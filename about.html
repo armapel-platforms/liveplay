@@ -7,38 +7,93 @@
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
+        @font-face {
+            font-family: 'Pixel';
+            /* Make sure you have a pixel font file or use a web font service */
+            src: url('https://fonts.cdnfonts.com/s/16087/vga_dot.woff') format('woff');
+        }
         .pixel-font {
-            /* Using a common monospace font as a fallback for pixel style */
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Pixel', sans-serif;
+            font-weight: normal;
+        }
+        .about-page .content-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: rgba(26, 26, 26, 0.5);
+            border-radius: 20px;
+            margin-top: 4rem;
+        }
+        .about-page h1, .about-page h2 {
+            color: #FF4D00;
+            border-bottom: 1px solid #FF4D00;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .about-page p, .about-page li {
+            line-height: 1.6;
+            color: #ccc;
+        }
+        .partner-logos {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        .partner-logos img {
+            max-height: 40px;
+            filter: grayscale(100%) contrast(1.2);
+            opacity: 0.8;
+        }
+        .disclaimer {
+            font-size: 0.8rem;
+            font-style: italic;
+            color: #aaa;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .developer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1rem;
+            color: #ccc;
         }
     </style>
 </head>
-<body class="static-page">
-    <header>
-        <div class="logo"><a href="index.html">liveplay</a></div>
-    </header>
-    <main>
-        <h1>About Us</h1>
-        <p>liveplay is a free-to-watch online platform dedicated to bringing you a variety of live television channels right to your browser.</p>
+<body class="about-page">
+    <div class="content-container">
+        <h1>About liveplay</h1>
+        <p>
+            Welcome to liveplay, your premier destination for accessible live streaming. Our mission is to provide a seamless, user-friendly, and centralized platform where users can discover and watch a diverse range of publicly available channels for free. We believe that access to information, entertainment, and culture should be simple and direct.
+        </p>
+        <p>
+            liveplay acts as an aggregator, embedding streams from various providers to bring you news, sports, entertainment, and more, all in one place.
+        </p>
 
-        <h2>Our Partners</h2>
-        <p>We are able to provide these streams thanks to our content partners:</p>
+        <h2>Our Content Partners</h2>
+        <p>
+            The availability of our channels is made possible through the public stream manifests provided by leading digital platforms in the Philippines. We gratefully acknowledge them for making their content accessible.
+        </p>
         <div class="partner-logos">
-            <!-- Note: Save these logos to your assets/images folder -->
-            <img src="assets/images/cignalplay-logo.png" alt="CignalPlay Logo" style="height: 40px;">
-            <img src="assets/images/iwanttfc-logo.png" alt="iWantTFC Logo" style="height: 40px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Cignal_Play_logo.svg/1200px-Cignal_Play_logo.svg.png" alt="Cignal Play">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/IWantTFC_logo.svg/1200px-IWantTFC_logo.svg.png" alt="iWantTFC">
         </div>
-        <p style="font-size: 0.9em; color: #aaa;">(Kapamilya Channel provided by iWantTFC)</p>
+        <p class="disclaimer">
+            Disclaimer: liveplay is an independent project and is not officially affiliated with, endorsed by, or connected to Cignal Play or iWantTFC. All channel logos and content are the property of their respective owners.
+        </p>
 
         <h2>Evolution History</h2>
         <ul>
-            <li>lingk IPTV (September 2024 - December 2024)</li>
-            <li>flow (February 2025 - March 2025)</li>
-            <li>flow+ (March 2025 - June 16, 2025)</li>
-            <li>liveplay (July 20, 2025 - Present)</li>
+            <li><strong>lingk IPTV</strong> (September 2024 - December 2024)</li>
+            <li><strong>flow</strong> (February 2025 - March 2025)</li>
+            <li><strong>flow+</strong> (March 2025 - June 16, 2025)</li>
+            <li><strong>liveplay</strong> (July 20, 2025 - Present)</li>
         </ul>
 
-        <p class="developed-by">Developed by <span class="pixel-font">armapel</span></p>
-    </main>
+        <p class="developer">Developed by <span class="pixel-font">armapel</span></p>
+    </div>
 </body>
 </html>
