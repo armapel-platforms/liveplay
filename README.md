@@ -33,14 +33,14 @@
 *   **👆 Easy Category Filtering:** Icon-based category pills make finding what you want to watch easier than ever.
 *   **📱 Multi-Device Ready:** Fully compatible with mobile phones, laptops, computers, and tablets for watching in different angles.
 <p align="center">
-<h1>Tech Stack</h1>
+<h2>Tech Stack</h2>
 
 *   **HTML5 & CSS3:** For a clean, modern, and responsive structure.
 *   **Vanilla JavaScript:** For dynamic content rendering and interactivity.
 *   **Shaka Player:** An open-source DASH and HLS player from Google for robust video playback and DRM.
 
 <p align="center">
-<h1>Developer</h1>
+<h2>Developer</h2>
 
 <p align="center"><br>
   <img src="logo/armapel-logo-black.png" alt="armapel logo" height="40">
