@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo/liveplay-logo-white.png" alt="liveplay logo" width="300"/>
+  <img src="logo/liveplay-logo-bg.png" alt="liveplay logo" width="500"/>
 </p>
 <p align="center">
   <strong>Just Watch Free Live Channels with liveplay.</strong>
