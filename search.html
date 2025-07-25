@@ -3,17 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search - liveplay</title>
+    <title>Search - Liveplay</title>
+    <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
+    <link rel="shortcut icon" href="/logo/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
+    <link rel="manifest" href="/logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0" />
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .search-container { max-width: 1200px; margin: 0 auto; }
+        #search-results { padding: 0 20px; }
+        #initial-message { color: var(--text-secondary); text-align: center; padding: 50px 0; font-size: 1rem; }
+    </style>
 </head>
-<body class="search-page">
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search for channels...">
-        <div id="search-results"></div>
-    </div>
+<body class="subpage">
+    <header class="subpage-header">
+        <a href="index.html" class="back-link">
+            <span class="material-symbols-outlined">arrow_back_ios_new</span>
+        </a>
+        <h1>Search</h1>
+    </header>
+
+    <main class="subpage-content search-container">
+        <div class="search-bar">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" id="search-input" placeholder="Search for channels..." autocomplete="off" autofocus>
+        </div>
+
+        <div id="search-results">
+             <p id="initial-message">Start typing to find your favorite channels.</p>
+        </div>
+    </main>
+
     <script src="js/streams.js"></script>
-    <script src="js/search.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search-input');
+            const searchResultsContainer = document.getElementById('search-results');
+            const initialMessage = document.getElementById('initial-message');
+            const allStreams = streams; 
+
+            const categoryIcons = {
+                ALL: 'apps', GENERAL: 'tv_gen', NEWS: 'newspaper', ENTERTAINMENT: 'movie',
+                SPORTS: 'sports_basketball', MOVIES: 'theaters', KIDS: 'smart_toy',
+                EDUCATIONAL: 'school', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note',
+                'ACTION + CRIME': 'local_police', OVERSEAS: 'public', RELIGION: 'church',
+                'NATURE + ANIMAL': 'pets'
+            };
+
+            const renderResults = (results) => {
+                searchResultsContainer.innerHTML = '';
+                if (results.length === 0) {
+                    searchResultsContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center; width: 100%; padding: 50px 0;">No channels found.</p>';
+                    return;
+                }
+
+                const groupedByCategory = results.reduce((acc, stream) => {
+                    (acc[stream.category] = acc[stream.category] || []).push(stream);
+                    return acc;
+                }, {});
+
+                for (const category in groupedByCategory) {
+                    const section = document.createElement('div');
+                    section.className = 'category-section';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'category-title';
+                    title.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span><h3>${category}</h3>`;
+                    section.appendChild(title);
+
+                    const row = document.createElement('div');
+                    row.className = 'channel-row';
+                    
+                    groupedByCategory[category].forEach(stream => {
+                        const card = document.createElement('div');
+                        card.className = 'channel-card';
+                        card.innerHTML = `<div class="channel-logo-bg"><img src="${stream.logo}" alt="${stream.name}" class="channel-logo"></div>`;
+                        card.addEventListener('click', () => {
+                             window.location.href = `index.html?play=${encodeURIComponent(stream.name)}`;
+                        });
+                        row.appendChild(card);
+                    });
+
+                    section.appendChild(row);
+                    searchResultsContainer.appendChild(section);
+                }
+            };
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                initialMessage.style.display = 'none';
+
+                if (query.length > 0) {
+                    const filteredStreams = allStreams.filter(stream => stream.name.toLowerCase().includes(query));
+                    renderResults(filteredStreams);
+                } else {
+                    searchResultsContainer.innerHTML = '';
+                    initialMessage.style.display = 'block';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
