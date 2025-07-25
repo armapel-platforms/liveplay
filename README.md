@@ -11,15 +11,16 @@
 
 <p align="center">
 <h2>Features</h2>
-  <img src="logo/feature1.png" alt="liveplay Promotional Poster" width="25%"/>
-  <img src="logo/feature2.png" alt="liveplay Promotional Poster" width="25%"/>
-  <img src="logo/feature3.png" alt="liveplay Promotional Poster" width="25%"/>
-  <img src="logo/feature4.png" alt="liveplay Promotional Poster" width="25%"/>
+  <img src="logo/feature1.png" width="30%"/>
+  <img src="logo/feature2.png" width="30%"/>
+  <img src="logo/feature3.png" width="30%"/>
   
-  <img src="logo/feature5.png" alt="liveplay Promotional Poster" width="25%"/>
-  <img src="logo/feature6.png" alt="liveplay Promotional Poster" width="25%"/>
-  <img src="logo/feature7.png" alt="liveplay Promotional Poster" width="25%"/>
-  <img src="logo/feature9.png" alt="liveplay Promotional Poster" width="25%"/>
+  <img src="logo/feature4.png" width="30%"/>
+  <img src="logo/feature5.png" width="30%"/>
+  <img src="logo/feature6.png" width="30%"/>
+  
+  <img src="logo/feature7.png" width="30%"/>
+  <img src="logo/feature9.png" width="30%"/>
 </p>
 
 ---
