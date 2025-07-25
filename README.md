@@ -1,9 +1,6 @@
 <p align="center">
-  <img src="logo/liveplay-logo-black.png" alt="liveplay logo" width="300"/>
+  <img src="logo/liveplay-logo-white.png" alt="liveplay logo" width="300"/>
 </p>
-
-<h1 align="center">liveplay</h1>
-
 <p align="center">
   <strong>Just Watch Free Live Channels with liveplay.</strong>
 </p>
@@ -63,7 +60,7 @@
     <td align="center"><em>HD Viewing Experience.</em></td>
   </tr>
    <tr>
-    <td colspan="2" align="center"><img src="logo/feature8.png" alt="Watch in different angles" width="600"></td>
+    <td colspan="2" align="center"><img src="logo/feature9.png" alt="Watch in different angles" width="600"></td>
   </tr>
   <tr>
     <td colspan="2" align="center"><em>Watch in different angles.</em></td>
