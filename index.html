@@ -3,77 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>liveplay</title>
+    <title>Liveplay - Free Live Channel Online</title>
+    <meta name="description" content="liveplay is a free to watch online channels, offering a variety of live TV streams including news, sports, entertainment, and more.">
+    <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
+    <link rel="shortcut icon" href="/logo/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
+    <link rel="manifest" href="/logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100,0,0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/shaka-player/4.3.4/shaka-player.ui.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/shaka-player/4.3.4/controls.css">
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/shaka-player.ui.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/controls.css">
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
     <header>
-        <div class="logo">liveplay</div>
-        <div class="header-right">
-            <a href="search.html"><i class="material-icons" style="font-weight: 100;">search</i></a>
-            <i class="material-icons" style="font-weight: 100;" id="menu-icon">menu</i>
-        </div>
+        <a href="index.html" class="logo">liveplay</a>
+        <nav>
+            <a href="search.html" class="icon-link">
+                <span class="material-symbols-outlined">search</span>
+            </a>
+            <button id="menu-btn" class="icon-link">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </nav>
     </header>
 
-    <div class="menu-container" id="menu-container">
+    <div id="floating-menu" class="floating-menu">
         <ul>
-            <li><a href="#"><span class="material-symbols-outlined">login</span> Log In/Sign Up <span class="badge">Coming Soon!</span></a></li>
+            <li><a href="#"><span class="material-symbols-outlined">login</span> Log In/Sign Up<span class="badge">Coming Soon!</span></a></li>
             <li><a href="about.html"><span class="material-symbols-outlined">info</span> About Us</a></li>
             <li><a href="privacy.html"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
             <li><a href="terms.html"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
         </ul>
     </div>
 
-    <div class="featured-slider">
-        <!-- Featured content will be dynamically inserted here -->
-    </div>
-    <div class="dots">
-        <!-- Dots will be dynamically inserted here -->
-    </div>
+    <main>
+        <section id="featured-slider" class="featured-slider">
+            <div class="slider">
+                <!-- Slide 1: TV SHOW -->
+                <div class="slide active">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJp6f2Myjvty8B7-cildd7oFKEAXLUA8xk3MH7NcaBjtepU8oGKe9HFkqC&s=10" alt="Featured Show Background" class="slide-bg">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <div class="slide-logo-container"><img src="https://static.wikia.nocookie.net/abscbn/images/7/74/Kapamilya_Channel_3D_Logo.png" alt="Channel Logo" class="slide-logo"></div>
+                        <h2 class="slide-title">FPJ's Batang Quiapo</h2>
+                        <div class="slide-badge catchup-badge">CATCH-UP TV</div>
+                    </div>
+                </div>
 
+                <!-- Slide 2: PROMOTIONAL -->
+                <a href="https://www.coca-cola.com/ph/en/offerings/kolek-and-win#:~:text=Redemption%20Center%20Locations-,Kolek%20&%20Win%20Promo,21%20to%20October%2016%2C%202025." target="_blank" rel="noopener noreferrer" class="slide">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShKqphp9oWsB22dC7kdgafpg1aJRkhBGnVk-n-iUNENAQw8yikODmi-Ik&s=10" alt="Promotion Background" class="slide-bg">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <h2 class="slide-title">Kolek & Win Q3 2025</h2>
+                        <div class="slide-badge visit-badge">JOIN</div>
+                    </div>
+                </a>
 
-    <div class="category-pills">
-        <!-- Categories will be dynamically inserted here -->
-    </div>
+                <!-- Slide 3: TV SHOW -->
+                <div class="slide">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe49MSesMRK4pFR7OVhjFv7meCLPvBJQp3jm3UHPu1nZ95f02VQ3-Fs_A&s=10" alt="Show Background" class="slide-bg">
+                     <div class="slide-overlay"></div>
+                     <div class="slide-content">
+                         <div class="slide-logo-container">
+                        <img src="https://static.wikia.nocookie.net/abscbn/images/7/74/Kapamilya_Channel_3D_Logo.png" alt="Channel Logo" class="slide-logo">
+                        </div>
+                       <h2 class="slide-title">It's Okay To Not Be Okay</h2>
+                        <div class="slide-badge catchup-badge">CATCH-UP TV</div>
+                    </div>
+                </div>
+                
+                <!-- Slide 4: PROMOTIONAL -->
+                <a href="https://www.iwanttfc.com/discover?gad_source=1&gad_campaignid=22790237230&gbraid=0AAAAAqEnTYj_py0phGJHnk9VtDIBTI4DS&gclid=EAIaIQobChMIud39wOLYjgMVOmoPAh3NPgXgEAAYASAAEgI8sPD_BwE" target="_blank" rel="noopener noreferrer" class="slide">
+                    <img src="https://absprod-static.iwanttfc.com/c/6/images/D_vahJgQt8df5tGyyhpmNA.jpg" alt="Promo Background" class="slide-bg">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <h2 class="slide-title">Love At First Spike</h2>
+                        <div class="slide-badge visit-badge">WATCH NOW</div>
+                    </div>
+                </a>
 
-    <div id="channels-container">
-        <!-- Channels will be dynamically inserted here -->
-    </div>
+                <!-- Slide 5: TV SHOW -->
+                <div class="slide">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKQSrTJG2u4WcENfEIgnTqJSOLQ5OgbcVfwhkkpgvKCabHrxy9jHqq6_uF&s=10" alt="Show Background" class="slide-bg">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <div class="slide-logo-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/en/d/de/NBA_TV_Philippines.png" alt="Channel Logo" class="slide-logo">
+                        </div>
+                        <h2 class="slide-title">NBA TV Philippines</h2>
+                        <div class="slide-badge catchup-badge">WATCH NOW</div></div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="slide-up-player" id="slide-up-player">
+            <!-- UPDATED NAVIGATION DOTS (Total of 5) -->
+            <div class="slider-nav">
+                <button class="dot active"></button>
+                <button class="dot"></button>
+                <button class="dot"></button>
+                <button class="dot"></button>
+                <button class="dot"></button>
+            </div>
+        </section>
+
+        <section id="category-nav" class="category-nav">
+            <div class="category-pills"></div>
+        </section>
+
+        <section id="channel-listings" class="channel-listings">
+        </section>
+    </main>
+
+    <div id="player-view" class="player-view">
         <div class="player-header">
-            <i class="material-icons" id="minimize-player">arrow_downward</i>
+            <button id="minimize-player-btn" class="icon-link">
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
         </div>
-        <video id="video" style="width:100%; height:auto; border-radius: 20px;" poster="https://via.placeholder.com/1600x900" controls autoplay></video>
-        <div class="player-footer">
-            <div class="channel-info">
-                <h3 id="player-channel-name"></h3>
-                <p id="player-channel-category"></p>
+        <div class="video-player-container" id="video-player-wrapper">
+            <video id="video-player" poster=""></video>
+        </div>
+        <div class="player-info">
+            <div class="player-info-left">
+                <h3 id="player-channel-name">Channel Name</h3>
+                <p id="player-channel-category">Category</p>
             </div>
             <div class="live-indicator">
-                <i class="material-icons">sensors</i>
-                <span>LIVE</span>
+                <span class="material-symbols-outlined">sensors</span>LIVE
             </div>
         </div>
     </div>
-
-    <div class="minimized-player" id="minimized-player">
-        <img id="minimized-logo" src="" alt="logo">
-        <div class="minimized-info">
-            <h4 id="minimized-channel-name"></h4>
-            <p id="minimized-channel-category"></p>
+    
+    <div id="minimized-player" class="minimized-player">
+        <div class="minimized-player-left">
+            <img id="minimized-player-logo" src="" alt="Channel Logo" class="minimized-logo">
+            <div class="minimized-info">
+                <h4 id="minimized-player-name">Channel Name</h4>
+                <p id="minimized-player-category">Category</p>
+            </div>
         </div>
-        <i class="material-icons live-dot">sensors</i>
-        <i class="material-icons" id="exit-minimized">close</i>
+        <div class="minimized-player-right">
+            <span class="material-symbols-outlined live-sensor-mini">sensors</span>
+            <button id="exit-player-btn" class="icon-link-mini">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
     </div>
 
     <script src="js/streams.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
