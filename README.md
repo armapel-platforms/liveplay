@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-<h2>Features</h2>
+<h2>Gallery</h2>
   <img src="logo/feature1.png" width="30%"/>
   <img src="logo/feature2.png" width="30%"/>
   <img src="logo/feature3.png" width="30%"/>
