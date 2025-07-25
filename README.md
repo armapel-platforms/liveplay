@@ -1,4 +1,4 @@
-<p align="center">
+<div align="center">
   <img src="logo/liveplay-logo-white.png" alt="liveplay logo" width="300"/>
 </p>
 <p align="center">
