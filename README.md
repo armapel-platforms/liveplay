@@ -23,7 +23,6 @@
   <img src="logo/feature9.png" width="30%"/>
 </p>
 
----
 <p align="center">
 <h2>Features</h2>
 
@@ -40,7 +39,6 @@
 *   **Vanilla JavaScript:** For dynamic content rendering and interactivity.
 *   **Shaka Player:** An open-source DASH and HLS player from Google for robust video playback and DRM.
 
----
 <p align="center">
 <h1>Developer</h1>
 
