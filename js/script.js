@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pill.dataset.category = category;
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`; // Icon-only
                 
-                pill.addEventListener('click', createRipple); // ADDED RIPPLE EFFECT TO PILLS
+                // NO RIPPLE ON PILLS
                 
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active').classList.remove('active');
@@ -128,7 +128,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
                     
                     logoBg.addEventListener("click", createRipple);
-                    logoBg.addEventListener('click', () => openPlayer(stream));
+                    
+                    // THIS IS THE CORRECTED CLICK LOGIC
+                    logoBg.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-')); // Replace spaces with dashes
+                        const newUrl = `?play=${channelName}`;
+                        
+                        // Change the URL without reloading
+                        history.pushState({ channel: stream.name }, ``, newUrl);
+                        
+                        openPlayer(stream);
+                    });
                     
                     card.appendChild(logoBg);
                     row.appendChild(card);
@@ -196,17 +207,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         minimizedPlayer.classList.remove('active');
         if (player) { await player.unload(); }
         activeStream = null;
-        history.pushState({}, '', '/liveplay/');
+        // Reset URL to the base path
+        history.pushState({}, '', window.location.pathname);
     };
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
     
+    // --- HANDLE DIRECT PLAY FROM URL ON PAGE LOAD ---
     const params = new URLSearchParams(window.location.search);
     const channelToPlay = params.get('play');
     if (channelToPlay) {
-        const streamToPlay = streamsData.find(s => s.name === decodeURIComponent(channelToPlay));
+        // Replace dashes back to spaces for matching
+        const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
         if (streamToPlay) { openPlayer(streamToPlay); }
     }
 });
