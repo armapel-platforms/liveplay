@@ -19,7 +19,6 @@ body {
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     margin-bottom: 90px;
-    touch-action: none;
 }
 
 body.subpage {
