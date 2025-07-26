@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
+    // --- RIPPLE EFFECT FUNCTION ---
     const createRipple = (event) => {
         const target = event.currentTarget;
         const circle = document.createElement("span");
@@ -15,9 +16,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         target.appendChild(circle);
     }
 
-    const staticRippleElements = document.querySelectorAll('.icon-link, .floating-menu a, #minimized-player, .back-link, .social-icon, .video-player-container');
+    // --- ATTACH RIPPLE TO STATIC ELEMENTS ---
+    const staticRippleElements = document.querySelectorAll('.icon-link, .floating-menu a, #minimized-player, .back-link, .social-icon, .video-player-container, .pill');
     staticRippleElements.forEach(elem => elem.addEventListener("click", createRipple));
 
+    // --- GLOBAL ELEMENTS ---
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
     const streamsData = streams;
@@ -26,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let player = null;
     let ui = null;
 
+    // --- MENU LOGIC ---
     if (menuBtn) {
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -38,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // --- FEATURED SLIDER LOGIC ---
     const slider = document.querySelector('.slider');
     if (slider) {
         const slides = document.querySelectorAll('.slide');
@@ -63,6 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setInterval(nextSlide, slideInterval);
     }
     
+    // --- CATEGORY & CHANNEL RENDERING ---
     const categoryPillsContainer = document.querySelector('.category-pills');
     const channelListingsContainer = document.getElementById('channel-listings');
 
@@ -82,10 +88,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pill.className = 'pill';
                 if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
-                pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
-                
+                pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span> ${category}`;
                 pill.addEventListener('click', createRipple);
-                
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active').classList.remove('active');
                     pill.classList.add('active');
@@ -122,7 +126,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                     logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
                     
                     logoBg.addEventListener("click", createRipple);
-                    logoBg.addEventListener('click', () => openPlayer(stream));
+
+                    // --- URL HANDLING & HISTORY API ---
+                    logoBg.addEventListener('click', (e) => {
+                        e.preventDefault(); // Prevent any default link behavior
+                        const channelName = encodeURIComponent(stream.name);
+                        const newUrl = `/liveplay/?play=${channelName}`;
+                        
+                        // Change the URL in the browser bar without reloading the page
+                        history.pushState({ channel: stream.name }, ``, newUrl);
+                        
+                        // Now open the player
+                        openPlayer(stream);
+                    });
                     
                     card.appendChild(logoBg);
                     row.appendChild(card);
@@ -134,6 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderChannels('ALL');
     }
 
+    // --- PLAYER LOGIC ---
     const playerView = document.getElementById('player-view');
     const minimizedPlayer = document.getElementById('minimized-player');
     const minimizeBtn = document.getElementById('minimize-player-btn');
@@ -188,12 +205,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         minimizedPlayer.classList.remove('active');
         if (player) { await player.unload(); }
         activeStream = null;
+        // When closing, reset the URL back to the base
+        history.pushState({}, '', '/liveplay/');
     };
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
     
+    // --- HANDLE DIRECT PLAY FROM URL ON PAGE LOAD ---
     const params = new URLSearchParams(window.location.search);
     const channelToPlay = params.get('play');
     if (channelToPlay) {
