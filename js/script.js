@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- ATTACH RIPPLE TO STATIC ELEMENTS ---
-    const staticRippleElements = document.querySelectorAll('.icon-link, .floating-menu a, #minimized-player, .back-link, .social-icon, .video-player-container, .pill');
+    const staticRippleElements = document.querySelectorAll('.icon-link, .floating-menu a, #minimized-player, .back-link, .social-icon, .video-player-container');
     staticRippleElements.forEach(elem => elem.addEventListener("click", createRipple));
 
     // --- GLOBAL ELEMENTS ---
@@ -70,7 +70,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // --- CATEGORY & CHANNEL RENDERING ---
     const categoryPillsContainer = document.querySelector('.category-pills');
-    const categoryPillsContainer = document.querySelector('.category-pills');
     const channelListingsContainer = document.getElementById('channel-listings');
 
     if (categoryPillsContainer && channelListingsContainer) {
@@ -101,7 +100,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 categoryPillsContainer.appendChild(pill);
             }
         });
-        
+
+        const renderChannels = (filter) => {
+            channelListingsContainer.innerHTML = '';
+            const filteredStreams = (filter === 'ALL') ? streamsData : streamsData.filter(s => s.category === filter);
+            const groupedByCategory = filteredStreams.reduce((acc, stream) => {
+                (acc[stream.category] = acc[stream.category] || []).push(stream);
+                return acc;
+            }, {});
+
             const orderedCategories = categories.filter(c => c !== 'ALL' && groupedByCategory[c]);
             
             orderedCategories.forEach(category => {
@@ -121,19 +128,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
                     
                     logoBg.addEventListener("click", createRipple);
-
-                    // --- URL HANDLING & HISTORY API ---
-                    logoBg.addEventListener('click', (e) => {
-                        e.preventDefault(); // Prevent any default link behavior
-                        const channelName = encodeURIComponent(stream.name);
-                        const newUrl = `/liveplay/?play=${channelName}`;
-                        
-                        // Change the URL in the browser bar without reloading the page
-                        history.pushState({ channel: stream.name }, ``, newUrl);
-                        
-                        // Now open the player
-                        openPlayer(stream);
-                    });
+                    logoBg.addEventListener('click', () => openPlayer(stream));
                     
                     card.appendChild(logoBg);
                     row.appendChild(card);
@@ -186,7 +181,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    const restorePlayer = () => {
+    const restorePlayer = (e) => {
+        if (e.target.closest('#exit-player-btn')) return;
         if (minimizedPlayer.classList.contains('active')) {
             minimizedPlayer.classList.remove('active');
             playerView.classList.add('active');
@@ -200,7 +196,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         minimizedPlayer.classList.remove('active');
         if (player) { await player.unload(); }
         activeStream = null;
-        // When closing, reset the URL back to the base
         history.pushState({}, '', '/liveplay/');
     };
     
@@ -208,7 +203,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
     
-    // --- HANDLE DIRECT PLAY FROM URL ON PAGE LOAD ---
     const params = new URLSearchParams(window.location.search);
     const channelToPlay = params.get('play');
     if (channelToPlay) {
