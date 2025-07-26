@@ -88,9 +88,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pill.className = 'pill';
                 if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
-                pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`; // Icon-only
+                pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
                 
-                // NO RIPPLE ON PILLS
+                pill.addEventListener('click', createRipple); // RESTORED RIPPLE
                 
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active').classList.remove('active');
@@ -129,13 +129,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     logoBg.addEventListener("click", createRipple);
                     
-                    // THIS IS THE CORRECTED CLICK LOGIC
                     logoBg.addEventListener('click', (e) => {
                         e.preventDefault();
-                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-')); // Replace spaces with dashes
-                        const newUrl = `?play=${channelName}`;
+                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
+                        const newUrl = `/liveplay/?play=${channelName}`; // RESTORED BASEPATH
                         
-                        // Change the URL without reloading
                         history.pushState({ channel: stream.name }, ``, newUrl);
                         
                         openPlayer(stream);
@@ -207,8 +205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         minimizedPlayer.classList.remove('active');
         if (player) { await player.unload(); }
         activeStream = null;
-        // Reset URL to the base path
-        history.pushState({}, '', window.location.pathname);
+        history.pushState({}, '', '/liveplay/'); // RESTORED BASEPATH
     };
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
@@ -219,7 +216,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const channelToPlay = params.get('play');
     if (channelToPlay) {
-        // Replace dashes back to spaces for matching
         const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
         if (streamToPlay) { openPlayer(streamToPlay); }
     }
