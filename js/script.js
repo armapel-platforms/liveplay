@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // --- CATEGORY & CHANNEL RENDERING ---
     const categoryPillsContainer = document.querySelector('.category-pills');
+    const categoryPillsContainer = document.querySelector('.category-pills');
     const channelListingsContainer = document.getElementById('channel-listings');
 
     if (categoryPillsContainer && channelListingsContainer) {
@@ -88,8 +89,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pill.className = 'pill';
                 if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
-                pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span> ${category}`;
-                pill.addEventListener('click', createRipple);
+                pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`; // Icon-only
+                
+                pill.addEventListener('click', createRipple); // ADDED RIPPLE EFFECT TO PILLS
+                
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active').classList.remove('active');
                     pill.classList.add('active');
@@ -98,15 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 categoryPillsContainer.appendChild(pill);
             }
         });
-
-        const renderChannels = (filter) => {
-            channelListingsContainer.innerHTML = '';
-            const filteredStreams = (filter === 'ALL') ? streamsData : streamsData.filter(s => s.category === filter);
-            const groupedByCategory = filteredStreams.reduce((acc, stream) => {
-                (acc[stream.category] = acc[stream.category] || []).push(stream);
-                return acc;
-            }, {});
-
+        
             const orderedCategories = categories.filter(c => c !== 'ALL' && groupedByCategory[c]);
             
             orderedCategories.forEach(category => {
