@@ -84,5 +84,5 @@ const streams = [
    { name: 'Bloomberg', logo: 'https://static.wikia.nocookie.net/logopedia/images/c/cb/Bloomberg.svg', type: 'mpegdash', manifestUri: 'https://qp-pldt-live-grp-09-prod.akamaized.net/out/u/bloomberg_sd.mpd', clearKey: { 'ef7d9dcfb99b406cb79fb9f675cba426': 'b24094f6ca136af25600e44df5987af4' }, category: "NEWS" },
    { name: 'Vevo Pop', logo: 'https://images.viaway.com/26295749_640.png', type: 'hls', manifestUri: 'https://amg00056-amg00056c9-rakuten-fr-3243.playouts.now.amagi.tv/playlist/amg00056-vevotvfast-vevopopfr-rakutenfr/playlist.m3u8', category: "MUSIC" },
    { name: 'MTV US', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/MTV_2021_%28brand_version%29.svg/1200px-MTV_2021_%28brand_version%29.svg.png', type: 'hls', manifestUri: 'https://fl3.moveonjoy.com/MTV/index.m3u8', category: "MUSIC" },
-   { name: 'Nick Music', logo: 'https://dtvnews.hu/sites/default/files/wide_images/nickmusic_wide.png', type: 'hls', manifestUri: 'https://fl3.moveonjoy.com/NICK_MUSIC/index.m3u8', category: "MUSIC" },
+   { name: 'Nick Music US', logo: 'https://raw.githubusercontent.com/armapeltech/liveplay/refs/heads/main/logo/nickmusic-logo.png', type: 'hls', manifestUri: 'https://fl3.moveonjoy.com/NICK_MUSIC/index.m3u8', category: "MUSIC" },
 ];
