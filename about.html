@@ -16,7 +16,7 @@
         .about-container { max-width: 900px; margin: 0 auto; color: #fff; }
         .about-container p, .about-container li { font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary); }
         .section { margin-bottom: 20px; }
-        .section h2 { font-size: 1.3rem; border-bottom: 1px solid var(--theme-color); padding-bottom: 10px; margin-bottom: 20px; font-weight: 500; }
+        .section h2 { font-size: 1.3rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; font-weight: 500; }
         .partners-logos { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
         .partners-logos img { max-height: 25px; }
         .history-list { list-style: none; padding-left: 0; position: relative; }
@@ -30,6 +30,38 @@
         .social-icon { color: #fff; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); transition: background-color 0.3s; }
         .social-icon:hover { background: var(--theme-color); }
         .social-icon img { width: 24px; height: 24px; fill: currentColor; }
+        .developer-header-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.developer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.developer-credit .developer-header h2 {
+    border-bottom: none !important ;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.developer-header .material-symbols-outlined {
+    color: var(--text-secondary);
+}
+
+.developer-divider {
+    border: none;
+    height: 1px;
+    background-color: #333;
+    margin: 15px 0;
+}
+
+.developer-details {
+    margin-top: 15px;
+}
     </style>
 </head>
 <body class="subpage">
@@ -42,7 +74,7 @@
 
     <main class="subpage-content about-container">
         <div class="content-box section">
-            <h2>Our Mission</h2>
+            <h2>About Liveplay</h2>
             <p>liveplay is a free-to-watch online TV service dedicated to bringing a wide array of channels to viewers. We believe in providing easy and accessible entertainment for everyone, curating a selection of general entertainment, news, sports, and more, all in one place.</p>
         </div>
 
@@ -57,7 +89,7 @@
         </div>
 
         <div class="content-box section">
-            <h2>Project Evolution</h2>
+            <h2>Evolution</h2>
             <ul class="history-list">
                 <li><strong>lingk IPTV</strong> (September 2024 - December 2024)</li>
                 <li><strong>flow</strong> (February 2025 - March 2025)</li>
@@ -78,10 +110,27 @@
             </div>
         </div>
 
-        <div class="content-box section developer-credit">
+    <div class="content-box section developer-credit">
+    <!-- The header is now a clickable link -->
+    <a href="https://armapeltech.github.io/about" target="_blank" class="developer-header-link">
+        <div class="developer-header">
             <h2>Developer</h2>
-            <img src="logo/armapel-logo-white.png" alt="armapel logo" class="dev-logo">
+            <!-- The "go to page" icon -->
+            <span class="material-symbols-outlined">open_in_new</span>
         </div>
+    </a>
+    
+    <!-- The horizontal line -->
+    <hr class="developer-divider">
+    
+    <!-- The developer logo -->
+    <img src="logo/armapel-logo-white.png" alt="armapel logo" class="dev-logo">
+    
+    <!-- The new details about the developer -->
+    <p class="developer-details">
+        Arbie Peligro, known as armapel, is a passionate web developer and UI/UX enthusiast focused on creating clean, intuitive, and user-friendly digital experiences. This project is a demonstration of skills in front-end development and modern web technologies.
+    </p>
+</div>
     </main>
 </body>
 </html>

@@ -6,12 +6,13 @@
     <title>Search - Liveplay</title>
     <link rel="icon" type="image/png" href="logo/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="logo/favicon.svg" />
-    <link rel="shortcut icon" href="logo/favicon.ico" />
+    <link rel="shortcut" href="logo/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="logo/apple-touch-icon.png" />
     <link rel="manifest" href="logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0" />
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
     <style>
         .search-container { max-width: 1200px; margin: 0 auto; }
         #search-results { padding: 0 20px; }
@@ -37,13 +38,50 @@
         </div>
     </main>
 
+    <!-- "Join to Watch Free" Pop-up for Guests -->
+    <div id="auth-popup-overlay" class="auth-popup-overlay">
+        <div class="auth-popup">
+             <span id="close-popup" class="material-symbols-outlined" style="position: absolute; top: 15px; right: 15px; cursor: pointer;">close</span>
+            <img src="logo/liveplay-logo-white.png" alt="Liveplay Logo" class="popup-logo">
+            <h3>Join to Watch Free</h3>
+            <a href="login-signup.html" class="auth-btn">Log In or Sign Up</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
     <script src="js/streams.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const searchInput = document.getElementById('search-input');
             const searchResultsContainer = document.getElementById('search-results');
             const initialMessage = document.getElementById('initial-message');
-            const allStreams = streams; 
+            const allStreams = streams;
+            
+            const authPopup = document.getElementById('auth-popup-overlay');
+            const closePopupBtn = document.getElementById('close-popup');
+            let currentUser = await window.auth.getCurrentUser();
+
+            window.auth.onAuthStateChange(user => {
+                currentUser = user;
+            });
+
+            const showAuthPopup = () => {
+                if (authPopup) authPopup.classList.add('active');
+            };
+
+            const hideAuthPopup = () => {
+                if (authPopup) authPopup.classList.remove('active');
+            };
+
+            if (authPopup) {
+                authPopup.addEventListener('click', (e) => {
+                    if (e.target === authPopup) hideAuthPopup();
+                });
+            }
+            if(closePopupBtn) {
+                closePopupBtn.addEventListener('click', hideAuthPopup);
+            }
 
             const categoryIcons = {
                 ALL: 'apps', GENERAL: 'tv_gen', NEWS: 'newspaper', ENTERTAINMENT: 'movie',
@@ -82,7 +120,11 @@
                         card.className = 'channel-card';
                         card.innerHTML = `<div class="channel-logo-bg"><img src="${stream.logo}" alt="${stream.name}" class="channel-logo"></div>`;
                         card.addEventListener('click', () => {
-                             window.location.href = `index.html?play=${encodeURIComponent(stream.name)}`;
+                             if (currentUser) {
+                                window.location.href = `index.html?play=${encodeURIComponent(stream.name)}`;
+                             } else {
+                                showAuthPopup();
+                             }
                         });
                         row.appendChild(card);
                     });

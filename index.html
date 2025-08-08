@@ -7,7 +7,7 @@
     <meta name="description" content="liveplay is a free to watch online channels, offering a variety of live TV streams including news, sports, entertainment, and more.">
     <link rel="icon" type="image/png" href="logo/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="logo/favicon.svg" />
-    <link rel="shortcut icon" href="logo/favicon.ico" />
+    <link rel="shortcut" href="logo/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="logo/apple-touch-icon.png" />
     <link rel="manifest" href="logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
@@ -15,6 +15,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/shaka-player/4.3.4/shaka-player.ui.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/shaka-player/4.3.4/controls.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
     <header>
@@ -30,12 +31,6 @@
     </header>
 
     <div id="floating-menu" class="floating-menu">
-        <ul>
-            <li><a href="#"><span class="material-symbols-outlined">login</span> Log In/Sign Up<span class="badge">Coming Soon!</span></a></li>
-            <li><a href="about.html"><span class="material-symbols-outlined">info</span> About Us</a></li>
-            <li><a href="privacy.html"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
-            <li><a href="terms.html"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
-        </ul>
     </div>
 
     <main>
@@ -153,6 +148,27 @@
         </div>
     </div>
 
+    <!-- "Join to Watch Free" Pop-up for Guests -->
+    <div id="auth-popup-overlay" class="auth-popup-overlay">
+        <div class="auth-popup">
+            <span id="close-popup" class="material-symbols-outlined" style="position: absolute; top: 15px; right: 15px; cursor: pointer;">close</span>
+            <img src="logo/liveplay-logo-white.png" alt="Liveplay Logo" class="popup-logo">
+            <h3>Join to Watch Free</h3>
+            <a href="login-signup.html" class="auth-btn">Log In or Sign Up</a>
+        </div>
+    </div>
+    
+    <footer class="site-footer">
+    <div class="footer-content">
+        <p class="developer-credit">from <img src="logo/armapel-logo-white.png" alt="armapel logo" class="developer-logo"></p>
+        <p class="copyright">©2025 <span class="footer-brand">liveplay</span>, All Rights Reserved.</p>
+        <p class="version">Version 9.0.9</p>
+    </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/streams.js"></script>
     <script src="js/script.js"></script>
 </body>
