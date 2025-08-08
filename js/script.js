@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
-    // --- RIPPLE EFFECT FUNCTION ---
     const createRipple = (event) => {
         const target = event.currentTarget;
         const circle = document.createElement("span");
@@ -14,35 +13,88 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ripple = target.getElementsByClassName("ripple")[0];
         if (ripple) { ripple.remove(); }
         target.appendChild(circle);
-    }
+    };
 
-    // --- ATTACH RIPPLE TO STATIC ELEMENTS ---
-    const staticRippleElements = document.querySelectorAll('.icon-link, .floating-menu a, #minimized-player, .back-link, .social-icon, .video-player-container');
+    const staticRippleElements = document.querySelectorAll('.icon-link, #minimized-player, .back-link, .video-player-container');
     staticRippleElements.forEach(elem => elem.addEventListener("click", createRipple));
 
-    // --- GLOBAL ELEMENTS ---
+    const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
     const streamsData = streams;
     const videoElement = document.getElementById('video-player');
     const playerWrapper = document.getElementById('video-player-wrapper');
+    const authPopup = document.getElementById('auth-popup-overlay');
+    const closePopupBtn = document.getElementById('close-popup');
     let player = null;
     let ui = null;
+    let currentUser = null;
 
-    // --- MENU LOGIC ---
-    if (menuBtn) {
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            floatingMenu.classList.toggle('active');
+    if (document.getElementById('featured-slider')) {
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 10);
         });
     }
-    document.addEventListener('click', (e) => {
-        if (floatingMenu && floatingMenu.classList.contains('active') && !floatingMenu.contains(e.target) && e.target !== menuBtn) {
-            floatingMenu.classList.remove('active');
+
+    const renderMenu = (user) => {
+        let menuContent = '';
+        if (user) {
+            menuContent = `
+                <div class="menu-header">Hi, ${user.first_name || 'User'}</div>
+                <div class="menu-divider"></div>
+                <ul>
+                    <li><a href="account.html"><span class="material-symbols-outlined">manage_accounts</span> Manage Account</a></li>
+                </ul>`;
+        } else {
+            menuContent = `
+                <div class="menu-header">Hi, Guest</div>
+                <div class="menu-divider"></div>
+                <ul>
+                    <li><a href="login-signup.html"><span class="material-symbols-outlined">login</span> Log In / Sign Up</a></li>
+                </ul>`;
         }
+        menuContent += `
+            <ul>
+                <li><a href="about.html"><span class="material-symbols-outlined">info</span> About Us</a></li>
+                <li><a href="privacy.html"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
+                <li><a href="terms.html"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
+            </ul>`;
+        floatingMenu.innerHTML = menuContent;
+        
+        floatingMenu.querySelectorAll('li').forEach(li => {
+            const link = li.querySelector('a');
+            li.addEventListener('mousedown', () => li.classList.add('active-press'));
+            li.addEventListener('touchstart', () => li.classList.add('active-press'));
+            const releaseAction = (e) => {
+                li.classList.remove('active-press');
+                createRipple(e);
+                if (link && link.href) {
+                    setTimeout(() => { window.location.href = link.href; }, 150);
+                }
+            };
+            li.addEventListener('mouseup', releaseAction);
+            li.addEventListener('touchend', releaseAction);
+            li.addEventListener('mouseleave', () => li.classList.remove('active-press'));
+        });
+    };
+    
+    const showAuthPopup = () => { if (!currentUser && authPopup) authPopup.classList.add('active'); };
+    const hideAuthPopup = () => { if (authPopup) authPopup.classList.remove('active'); };
+
+    currentUser = await window.auth.getCurrentUser();
+    renderMenu(currentUser);
+
+    window.auth.onAuthStateChange(user => {
+        currentUser = user;
+        renderMenu(currentUser);
     });
 
-    // --- FEATURED SLIDER LOGIC ---
+    if (authPopup) authPopup.addEventListener('click', (e) => { if (e.target === authPopup) hideAuthPopup(); });
+    if (closePopupBtn) closePopupBtn.addEventListener('click', hideAuthPopup);
+    
+    if (menuBtn) menuBtn.addEventListener('click', (e) => { e.stopPropagation(); floatingMenu.classList.toggle('active'); });
+    document.addEventListener('click', (e) => { if (floatingMenu && floatingMenu.classList.contains('active') && !floatingMenu.contains(e.target) && e.target !== menuBtn) floatingMenu.classList.remove('active'); });
+
     const slider = document.querySelector('.slider');
     if (slider) {
         const slides = document.querySelectorAll('.slide');
@@ -50,28 +102,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         let currentSlide = 0;
         const slideInterval = 5000;
         const showSlide = (index) => {
-            slides.forEach((slide, i) => slide.classList.remove('active'));
+            slides.forEach((slide) => slide.classList.remove('active'));
             dots.forEach(dot => dot.classList.remove('active'));
-            slides[index].classList.add('active');
-            dots[index]?.classList.add('active');
+            if (slides[index]) slides[index].classList.add('active');
+            if (dots[index]) dots[index].classList.add('active');
         };
-        const nextSlide = () => {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
-        };
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                currentSlide = index;
-                showSlide(currentSlide);
-            });
-        });
+        const nextSlide = () => { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); };
+        dots.forEach((dot, index) => dot.addEventListener('click', () => { currentSlide = index; showSlide(currentSlide); }));
         setInterval(nextSlide, slideInterval);
     }
     
-    // --- CATEGORY & CHANNEL RENDERING ---
     const categoryPillsContainer = document.querySelector('.category-pills');
     const channelListingsContainer = document.getElementById('channel-listings');
-
     if (categoryPillsContainer && channelListingsContainer) {
         const categories = ['ALL', 'GENERAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'EDUCATIONAL', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGION', 'NATURE + ANIMAL'];
         const categoryIcons = {
@@ -89,9 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
-                
-                pill.addEventListener('click', createRipple); // RESTORED RIPPLE
-                
+                pill.addEventListener('click', createRipple);
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active').classList.remove('active');
                     pill.classList.add('active');
@@ -108,9 +148,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 (acc[stream.category] = acc[stream.category] || []).push(stream);
                 return acc;
             }, {});
-
             const orderedCategories = categories.filter(c => c !== 'ALL' && groupedByCategory[c]);
-            
             orderedCategories.forEach(category => {
                 const section = document.createElement('div');
                 section.className = 'category-section';
@@ -126,19 +164,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const logoBg = document.createElement('div');
                     logoBg.className = 'channel-logo-bg';
                     logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
-                    
                     logoBg.addEventListener("click", createRipple);
-                    
                     logoBg.addEventListener('click', (e) => {
                         e.preventDefault();
-                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
-                        const newUrl = `/liveplay/?play=${channelName}`; // RESTORED BASEPATH
-                        
-                        history.pushState({ channel: stream.name }, ``, newUrl);
-                        
-                        openPlayer(stream);
+                        if (currentUser) {
+                            const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
+                            history.pushState({ channel: stream.name }, ``, `?play=${channelName}`);
+                            openPlayer(stream);
+                        } else {
+                            showAuthPopup();
+                        }
                     });
-                    
                     card.appendChild(logoBg);
                     row.appendChild(card);
                 });
@@ -149,7 +185,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderChannels('ALL');
     }
 
-    // --- PLAYER LOGIC ---
     const playerView = document.getElementById('player-view');
     const minimizedPlayer = document.getElementById('minimized-player');
     const minimizeBtn = document.getElementById('minimize-player-btn');
@@ -205,18 +240,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         minimizedPlayer.classList.remove('active');
         if (player) { await player.unload(); }
         activeStream = null;
-        history.pushState({}, '', '/liveplay/'); // RESTORED BASEPATH
+        history.pushState({}, '', window.location.pathname);
     };
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
     
-    // --- HANDLE DIRECT PLAY FROM URL ON PAGE LOAD ---
     const params = new URLSearchParams(window.location.search);
     const channelToPlay = params.get('play');
     if (channelToPlay) {
-        const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
-        if (streamToPlay) { openPlayer(streamToPlay); }
+         if (currentUser) {
+            const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
+            if (streamToPlay) openPlayer(streamToPlay);
+        } else {
+            history.replaceState({}, '', window.location.pathname); 
+            showAuthPopup();
+        }
     }
 });
