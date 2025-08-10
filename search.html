@@ -10,13 +10,16 @@
     <link rel="apple-touch-icon" sizes="180x180" href="logo/apple-touch-icon.png" />
     <link rel="manifest" href="logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0" />
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
     <style>
         .search-container { max-width: 1200px; margin: 0 auto; }
         #search-results { padding: 0 20px; }
         #initial-message { color: var(--text-secondary); text-align: center; padding: 50px 0; font-size: 1rem; }
+        .pill.active .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
     </style>
 </head>
 <body class="subpage">
@@ -38,7 +41,6 @@
         </div>
     </main>
 
-    <!-- "Join to Watch Free" Pop-up for Guests -->
     <div id="auth-popup-overlay" class="auth-popup-overlay">
         <div class="auth-popup">
              <span id="close-popup" class="material-symbols-outlined" style="position: absolute; top: 15px; right: 15px; cursor: pointer;">close</span>
@@ -51,12 +53,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/auth.js"></script>
     <script src="js/streams.js"></script>
+    <script src="js/yt-live.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const searchInput = document.getElementById('search-input');
             const searchResultsContainer = document.getElementById('search-results');
             const initialMessage = document.getElementById('initial-message');
-            const allStreams = streams;
+            const allStreams = [...streams, ...yt_live];
             
             const authPopup = document.getElementById('auth-popup-overlay');
             const closePopupBtn = document.getElementById('close-popup');
@@ -88,7 +91,7 @@
                 SPORTS: 'sports_basketball', MOVIES: 'theaters', KIDS: 'smart_toy',
                 EDUCATIONAL: 'school', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note',
                 'ACTION + CRIME': 'local_police', OVERSEAS: 'public', RELIGION: 'church',
-                'NATURE + ANIMAL': 'pets'
+                'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display'
             };
 
             const renderResults = (results) => {
