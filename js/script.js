@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
-    const streamsData = streams;
+    const streamsData = [...streams, ...yt_live];
     const videoElement = document.getElementById('video-player');
     const playerWrapper = document.getElementById('video-player-wrapper');
     const authPopup = document.getElementById('auth-popup-overlay');
@@ -115,13 +115,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categoryPillsContainer = document.querySelector('.category-pills');
     const channelListingsContainer = document.getElementById('channel-listings');
     if (categoryPillsContainer && channelListingsContainer) {
-        const categories = ['ALL', 'GENERAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'EDUCATIONAL', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGION', 'NATURE + ANIMAL'];
+        const categories = ['ALL', 'GENERAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'EDUCATIONAL', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGION', 'NATURE + ANIMAL', 'YOUTUBE LIVE'];
         const categoryIcons = {
             ALL: 'apps', GENERAL: 'tv_gen', NEWS: 'newspaper', ENTERTAINMENT: 'movie',
             SPORTS: 'sports_basketball', MOVIES: 'theaters', KIDS: 'smart_toy',
             EDUCATIONAL: 'school', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note',
             'ACTION + CRIME': 'local_police', OVERSEAS: 'public', RELIGION: 'church',
-            'NATURE + ANIMAL': 'pets'
+            'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display'
         };
 
         categories.forEach(category => {
@@ -133,8 +133,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
                 pill.addEventListener('click', createRipple);
                 pill.addEventListener('click', () => {
-                    document.querySelector('.pill.active').classList.remove('active');
+                    const currentActive = document.querySelector('.pill.active');
+                    if (currentActive) {
+                        currentActive.classList.remove('active');
+                    }
                     pill.classList.add('active');
+
                     renderChannels(category);
                 });
                 categoryPillsContainer.appendChild(pill);
@@ -204,16 +208,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     const onError = (event) => console.error('Player Error', event.detail);
 
     const openPlayer = async (stream) => {
-        if (!player) await initPlayer();
+        const videoPlayer = document.getElementById('video-player');
+        const youtubePlayer = document.getElementById('youtube-player');
+
+        if (stream.type === 'youtube') {
+            if (player) {
+                await player.unload();
+            }
+            // --- FINAL FIX: Use the official API to disable the Shaka UI ---
+            if (ui) {
+                ui.setEnabled(false);
+            }
+            videoPlayer.style.display = 'none';
+            youtubePlayer.src = stream.embedUrl;
+            youtubePlayer.style.display = 'block';
+        } else { // This block handles Shaka Player streams
+            youtubePlayer.style.display = 'none';
+            youtubePlayer.src = '';
+            videoPlayer.style.display = 'block';
+            
+            if (!player) {
+                await initPlayer();
+            }
+            
+            // --- FINAL FIX: Ensure the Shaka UI is enabled for Shaka streams ---
+            if (ui) {
+                ui.setEnabled(true);
+            }
+
+            player.configure({ drm: { clearKeys: stream.clearKey || {} } });
+            try { 
+                await player.load(stream.manifestUri); 
+                videoElement.play(); 
+            } catch (e) { onError(e); }
+        }
+
         activeStream = stream;
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         document.getElementById('minimized-player-logo').src = stream.logo;
         document.getElementById('minimized-player-name').textContent = stream.name;
         document.getElementById('minimized-player-category').textContent = stream.category;
-        player.configure({ drm: { clearKeys: stream.clearKey || {} } });
-        try { await player.load(stream.manifestUri); videoElement.play(); } 
-        catch (e) { onError(e); }
+        
         minimizedPlayer.classList.remove('active');
         playerView.classList.add('active');
     };
@@ -230,7 +266,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (minimizedPlayer.classList.contains('active')) {
             minimizedPlayer.classList.remove('active');
             playerView.classList.add('active');
-            videoElement.play();
+            if (activeStream && activeStream.type !== 'youtube') {
+                 videoElement.play();
+            }
         }
     };
 
@@ -238,7 +276,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.stopPropagation();
         playerView.classList.remove('active');
         minimizedPlayer.classList.remove('active');
-        if (player) { await player.unload(); }
+
+        const youtubePlayer = document.getElementById('youtube-player');
+        if (youtubePlayer) {
+            youtubePlayer.src = '';
+            youtubePlayer.style.display = 'none';
+        }
+        document.getElementById('video-player').style.display = 'block';
+
+        // --- FINAL FIX: Also disable UI on close to be safe ---
+        if (ui) {
+            ui.setEnabled(false);
+        }
+
+        if (player) { 
+            await player.unload(); 
+        }
         activeStream = null;
         history.pushState({}, '', window.location.pathname);
     };
