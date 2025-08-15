@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>FAQ - Liveplay</title>
+    <link rel="icon" type="image/png" href="logo/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="logo/favicon.svg" />
+    <link rel="shortcut icon" href="logo/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="logo/apple-touch-icon.png" />
+    <link rel="manifest" href="logo/site.webmanifest" />
+    <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="subpage">
+    <header class="subpage-header">
+        <a href="index.html" class="back-link">
+            <span class="material-symbols-outlined">arrow_back_ios_new</span>
+        </a>
+        <h1>Frequently Asked Questions</h1>
+    </header>
+
+    <main class="subpage-content">
+        <div class="faq-intro">
+            <p>Welcome to our FAQ! Here, you'll find answers to common questions about <strong>Liveplay</strong>, including how to watch free live TV, our privacy practices, and tips to enhance your experience. Looking for a specific station or just want to discover something new? <strong>Liveplay</strong> makes it easy.</p>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is Liveplay's role?</span>
+                    <span class="material-symbols-outlined">expand_more</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Liveplay acts as a search engine and directory. We do not host or broadcast any content ourselves. Our service finds and organizes links to publicly available TV streams from the internet to provide a convenient viewing experience.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Are you affiliated with CignalPlay or iWant?</span>
+                    <span class="material-symbols-outlined">expand_more</span>
+                </div>
+                <div class="faq-answer">
+                    <p>No. Liveplay is an independent service and has no official affiliation, partnership, or endorsement from any third-party broadcaster. We simply link to publicly accessible streams that may originate from their platforms, similar to how a search engine lists results.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is it legal to watch channels on Liveplay?</span>
+                    <span class="material-symbols-outlined">expand_more</span>
+                </div>
+                <div class="faq-answer">
+                    <p>We provide links to streams that are already publicly available online. However, the legality of accessing specific content can vary by region. It is the user's responsibility to ensure they are complying with the copyright laws in their country.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Why is an account required to watch?</span>
+                    <span class="material-symbols-outlined">expand_more</span>
+                </div>
+                <div class="faq-answer">
+                    <p>A free account is required to access our platform. This helps us maintain a stable and secure service for all users and allows for basic personalization. Your information is used only for core functions like logging in.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What happens to my data if I delete my account?</span>
+                    <span class="material-symbols-outlined">expand_more</span>
+                </div>
+                <div class="faq-answer">
+                    <p>If you choose to delete your account, all of your personal information (name, email, username) will be permanently removed from our active databases, as stated in our <a href="privacy.html" class="inline-link">Privacy Policy</a>.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Why is a channel unavailable or not working?</span>
+                    <span class="material-symbols-outlined">expand_more</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Because we link to external sources, we do not control the availability of the streams. If a channel is down, the issue lies with the original provider. We recommend trying again later, as these disruptions are often temporary.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    const currentlyActive = document.querySelector('.faq-item.active');
+                    if (currentlyActive && currentlyActive !== item) {
+                        currentlyActive.classList.remove('active');
+                    }
+                    item.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
