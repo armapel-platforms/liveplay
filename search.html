@@ -41,14 +41,16 @@
         </div>
     </main>
 
-    <div id="auth-popup-overlay" class="auth-popup-overlay">
-        <div class="auth-popup">
-             <span id="close-popup" class="material-symbols-outlined" style="position: absolute; top: 15px; right: 15px; cursor: pointer;">close</span>
-            <img src="logo/liveplay-logo-white.png" alt="Liveplay Logo" class="popup-logo">
-            <h3>Join to Watch Free</h3>
-            <a href="login-signup.html" class="auth-btn">Log In or Sign Up</a>
+        <div id="auth-popup-overlay" class="auth-popup-overlay">
+            <div class="auth-popup">
+                <button id="close-popup" class="popup-close-btn">
+                <span class="material-symbols-outlined">close</span>
+                </button>
+                <img src="logo/liveplay-logo-white.png" alt="Liveplay Logo" class="popup-logo">
+                <p class="popup-subtitle">Join to Watch Free</p>
+                <a href="login-signup.html" class="popup-action-btn">Log In or Sign Up</a>
+            </div>
         </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/auth.js"></script>
