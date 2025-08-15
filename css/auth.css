@@ -32,6 +32,7 @@
 
 .auth-form h2 {
     margin-top: 0;
+    font-size: 1.5rem;
     margin-bottom: 25px;
     font-weight: 600;
 }
@@ -59,7 +60,7 @@
     border-radius: 10px;
     color: var(--text-color);
     font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.8rem;
     box-sizing: border-box;
     transition: border-color 0.3s, background-color 0.3s;
 }
@@ -79,7 +80,7 @@
 
 .forgot-password {
     align-self: flex-end;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     margin-bottom: 25px;
 }
@@ -92,7 +93,7 @@
     border-radius: 20px;
     color: var(--text-color);
     font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -120,7 +121,7 @@
 
 .toggle-form {
     margin-top: 30px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
 }
 
@@ -144,7 +145,7 @@
 .account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
 .account-row.editing .edit-icon { color: var(--theme-color); }
 .account-actions { margin-top: 30px; text-align: center; }
-#delete-account-link { display: block; margin-top: 20px; font-size: 0.9rem; color: #d9534f; cursor: pointer; }
+#delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
 #delete-account-survey { display: none; margin-top: 20px; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
 #delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; }
 .other-reason-label { flex-wrap: wrap; }
@@ -172,27 +173,72 @@
 
 .auth-popup {
     background: var(--card-background);
-    border-radius: var(--border-radius);
-    padding: 40px;
+    border-radius: 24px;
+    padding: 30px;
     text-align: center;
+    position: relative;
     transform: scale(0.95);
     transition: transform 0.3s ease;
+    max-width: 340px;
+    width: 90%;
+    box-sizing: border-box;
 }
 
 .auth-popup-overlay.active .auth-popup {
     transform: scale(1);
 }
 
+.popup-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .popup-logo {
-    width: 100px;
+    width: 120px;
     height: auto;
-    margin-bottom: 10px;
+    margin: 10px 0 15px 0;
+}
+
+.popup-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0 0 25px 0;
+}
+
+.popup-action-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--theme-color);
+    border: none;
+    border-radius: 50px;
+    color: var(--text-color);
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.popup-action-btn:hover {
+    background-color: #ff6a29;
 }
 
 .auth-popup h3 {
     margin: 0 0 25px 0;
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: 1.0rem;
+    font-weight: 400;
 }
 
 .menu-header {
@@ -208,14 +254,16 @@
     margin: 5px 10px 10px;
 }
 
-.otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.3rem; font-weight: 600; }
-.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
+
+.otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.0rem; font-weight: 600; }
+.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.8rem; }
 .otp-input-container { margin-bottom: 25px; width: 100%; }
 #otp-input {
     width: 100%;
     box-sizing: border-box;
     padding: 12px;
-    font-size: 1.5rem;
+    font-family: 'TT Hoves Pro Trail', sans-serif;
+    font-size: 1.0rem;
     font-weight: 600;
     text-align: center;
     letter-spacing: 0.5em;
@@ -231,12 +279,12 @@
 .resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; }
 .resend-link.disabled { display: none; }
 
-.form-description { font-size: 0.9rem; color: var(--text-secondary); margin-top: -10px; margin-bottom: 25px; }
+.form-description { font-size: 0.8rem; color: var(--text-secondary); margin-top: -10px; margin-bottom: 25px; }
 .otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
 .otp-input-container { margin-bottom: 25px; width: 100%; }
-#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-size: 1.5rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
+#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1.5rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
 #otp-input:focus { outline: none; border-color: var(--theme-color); }
-#resend-container { margin-top: 25px; text-align: center; font-size: 0.9rem; }
+#resend-container { margin-top: 25px; text-align: center; font-size: 0.8rem; }
 .timer-display { color: var(--text-secondary); }
 .resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; text-decoration: none; }
 .resend-link.disabled { display: none; color: var(--text-secondary); cursor: not-allowed; pointer-events: none; }
