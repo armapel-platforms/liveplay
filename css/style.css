@@ -366,8 +366,8 @@ header.subpage-header h1 {
 
 .category-title h3 { 
     margin: 0; 
-    font-size: 1.1rem; 
-    font-weight: 500; 
+    font-size: 0.95rem; 
+    font-weight: 600; 
 }
 
 .category-title .material-symbols-outlined { 
