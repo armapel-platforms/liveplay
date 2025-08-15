@@ -67,7 +67,7 @@ header.scrolled {
 }
 
 .logo { 
-    font-size: 1.4rem; 
+    font-size: 1.5rem; 
     font-weight: 700; 
     color: var(--text-color); 
 }
@@ -123,7 +123,7 @@ header.subpage-header h1 {
     transform: translateY(-10px);
     visibility: hidden;
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    width: 185px;
+    width: 180px;
 }
 
 .floating-menu.active { 
@@ -144,7 +144,7 @@ header.subpage-header h1 {
     align-items: center; 
     gap: 15px; 
     padding: 10px; 
-    font-size: 0.9rem; 
+    font-size: 0.8rem; 
     font-weight: 600; 
     border-radius: 10px; 
     transition: background-color 0.2s ease; 
@@ -255,7 +255,7 @@ header.subpage-header h1 {
 }
 
 .slide-title { 
-    font-size: 1.5rem; 
+    font-size: 1.3rem; 
     font-weight: 700; 
     margin: 0 0 10px 0; 
 }
@@ -367,7 +367,7 @@ header.subpage-header h1 {
 .category-title h3 { 
     margin: 0; 
     font-size: 1.1rem; 
-    font-weight: 400; 
+    font-weight: 500; 
 }
 
 .category-title .material-symbols-outlined { 
@@ -481,12 +481,12 @@ header.subpage-header h1 {
 
 .player-info-left h3 { 
     margin: 0; 
-    font-size: 1.2rem; 
+    font-size: 1.1rem; 
 }
 
 .player-info-left p { 
     margin: 0; 
-    font-size: 0.9rem; 
+    font-size: 0.8rem; 
     color: var(--text-secondary); 
 }
 
@@ -558,7 +558,7 @@ header.subpage-header h1 {
 
 .minimized-info p { 
     margin: 0; 
-    font-size: 0.85rem; 
+    font-size: 0.8rem; 
     color: var(--text-secondary); 
 }
 
@@ -605,7 +605,7 @@ header.subpage-header h1 {
 }
 
 .legal-container h2 {
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     font-weight: 600;
     padding-top: 0;
     margin: 0 0 15px 0;
@@ -617,7 +617,7 @@ header.subpage-header h1 {
 .legal-container li {
     color: var(--text-secondary);
     line-height: 1.7;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin: 0;
 }
 
@@ -649,7 +649,7 @@ header.subpage-header h1 {
     text-align: left;
     color: var(--text-secondary);
     margin: 0 auto 30px auto;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     max-width: 700px;
     line-height: 1.6;
 }
@@ -670,7 +670,7 @@ header.subpage-header h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.0rem;
+    font-size: 0.95rem;
     padding: 20px 25px;
     cursor: pointer;
     font-weight: 600;
@@ -694,7 +694,7 @@ header.subpage-header h1 {
 .faq-answer p {
     padding: 0 25px 20px 25px;
     margin: 0;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     line-height: 1.7;
     color: var(--text-secondary);
 }
