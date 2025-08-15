@@ -53,9 +53,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <li><a href="login-signup.html"><span class="material-symbols-outlined">login</span> Log In / Sign Up</a></li>
                 </ul>`;
         }
-        menuContent += `
+                menuContent += `
             <ul>
                 <li><a href="about.html"><span class="material-symbols-outlined">info</span> About Us</a></li>
+                <li><a href="faq.html"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
                 <li><a href="privacy.html"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
                 <li><a href="terms.html"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
             </ul>`;
