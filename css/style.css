@@ -126,6 +126,11 @@ header.subpage-header h1 {
     width: 180px;
 }
 
+.floating-menu .menu-header {
+    color: #999;
+    font-weight: 700;
+}
+
 .floating-menu.active { 
     opacity: 1; 
     transform: translateY(0); 
