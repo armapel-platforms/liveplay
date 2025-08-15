@@ -137,8 +137,8 @@
 .row-icon { color: var(--text-secondary); margin-right: 20px; }
 .row-content { flex-grow: 1; }
 .row-content label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2px; }
-.row-content .row-value { color: var(--text-color); font-size: 1rem; font-weight: 500; }
-.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1rem; font-weight: 500; padding: 2px 0; }
+.row-content .row-value { color: var(--text-color); font-size: 0.85rem; font-weight: 500; }
+.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 2px 0; }
 .row-input:focus { outline: none; }
 .account-row.editing .row-value { display: none; }
 .account-row.editing .row-input { display: block; }
@@ -147,7 +147,7 @@
 .account-actions { margin-top: 30px; text-align: center; }
 #delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
 #delete-account-survey { display: none; margin-top: 20px; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
-#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; }
+#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
 .other-reason-label { flex-wrap: wrap; }
 #other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
 
