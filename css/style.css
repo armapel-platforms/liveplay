@@ -740,10 +740,10 @@ header.subpage-header h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 4px;
 }
 .footer-content .developer-logo {
-    height: 10px;
+    height: 9px;
     width: auto;
 }
 .footer-content .copyright {
