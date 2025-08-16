@@ -249,7 +249,7 @@ header.subpage-header h1 {
 .slide-overlay { 
     position: absolute; 
     inset: 0;
-    background: radial-gradient(circle at top right, transparent 0%, black 95%);
+    background: radial-gradient(circle at top right, transparent 35%, black 100%);
 }
 
 .slide-content { 
@@ -276,7 +276,11 @@ header.subpage-header h1 {
     margin: 0 0 4px 0; 
 }
 
-.slide-description { font-size: 0.5rem; color: var(--text-secondary); margin: 0 0 6px 0; }
+.slide-description { font-size: 0.5rem; color: var(--text-secondary); margin: 0 0 5.5px 0; }
+
+.slide-time { font-size: 0.55rem; font-weight: 700; color: var(--text-secondary); margin: 0 0 2px 0; }
+
+.slide-subdescription { font-size: 0.45rem; color: var(--text-secondary); margin: 0 0 5.5px 0; }
 
 .slide-badge { 
     display: inline-block; 
