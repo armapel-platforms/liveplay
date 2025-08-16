@@ -123,12 +123,13 @@ header.subpage-header h1 {
     transform: translateY(-10px);
     visibility: hidden;
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-    width: 180px;
+    width: 160px;
 }
 
 .floating-menu .menu-header {
     color: #999;
     font-weight: 700;
+    font-size: 1.0rem;
 }
 
 .floating-menu.active { 
@@ -144,13 +145,17 @@ header.subpage-header h1 {
     width: 100%; 
 }
 
+.floating-menu li .material-symbols-outlined {
+    font-size: 1.3rem;
+}
+
 .floating-menu li { 
     display: flex; 
     align-items: center; 
-    gap: 15px; 
-    padding: 10px; 
-    font-size: 0.8rem; 
-    font-weight: 600; 
+    gap: 13px; 
+    padding: 7px; 
+    font-size: 0.75rem; 
+    font-weight: 500; 
     border-radius: 10px; 
     transition: background-color 0.2s ease; 
     position: relative; 
