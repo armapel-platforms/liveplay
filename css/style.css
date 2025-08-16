@@ -223,8 +223,8 @@ header.subpage-header h1 {
     width: 100%; 
     height: 100%; 
     opacity: 0; 
-    transform: translateY(30px); 
-    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); 
+    transform: translateX(-30px);
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .slide.active { 
@@ -235,7 +235,8 @@ header.subpage-header h1 {
 
 .slide-bg { 
     width: 100%; 
-    height: 100%; 
+    height: 100%;
+    border-radius: var(--border-radius);
     object-fit: cover; 
     position: absolute; 
 }
@@ -291,18 +292,19 @@ header.subpage-header h1 {
 
 .slider-nav {
     position: absolute;
-    bottom: 25px;
+    bottom: 20px;
     right: 20px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
     z-index: 3;
 }
 
 .slider-nav .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    margin: -2.5px;
+    border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.5);
     transition: all 0.3s;
     cursor: pointer;
@@ -311,7 +313,7 @@ header.subpage-header h1 {
 
 .slider-nav .dot.active {
     background-color: white;
-    height: 24px;
+    width: 20px;
     border-radius: 5px;
 }
 
@@ -388,8 +390,8 @@ header.subpage-header h1 {
 }
 
 .channel-row { 
-    display: flex; 
-    gap: 20px; 
+    display: flex;
+    gap: 13px; 
     overflow-x: auto; 
     scrollbar-width: none; 
 }
@@ -403,8 +405,8 @@ header.subpage-header h1 {
 }
 
 .channel-logo-bg { 
-    width: 100px; 
-    height: 100px; 
+    width: 90px; 
+    height: 90px;
     border-radius: 50%; 
     display: flex; 
     justify-content: center; 
@@ -429,7 +431,7 @@ header.subpage-header h1 {
 }
 
 .channel-logo { 
-    width: 70%; 
+    width: 65%; 
     height: 40%; 
     object-fit: contain; 
 }
@@ -498,7 +500,7 @@ header.subpage-header h1 {
 
 .player-info-left p { 
     margin: 0; 
-    font-size: 0.8rem; 
+    font-size: 0.75rem; 
     color: var(--text-secondary); 
 }
 
@@ -570,7 +572,7 @@ header.subpage-header h1 {
 
 .minimized-info p { 
     margin: 0; 
-    font-size: 0.7rem; 
+    font-size: 0.55rem; 
     color: var(--text-secondary); 
 }
 
@@ -726,22 +728,22 @@ header.subpage-header h1 {
     color: #666;
     padding: 30px 20px;
     text-align: center;
-    line-height: 1.0;
+    line-height: 0.7;
     margin-top: 40px;
 }
 .footer-content p {
     margin: 8px 0;
-    font-size: 0.7rem;
+    font-size: 0.5rem;
 }
 .footer-content .developer-credit {
-    font-size: 0.7rem;
+    font-size: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 5px;
 }
 .footer-content .developer-logo {
-    height: 13px;
+    height: 10px;
     width: auto;
 }
 .footer-content .copyright {
@@ -751,7 +753,7 @@ header.subpage-header h1 {
     font-weight: 800;
 }
 .footer-content .version {
-    font-size: 0.7rem;
+    font-size: 0.5rem;
     color: #555;
 }
 
