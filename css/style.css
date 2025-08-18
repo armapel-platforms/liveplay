@@ -243,7 +243,8 @@ header.subpage-header h1 {
     height: 100%;
     border-radius: var(--border-radius);
     object-fit: cover; 
-    position: absolute; 
+    position: absolute;
+    pointer-events: none;
 }
 
 .slide-overlay { 
@@ -443,6 +444,7 @@ header.subpage-header h1 {
     width: 65%; 
     height: 40%; 
     object-fit: contain; 
+    pointer-events: none;
 }
 
 .player-view { 
@@ -571,6 +573,7 @@ header.subpage-header h1 {
     width: 60px; 
     height: 50px; 
     object-fit: contain; 
+    pointer-events: none;
 }
 
 .minimized-info h4 { 
@@ -754,6 +757,7 @@ header.subpage-header h1 {
 .footer-content .developer-logo {
     height: 9px;
     width: auto;
+    pointer-events: none;
 }
 .footer-content .copyright {
     font-weight: 500;
