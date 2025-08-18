@@ -28,6 +28,7 @@
     width: 100px;
     height: auto;
     margin-bottom: 20px;
+    pointer-events: none;
 }
 
 .auth-form h2 {
@@ -206,6 +207,7 @@
     width: 120px;
     height: auto;
     margin: 10px 0 15px 0;
+    pointer-events: none;
 }
 
 .popup-subtitle {
