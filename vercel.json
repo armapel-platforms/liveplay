@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/home" },
+    { "source": "/home", "destination": "/home.html" },
+    { "source": "/home/search", "destination": "/search.html" },
+    { "source": "/home/login", "destination": "/login-signup.html" },
+    { "source": "/home/signup", "destination": "/login-signup.html" },
+    { "source": "/home/forgot-password", "destination": "/forgot-password.html" },
+    { "source": "/home/manage-account", "destination": "/manage-account.html" },
+    { "source": "/home/about-us", "destination": "/about-us.html" },
+    { "source": "/home/terms-of-service", "destination": "/terms-of-service.html" },
+    { "source": "/home/privacy-policy", "destination": "/privacy-policy.html" },
+    { "source": "/home/faq", "destination": "/faq.html" }
+  ]
+}
