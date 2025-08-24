@@ -116,13 +116,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categoryPillsContainer = document.querySelector('.category-pills');
     const channelListingsContainer = document.getElementById('channel-listings');
     if (categoryPillsContainer && channelListingsContainer) {
-        const categories = ['ALL', 'GENERAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'EDUCATIONAL', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGION', 'NATURE + ANIMAL', 'YOUTUBE LIVE'];
+        const categories = ['ALL', 'LOCAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'INFOTAINMENT', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGIOUS', 'NATURE + ANIMAL', 'YOUTUBE LIVE'];
         const categoryIcons = {
-            ALL: 'apps', GENERAL: 'tv_gen', NEWS: 'newspaper', ENTERTAINMENT: 'movie',
-            SPORTS: 'sports_basketball', MOVIES: 'theaters', KIDS: 'smart_toy',
-            EDUCATIONAL: 'school', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note',
-            'ACTION + CRIME': 'local_police', OVERSEAS: 'public', RELIGION: 'church',
-            'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display'
+            ALL: 'apps', 
+            LOCAL: 'tv_gen', 
+            NEWS: 'news', 
+            ENTERTAINMENT: 'theater_comedy',
+            MOVIES: 'theaters',
+            SPORTS: 'sports_basketball', 
+            KIDS: 'smart_toy',
+            INFOTAINMENT: 'emoji_objects', 
+            'LIFESTYLE + FOOD': 'restaurant', 
+            MUSIC: 'music_note',
+            'ACTION + CRIME': 'local_police', 
+            OVERSEAS: 'globe', 
+            RELIGIOUS: 'church',
+            'NATURE + ANIMAL': 'pets', 
+            'YOUTUBE LIVE': 'smart_display'
         };
 
         categories.forEach(category => {
@@ -216,14 +226,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (player) {
                 await player.unload();
             }
-            // --- FINAL FIX: Use the official API to disable the Shaka UI ---
             if (ui) {
                 ui.setEnabled(false);
             }
             videoPlayer.style.display = 'none';
             youtubePlayer.src = stream.embedUrl;
             youtubePlayer.style.display = 'block';
-        } else { // This block handles Shaka Player streams
+        } else {
             youtubePlayer.style.display = 'none';
             youtubePlayer.src = '';
             videoPlayer.style.display = 'block';
@@ -232,7 +241,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await initPlayer();
             }
             
-            // --- FINAL FIX: Ensure the Shaka UI is enabled for Shaka streams ---
             if (ui) {
                 ui.setEnabled(true);
             }
@@ -285,7 +293,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         document.getElementById('video-player').style.display = 'block';
 
-        // --- FINAL FIX: Also disable UI on close to be safe ---
         if (ui) {
             ui.setEnabled(false);
         }
