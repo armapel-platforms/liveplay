@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Search - Liveplay</title>
-    <link rel="icon" type="image/png" href="logo/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="logo/favicon.svg" />
-    <link rel="shortcut" href="logo/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="logo/apple-touch-icon.png" />
-    <link rel="manifest" href="logo/site.webmanifest" />
+    <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
+    <link rel="shortcut" href="/logo/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
+    <link rel="manifest" href="/logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0" />
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/auth.css">
     <style>
         .search-container { max-width: 1200px; margin: 0 auto; }
         #search-results { padding: 0 5px; }
@@ -24,7 +24,7 @@
 </head>
 <body class="subpage">
     <header class="subpage-header">
-        <a href="index.html" class="back-link">
+        <a href="/home" class="back-link">
             <span class="material-symbols-outlined">arrow_back_ios_new</span>
         </a>
         <h1>Search</h1>
@@ -46,16 +46,16 @@
                 <button id="close-popup" class="popup-close-btn">
                 <span class="material-symbols-outlined">close</span>
                 </button>
-                <img src="logo/liveplay-logo-white.png" alt="Liveplay Logo" class="popup-logo">
+                <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="popup-logo">
                 <p class="popup-subtitle">Join to Watch Free</p>
-                <a href="login-signup.html" class="popup-action-btn">Log In or Sign Up</a>
+                <a href="/home/login" class="popup-action-btn">Log In or Sign Up</a>
             </div>
         </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/streams.js"></script>
-    <script src="js/yt-live.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/streams.js"></script>
+    <script src="/js/yt-live.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const searchInput = document.getElementById('search-input');
@@ -136,7 +136,7 @@
                         card.innerHTML = `<div class="channel-logo-bg"><img src="${stream.logo}" alt="${stream.name}" class="channel-logo"></div>`;
                         card.addEventListener('click', () => {
                              if (currentUser) {
-                                window.location.href = `index.html?play=${encodeURIComponent(stream.name)}`;
+                                window.location.href = `/home?play=${encodeURIComponent(stream.name)}`;
                              } else {
                                 showAuthPopup();
                              }
