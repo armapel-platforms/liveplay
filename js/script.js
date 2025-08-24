@@ -43,22 +43,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="menu-header">Hi, ${user.first_name || 'User'}</div>
                 <div class="menu-divider"></div>
                 <ul>
-                    <li><a href="account.html"><span class="material-symbols-outlined">manage_accounts</span> Manage Account</a></li>
+                    <li><a href="/home/manage-account"><span class="material-symbols-outlined">manage_accounts</span> My Account</a></li>
                 </ul>`;
         } else {
             menuContent = `
                 <div class="menu-header">Hi, Guest</div>
                 <div class="menu-divider"></div>
                 <ul>
-                    <li><a href="login-signup.html"><span class="material-symbols-outlined">login</span> Log In / Sign Up</a></li>
+                    <li><a href="/home/login"><span class="material-symbols-outlined">login</span> Log In / Sign Up</a></li>
                 </ul>`;
         }
                 menuContent += `
             <ul>
-                <li><a href="about.html"><span class="material-symbols-outlined">info</span> About Us</a></li>
-                <li><a href="faq.html"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
-                <li><a href="privacy.html"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
-                <li><a href="terms.html"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
+                <li><a href="/home/about-us"><span class="material-symbols-outlined">info</span> About Us</a></li>
+                <li><a href="/home/faq"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
+                <li><a href="/home/privacy-policy"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
+                <li><a href="/home/terms-of-service"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
             </ul>`;
         floatingMenu.innerHTML = menuContent;
         
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         e.preventDefault();
                         if (currentUser) {
                             const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
-                            history.pushState({ channel: stream.name }, ``, `?play=${channelName}`);
+                            history.pushState({ channel: stream.name }, ``, `/home?play=${channelName}`);
                             openPlayer(stream);
                         } else {
                             showAuthPopup();
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await player.unload(); 
         }
         activeStream = null;
-        history.pushState({}, '', window.location.pathname);
+        history.pushState({}, '', '/home');
     };
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
             if (streamToPlay) openPlayer(streamToPlay);
         } else {
-            history.replaceState({}, '', window.location.pathname); 
+            history.replaceState({}, '', '/home'); 
             showAuthPopup();
         }
     }

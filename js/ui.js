@@ -13,27 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         const signupForm = document.getElementById('signup-form');
-        const showSignupLink = document.getElementById('show-signup');
-        const showLoginLink = document.getElementById('show-login');
         const loginButton = document.getElementById('login-button');
         const signupButton = document.getElementById('signup-button');
         const otpModal = document.getElementById('otp-modal-overlay');
-
-        if (showSignupLink) {
-            showSignupLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginForm.classList.remove('active');
-                signupForm.classList.add('active');
-            });
-        }
-
-        if (showLoginLink) {
-            showLoginLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                signupForm.classList.remove('active');
-                loginForm.classList.add('active');
-            });
-        }
 
         if (loginButton) {
             loginButton.addEventListener('click', async () => {
@@ -48,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (error) {
                     alert(`Login Failed: ${error.message}`);
                 } else {
-                    window.location.href = 'index.html';
+                    window.location.href = '/home';
                 }
             });
         }
@@ -107,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(`Verification Failed: ${error.message}`);
                 } else if (data.session) {
                     alert("Account verified successfully! Welcome to Liveplay.");
-                    window.location.href = 'index.html';
+                    window.location.href = '/home';
                 }
             });
         }
@@ -177,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(`Password Reset Failed: ${error.message}`);
                 } else {
                     alert("Password has been reset successfully. Please log in.");
-                    window.location.href = 'login-signup.html';
+                    window.location.href = '/home/login';
                 }
             });
         }
@@ -243,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const initializeAccountPage = async () => {
             const user = await window.auth.getCurrentUser();
-            if (!user) return window.location.href = 'login-signup.html';
+            if (!user) return window.location.href = '/home/login';
             populateAccountInfo(user);
         };
 
@@ -303,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (logoutButton) {
             logoutButton.addEventListener('click', async () => {
                 await window.auth.logOut();
-                window.location.href = 'index.html';
+                window.location.href = '/home';
             });
         }
 
@@ -329,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (confirm("Are you sure? This action cannot be undone.")) {
                         await window.auth.deleteUserAccount();
                         alert("Account deleted.");
-                        window.location.href = 'index.html';
+                        window.location.href = '/home';
                     }
                 });
             }
