@@ -21,7 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
-    const streamsData = [...streams, ...yt_live];
+    
+    // The main streams array is no longer here. We only keep yt_live.
+    // The secure stream data will be fetched from the API.
+    const streamsData = [...yt_live]; 
+    
     const videoElement = document.getElementById('video-player');
     const playerWrapper = document.getElementById('video-player-wrapper');
     const authPopup = document.getElementById('auth-popup-overlay');
@@ -218,17 +222,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const onError = (event) => console.error('Player Error', event.detail);
 
+    // THIS ENTIRE FUNCTION IS REPLACED TO BE SECURE
     const openPlayer = async (stream) => {
         const videoPlayer = document.getElementById('video-player');
         const youtubePlayer = document.getElementById('youtube-player');
+        activeStream = stream; // Set active stream early
 
         if (stream.type === 'youtube') {
-            if (player) {
-                await player.unload();
-            }
-            if (ui) {
-                ui.setEnabled(false);
-            }
+            if (player) await player.unload();
+            if (ui) ui.setEnabled(false);
+            
             videoPlayer.style.display = 'none';
             youtubePlayer.src = stream.embedUrl;
             youtubePlayer.style.display = 'block';
@@ -237,22 +240,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             youtubePlayer.src = '';
             videoPlayer.style.display = 'block';
             
-            if (!player) {
-                await initPlayer();
-            }
-            
-            if (ui) {
-                ui.setEnabled(true);
-            }
+            if (!player) await initPlayer();
+            if (ui) ui.setEnabled(true);
 
-            player.configure({ drm: { clearKeys: stream.clearKey || {} } });
-            try { 
-                await player.load(stream.manifestUri); 
-                videoElement.play(); 
-            } catch (e) { onError(e); }
+            try {
+                // Securely fetch stream data from our new API endpoint
+                const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
+                if (!response.ok) {
+                    throw new Error(`Stream data not found for ${stream.name}. Status: ${response.status}`);
+                }
+                const secureData = await response.json();
+
+                // Configure the player with the data received from the server
+                player.configure({ drm: { clearKeys: secureData.clearKey || {} } });
+                await player.load(secureData.manifestUri);
+                videoElement.play();
+
+            } catch (e) {
+                console.error('Player Error', e);
+                onError(e);
+            }
         }
 
-        activeStream = stream;
+        // Update player UI elements
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         document.getElementById('minimized-player-logo').src = stream.logo;
