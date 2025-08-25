@@ -1,6 +1,3 @@
-// This file is now on the secure server-side.
-// Its contents are NOT visible to users in their browser.
-
 const streams = [
     // LOCAL
     { name: 'Kapamilya Channel', logo: 'https://static.wikia.nocookie.net/abscbn/images/7/74/Kapamilya_Channel_3D_Logo.png', type: 'mpegdash', manifestUri: 'https://cdn-ue1-prod.tsv2.amagi.tv/linear/amg01006-abs-cbn-kapcha-dash-abscbnono/index.mpd', clearKey: { 'bd17afb5dc9648a39be79ee3634dd4b8': '3ecf305d54a7729299b93a3d69c02ea5' }, category: "LOCAL" },
@@ -139,7 +136,6 @@ export default function handler(request, response) {
     return response.status(404).json({ error: 'Stream not found' });
   }
 
-  // Only send the manifest and key for the specific stream requested.
   response.status(200).json({
     manifestUri: streamData.manifestUri,
     clearKey: streamData.clearKey,
