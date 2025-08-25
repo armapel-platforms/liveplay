@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
-    let streamsData = []; // Initialize as an empty array
+    let streamsData = [];
     const videoElement = document.getElementById('video-player');
     const playerWrapper = document.getElementById('video-player-wrapper');
     const authPopup = document.getElementById('auth-popup-overlay');
@@ -170,17 +170,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch('/api/getChannels');
             if (!response.ok) throw new Error('Network response was not ok');
             const publicStreams = await response.json();
-            streamsData = [...publicStreams, ...yt_live]; // Combine server list with local YT list
+            streamsData = [...publicStreams, ...yt_live];
         } catch (error) {
             console.error("Failed to fetch channel list:", error);
-            streamsData = [...yt_live]; // Fallback to only showing YouTube channels
+            streamsData = [...yt_live];
         }
 
         if (categoryPillsContainer && channelListingsContainer) {
             const categories = ['ALL', ...new Set(streamsData.map(s => s.category))];
             const categoryIcons = { ALL: 'apps', LOCAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', OVERSEAS: 'globe', RELIGIOUS: 'church', 'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display' };
             
-            categoryPillsContainer.innerHTML = ''; // Clear existing pills
+            categoryPillsContainer.innerHTML = '';
             categories.forEach(category => {
                 const pill = document.createElement('button');
                 pill.className = 'pill';
