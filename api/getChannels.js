@@ -1,8 +1,4 @@
-// This file provides a PUBLIC and SAFE list of channels for the UI.
-// It deliberately removes all sensitive data like manifestUris and clearKeys.
-
 const streams = [
-    // LOCAL
     { name: 'Kapamilya Channel', logo: 'https://static.wikia.nocookie.net/abscbn/images/7/74/Kapamilya_Channel_3D_Logo.png', type: 'mpegdash', manifestUri: 'https://cdn-ue1-prod.tsv2.amagi.tv/linear/amg01006-abs-cbn-kapcha-dash-abscbnono/index.mpd', clearKey: { 'bd17afb5dc9648a39be79ee3634dd4b8': '3ecf305d54a7729299b93a3d69c02ea5' }, category: "LOCAL" },
     { name: 'TV5 HD', logo: 'https://static.wikia.nocookie.net/tv5network/images/9/95/TV5_HD_2024.svg', type: 'mpegdash', manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/tv5_hd.mpd', clearKey: { '2615129ef2c846a9bbd43a641c7303ef': '07c7f996b1734ea288641a68e1cfdc4d' }, category: "LOCAL" },
     { name: 'A2Z', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f8/A2Z_Channel_11_Logo.png', type: 'mpegdash', manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cg_a2z.mpd', clearKey: { 'f703e4c8ec9041eeb5028ab4248fa094': 'c22f2162e176eee6273a5d0b68d19530' }, category: "LOCAL" },
@@ -102,15 +98,12 @@ const streams = [
     { name: 'TV Maria', logo: 'https://static.wikia.nocookie.net/russel/images/3/33/TV_Maria_Logo_2006.png', type: 'mpegdash', manifestUri: 'https://qp-pldt-live-grp-07-prod.akamaized.net/out/u/tvmaria_prd.mpd', clearKey: { 'fa3998b9a4de40659725ebc5151250d6': '998f1294b122bbf1a96c1ddc0cbb229f' }, category: "RELIGIOUS" }
 ];
 
-// Create a version of the streams list that is safe to send to the client
 const publicStreams = streams.map(stream => ({
   name: stream.name,
   logo: stream.logo,
   category: stream.category,
-  type: stream.type, // The 'type' is needed to know if it's a shaka or youtube stream
+  type: stream.type,
 }));
 
-export default function handler(request, response) {
-  // Return the safe list of channels
-  response.status(200).json(publicStreams);
+export default function handler(request, response) {  response.status(200).json(publicStreams);
 }
