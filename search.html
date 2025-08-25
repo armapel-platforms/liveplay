@@ -60,11 +60,21 @@
             const searchInput = document.getElementById('search-input');
             const searchResultsContainer = document.getElementById('search-results');
             const initialMessage = document.getElementById('initial-message');
-            
-            // NOTE: The main 'streams' array is removed for security.
-            // This search page will now only find channels from yt-live.js.
-            const allStreams = [...yt_live]; 
-            
+            let allStreams = [];
+
+            try {
+                const response = await fetch('/api/getChannels');
+                if (!response.ok) throw new Error('Failed to fetch channel list');
+                const publicStreams = await response.json();
+                
+                allStreams = [...publicStreams, ...yt_live];
+            } catch (error) {
+                console.error("Could not load channel list for search:", error);
+                
+                allStreams = [...yt_live]; 
+                searchResultsContainer.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.8rem; text-align: center;">Could not load full channel list. Search may be limited.</p>';
+            }
+
             const authPopup = document.getElementById('auth-popup-overlay');
             const closePopupBtn = document.getElementById('close-popup');
             let currentUser = await window.auth.getCurrentUser();
@@ -138,7 +148,8 @@
                         card.innerHTML = `<div class="channel-logo-bg"><img src="${stream.logo}" alt="${stream.name}" class="channel-logo"></div>`;
                         card.addEventListener('click', () => {
                              if (currentUser) {
-                                window.location.href = `/home?play=${encodeURIComponent(stream.name)}`;
+                                const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
+                                window.location.href = `/home?play=${channelName}`;
                              } else {
                                 showAuthPopup();
                              }
