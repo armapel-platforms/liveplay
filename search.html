@@ -54,14 +54,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/js/auth.js"></script>
-    <script src="/js/streams.js"></script>
     <script src="/js/yt-live.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const searchInput = document.getElementById('search-input');
             const searchResultsContainer = document.getElementById('search-results');
             const initialMessage = document.getElementById('initial-message');
-            const allStreams = [...streams, ...yt_live];
+            
+            // NOTE: The main 'streams' array is removed for security.
+            // This search page will now only find channels from yt-live.js.
+            const allStreams = [...yt_live]; 
             
             const authPopup = document.getElementById('auth-popup-overlay');
             const closePopupBtn = document.getElementById('close-popup');
