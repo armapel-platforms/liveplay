@@ -21,11 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
-    
-    // The main streams array is no longer here. We only keep yt_live.
-    // The secure stream data will be fetched from the API.
-    const streamsData = [...yt_live]; 
-    
+    let streamsData = []; // Initialize as an empty array
     const videoElement = document.getElementById('video-player');
     const playerWrapper = document.getElementById('video-player-wrapper');
     const authPopup = document.getElementById('auth-popup-overlay');
@@ -64,23 +60,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <li><a href="/home/privacy-policy"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
                 <li><a href="/home/terms-of-service"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
             </ul>`;
-        floatingMenu.innerHTML = menuContent;
+        if (floatingMenu) floatingMenu.innerHTML = menuContent;
         
-        floatingMenu.querySelectorAll('li').forEach(li => {
-            const link = li.querySelector('a');
-            li.addEventListener('mousedown', () => li.classList.add('active-press'));
-            li.addEventListener('touchstart', () => li.classList.add('active-press'));
-            const releaseAction = (e) => {
-                li.classList.remove('active-press');
-                createRipple(e);
-                if (link && link.href) {
-                    setTimeout(() => { window.location.href = link.href; }, 150);
-                }
-            };
-            li.addEventListener('mouseup', releaseAction);
-            li.addEventListener('touchend', releaseAction);
-            li.addEventListener('mouseleave', () => li.classList.remove('active-press'));
-        });
+        if (floatingMenu) {
+            floatingMenu.querySelectorAll('li').forEach(li => {
+                const link = li.querySelector('a');
+                li.addEventListener('mousedown', () => li.classList.add('active-press'));
+                li.addEventListener('touchstart', () => li.classList.add('active-press'));
+                const releaseAction = (e) => {
+                    li.classList.remove('active-press');
+                    createRipple(e);
+                    if (link && link.href) {
+                        setTimeout(() => { window.location.href = link.href; }, 150);
+                    }
+                };
+                li.addEventListener('mouseup', releaseAction);
+                li.addEventListener('touchend', releaseAction);
+                li.addEventListener('mouseleave', () => li.classList.remove('active-press'));
+            });
+        }
     };
     
     const showAuthPopup = () => { if (!currentUser && authPopup) authPopup.classList.add('active'); };
@@ -97,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (authPopup) authPopup.addEventListener('click', (e) => { if (e.target === authPopup) hideAuthPopup(); });
     if (closePopupBtn) closePopupBtn.addEventListener('click', hideAuthPopup);
     
-    if (menuBtn) menuBtn.addEventListener('click', (e) => { e.stopPropagation(); floatingMenu.classList.toggle('active'); });
+    if (menuBtn) menuBtn.addEventListener('click', (e) => { e.stopPropagation(); if (floatingMenu) floatingMenu.classList.toggle('active'); });
     document.addEventListener('click', (e) => { if (floatingMenu && floatingMenu.classList.contains('active') && !floatingMenu.contains(e.target) && e.target !== menuBtn) floatingMenu.classList.remove('active'); });
 
     const slider = document.querySelector('.slider');
@@ -119,28 +117,71 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const categoryPillsContainer = document.querySelector('.category-pills');
     const channelListingsContainer = document.getElementById('channel-listings');
-    if (categoryPillsContainer && channelListingsContainer) {
-        const categories = ['ALL', 'LOCAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'INFOTAINMENT', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGIOUS', 'NATURE + ANIMAL', 'YOUTUBE LIVE'];
-        const categoryIcons = {
-            ALL: 'apps', 
-            LOCAL: 'tv_gen', 
-            NEWS: 'news', 
-            ENTERTAINMENT: 'theater_comedy',
-            MOVIES: 'theaters',
-            SPORTS: 'sports_basketball', 
-            KIDS: 'smart_toy',
-            INFOTAINMENT: 'emoji_objects', 
-            'LIFESTYLE + FOOD': 'restaurant', 
-            MUSIC: 'music_note',
-            'ACTION + CRIME': 'local_police', 
-            OVERSEAS: 'globe', 
-            RELIGIOUS: 'church',
-            'NATURE + ANIMAL': 'pets', 
-            'YOUTUBE LIVE': 'smart_display'
-        };
+    
+    const renderChannels = (filter) => {
+        if (!channelListingsContainer) return;
+        channelListingsContainer.innerHTML = '';
+        const filteredStreams = (filter === 'ALL') ? streamsData : streamsData.filter(s => s.category === filter);
+        const groupedByCategory = filteredStreams.reduce((acc, stream) => {
+            (acc[stream.category] = acc[stream.category] || []).push(stream);
+            return acc;
+        }, {});
 
-        categories.forEach(category => {
-            if (streamsData.some(s => s.category === category) || category === 'ALL') {
+        const categories = ['ALL', 'LOCAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'INFOTAINMENT', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGIOUS', 'NATURE + ANIMAL', 'YOUTUBE LIVE'];
+        const categoryIcons = { ALL: 'apps', LOCAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', OVERSEAS: 'globe', RELIGIOUS: 'church', 'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display' };
+        
+        const orderedCategories = categories.filter(c => c !== 'ALL' && groupedByCategory[c]);
+        orderedCategories.forEach(category => {
+            const section = document.createElement('div');
+            section.className = 'category-section';
+            const title = document.createElement('div');
+            title.className = 'category-title';
+            title.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span><h3>${category}</h3>`;
+            section.appendChild(title);
+            const row = document.createElement('div');
+            row.className = 'channel-row';
+            groupedByCategory[category].forEach(stream => {
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                const logoBg = document.createElement('div');
+                logoBg.className = 'channel-logo-bg';
+                logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
+                logoBg.addEventListener("click", createRipple);
+                logoBg.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (currentUser) {
+                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
+                        history.pushState({ channel: stream.name }, ``, `/home?play=${channelName}`);
+                        openPlayer(stream);
+                    } else {
+                        showAuthPopup();
+                    }
+                });
+                card.appendChild(logoBg);
+                row.appendChild(card);
+            });
+            section.appendChild(row);
+            channelListingsContainer.appendChild(section);
+        });
+    };
+
+    async function initializePage() {
+        try {
+            const response = await fetch('/api/getChannels');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const publicStreams = await response.json();
+            streamsData = [...publicStreams, ...yt_live]; // Combine server list with local YT list
+        } catch (error) {
+            console.error("Failed to fetch channel list:", error);
+            streamsData = [...yt_live]; // Fallback to only showing YouTube channels
+        }
+
+        if (categoryPillsContainer && channelListingsContainer) {
+            const categories = ['ALL', ...new Set(streamsData.map(s => s.category))];
+            const categoryIcons = { ALL: 'apps', LOCAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', OVERSEAS: 'globe', RELIGIOUS: 'church', 'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display' };
+            
+            categoryPillsContainer.innerHTML = ''; // Clear existing pills
+            categories.forEach(category => {
                 const pill = document.createElement('button');
                 pill.className = 'pill';
                 if (category === 'ALL') pill.classList.add('active');
@@ -148,60 +189,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
                 pill.addEventListener('click', createRipple);
                 pill.addEventListener('click', () => {
-                    const currentActive = document.querySelector('.pill.active');
-                    if (currentActive) {
-                        currentActive.classList.remove('active');
-                    }
+                    document.querySelector('.pill.active')?.classList.remove('active');
                     pill.classList.add('active');
-
                     renderChannels(category);
                 });
                 categoryPillsContainer.appendChild(pill);
-            }
-        });
-
-        const renderChannels = (filter) => {
-            channelListingsContainer.innerHTML = '';
-            const filteredStreams = (filter === 'ALL') ? streamsData : streamsData.filter(s => s.category === filter);
-            const groupedByCategory = filteredStreams.reduce((acc, stream) => {
-                (acc[stream.category] = acc[stream.category] || []).push(stream);
-                return acc;
-            }, {});
-            const orderedCategories = categories.filter(c => c !== 'ALL' && groupedByCategory[c]);
-            orderedCategories.forEach(category => {
-                const section = document.createElement('div');
-                section.className = 'category-section';
-                const title = document.createElement('div');
-                title.className = 'category-title';
-                title.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span><h3>${category}</h3>`;
-                section.appendChild(title);
-                const row = document.createElement('div');
-                row.className = 'channel-row';
-                groupedByCategory[category].forEach(stream => {
-                    const card = document.createElement('div');
-                    card.className = 'channel-card';
-                    const logoBg = document.createElement('div');
-                    logoBg.className = 'channel-logo-bg';
-                    logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
-                    logoBg.addEventListener("click", createRipple);
-                    logoBg.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        if (currentUser) {
-                            const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
-                            history.pushState({ channel: stream.name }, ``, `/home?play=${channelName}`);
-                            openPlayer(stream);
-                        } else {
-                            showAuthPopup();
-                        }
-                    });
-                    card.appendChild(logoBg);
-                    row.appendChild(card);
-                });
-                section.appendChild(row);
-                channelListingsContainer.appendChild(section);
             });
-        };
-        renderChannels('ALL');
+            renderChannels('ALL');
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const channelToPlay = params.get('play');
+        if (channelToPlay) {
+             if (currentUser) {
+                const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
+                if (streamToPlay) openPlayer(streamToPlay);
+            } else {
+                history.replaceState({}, '', '/home'); 
+                showAuthPopup();
+            }
+        }
     }
 
     const playerView = document.getElementById('player-view');
@@ -222,94 +229,81 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const onError = (event) => console.error('Player Error', event.detail);
 
-    // THIS ENTIRE FUNCTION IS REPLACED TO BE SECURE
     const openPlayer = async (stream) => {
-        const videoPlayer = document.getElementById('video-player');
         const youtubePlayer = document.getElementById('youtube-player');
-        activeStream = stream; // Set active stream early
+        activeStream = stream;
 
         if (stream.type === 'youtube') {
             if (player) await player.unload();
             if (ui) ui.setEnabled(false);
-            
-            videoPlayer.style.display = 'none';
-            youtubePlayer.src = stream.embedUrl;
-            youtubePlayer.style.display = 'block';
+            if (videoElement) videoElement.style.display = 'none';
+            if (youtubePlayer) {
+                youtubePlayer.src = stream.embedUrl;
+                youtubePlayer.style.display = 'block';
+            }
         } else {
-            youtubePlayer.style.display = 'none';
-            youtubePlayer.src = '';
-            videoPlayer.style.display = 'block';
+            if (youtubePlayer) {
+                youtubePlayer.style.display = 'none';
+                youtubePlayer.src = '';
+            }
+            if (videoElement) videoElement.style.display = 'block';
             
             if (!player) await initPlayer();
             if (ui) ui.setEnabled(true);
 
             try {
-                // Securely fetch stream data from our new API endpoint
                 const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
-                if (!response.ok) {
-                    throw new Error(`Stream data not found for ${stream.name}. Status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`Stream data not found for ${stream.name}.`);
                 const secureData = await response.json();
 
-                // Configure the player with the data received from the server
                 player.configure({ drm: { clearKeys: secureData.clearKey || {} } });
                 await player.load(secureData.manifestUri);
                 videoElement.play();
-
             } catch (e) {
                 console.error('Player Error', e);
                 onError(e);
             }
         }
-
-        // Update player UI elements
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         document.getElementById('minimized-player-logo').src = stream.logo;
         document.getElementById('minimized-player-name').textContent = stream.name;
         document.getElementById('minimized-player-category').textContent = stream.category;
         
-        minimizedPlayer.classList.remove('active');
-        playerView.classList.add('active');
+        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+        if (playerView) playerView.classList.add('active');
     };
 
     const minimizePlayer = () => {
-        if (playerView.classList.contains('active')) {
+        if (playerView && playerView.classList.contains('active')) {
             playerView.classList.remove('active');
-            minimizedPlayer.classList.add('active');
+            if (minimizedPlayer) minimizedPlayer.classList.add('active');
         }
     };
 
     const restorePlayer = (e) => {
         if (e.target.closest('#exit-player-btn')) return;
-        if (minimizedPlayer.classList.contains('active')) {
+        if (minimizedPlayer && minimizedPlayer.classList.contains('active')) {
             minimizedPlayer.classList.remove('active');
-            playerView.classList.add('active');
+            if (playerView) playerView.classList.add('active');
             if (activeStream && activeStream.type !== 'youtube') {
-                 videoElement.play();
+                 if (videoElement) videoElement.play();
             }
         }
     };
 
     const closePlayer = async (e) => {
         e.stopPropagation();
-        playerView.classList.remove('active');
-        minimizedPlayer.classList.remove('active');
-
+        if (playerView) playerView.classList.remove('active');
+        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
         const youtubePlayer = document.getElementById('youtube-player');
         if (youtubePlayer) {
             youtubePlayer.src = '';
             youtubePlayer.style.display = 'none';
         }
-        document.getElementById('video-player').style.display = 'block';
-
-        if (ui) {
-            ui.setEnabled(false);
-        }
-
-        if (player) { 
-            await player.unload(); 
-        }
+        if (videoElement) videoElement.style.display = 'block';
+        if (ui) ui.setEnabled(false);
+        if (player) await player.unload();
         activeStream = null;
         history.pushState({}, '', '/home');
     };
@@ -318,15 +312,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
     
-    const params = new URLSearchParams(window.location.search);
-    const channelToPlay = params.get('play');
-    if (channelToPlay) {
-         if (currentUser) {
-            const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
-            if (streamToPlay) openPlayer(streamToPlay);
-        } else {
-            history.replaceState({}, '', '/home'); 
-            showAuthPopup();
-        }
-    }
+    await initializePage();
 });
