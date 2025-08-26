@@ -50,7 +50,7 @@
     }
     
     .live-indicator {
-        font-size: 1.1rem;
+        font-size: 1.0rem;
     }
 
     .content-container {
@@ -84,50 +84,5 @@
     .content-container .category-nav {
         padding-top: 25px;
         padding-bottom: 0;
-    }
-
-    /* --- Substantial Font and Element Size Adjustments for Desktop --- */
-
-    .slide-content {
-        bottom: 30px;
-        left: 30px;
-    }
-
-    .slide-title {
-        font-size: 2.0rem; /* Increased size */
-    }
-    .slide-time, .slide-subdescription, .slide-description {
-        font-size: 1.0rem; /* Increased size */
-    }
-    .slide-badge {
-        font-size: 0.8rem; /* Increased size */
-        padding: 6px 10px;
-        border-radius: 8px;
-    }
-
-    .pill {
-        width: 70px; /* Increased size */
-        height: 70px;
-    }
-
-    .pill .material-symbols-outlined {
-        font-size: 36px; /* Increased size */
-    }
-
-    .category-section {
-        margin-top: 40px;
-    }
-    
-    .category-title h3 {
-        font-size: 1.5rem; /* Increased size */
-    }
-    
-    .category-title .material-symbols-outlined {
-        font-size: 30px;
-    }
-
-    .channel-logo-bg {
-        width: 130px; /* Increased size */
-        height: 130px;
     }
 }
