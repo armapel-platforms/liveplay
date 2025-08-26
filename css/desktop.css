@@ -33,13 +33,24 @@
     .video-player-container {
         max-width: none;
         margin: 0;
-        border-radius: 15px;
+        border-radius: 20px;
     }
 
     .player-info {
         max-width: none;
+        margin-top: 20px;
         padding: 30px; 
     }
+
+    /* FONT SIZE ADJUSTMENTS FOR DESKTOP PLAYER */
+    .player-info-left h3 {
+        font-size: 1.0rem; /* Increased channel name size */
+    }
+
+    .player-info-left p {
+        font-size: 0.8rem; /* Increased category name size */
+    }
+
 
     .content-container {
         height: calc(100vh - 100px); /* Adjusts for header and main padding */
