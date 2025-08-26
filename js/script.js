@@ -29,12 +29,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     let player = null;
     let ui = null;
     let currentUser = null;
+    let isDesktop = window.innerWidth >= 1024;
 
     if (document.getElementById('featured-slider')) {
         window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 10);
+             if (!isDesktop) {
+                header.classList.toggle('scrolled', window.scrollY > 10);
+            }
         });
     }
+    
+    window.addEventListener('resize', () => {
+        isDesktop = window.innerWidth >= 1024;
+    });
 
     const renderMenu = (user) => {
         let menuContent = '';
@@ -229,7 +236,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const onError = (event) => console.error('Player Error', event.detail);
 
+    const updatePlayerInfo = (stream) => {
+        // Update desktop player info
+        document.getElementById('player-channel-name').textContent = stream.name;
+        document.getElementById('player-channel-category').textContent = stream.category;
+        document.querySelector('.live-indicator').style.display = 'flex';
+
+        // Update mobile minimized player info
+        document.getElementById('minimized-player-logo').src = stream.logo;
+        document.getElementById('minimized-player-name').textContent = stream.name;
+        document.getElementById('minimized-player-category').textContent = stream.category;
+    };
+    
     const openPlayer = async (stream) => {
+        if (isDesktop) {
+            openDesktopPlayer(stream);
+        } else {
+            openMobilePlayer(stream);
+        }
+    };
+
+    const openDesktopPlayer = async (stream) => {
         const youtubePlayer = document.getElementById('youtube-player');
         activeStream = stream;
 
@@ -264,11 +291,54 @@ document.addEventListener('DOMContentLoaded', async () => {
                 onError(e);
             }
         }
-        document.getElementById('player-channel-name').textContent = stream.name;
-        document.getElementById('player-channel-category').textContent = stream.category;
-        document.getElementById('minimized-player-logo').src = stream.logo;
-        document.getElementById('minimized-player-name').textContent = stream.name;
-        document.getElementById('minimized-player-category').textContent = stream.category;
+        updatePlayerInfo(stream);
+    };
+
+    const openMobilePlayer = async (stream) => {
+        // Clone player elements for the mobile view to avoid conflicts
+        const mobilePlayerContainer = document.querySelector('.video-player-container-mobile');
+        const mobileInfoContainer = document.querySelector('.player-info-mobile');
+        mobilePlayerContainer.innerHTML = '';
+        mobileInfoContainer.innerHTML = '';
+        mobilePlayerContainer.appendChild(playerWrapper.cloneNode(true));
+        mobileInfoContainer.appendChild(document.querySelector('.player-info').cloneNode(true));
+
+        const mobileVideoElement = mobilePlayerContainer.querySelector('video');
+        const mobilePlayerWrapper = mobilePlayerContainer.querySelector('.video-player-container');
+        const mobileYoutubePlayer = mobilePlayerContainer.querySelector('#youtube-player');
+        
+        activeStream = stream;
+        
+        if (stream.type === 'youtube') {
+            if (player) await player.unload();
+            mobileVideoElement.style.display = 'none';
+            mobileYoutubePlayer.src = stream.embedUrl;
+            mobileYoutubePlayer.style.display = 'block';
+
+        } else {
+            mobileYoutubePlayer.style.display = 'none';
+            mobileYoutubePlayer.src = '';
+            mobileVideoElement.style.display = 'block';
+            
+            if (!player) await initPlayer(); // Ensure main player instance is initialized
+             // Re-initialize UI on the cloned element
+            let mobileUi = new shaka.ui.Overlay(player, mobilePlayerWrapper, mobileVideoElement);
+            mobileUi.getControls();
+            
+            try {
+                const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
+                if (!response.ok) throw new Error(`Stream data not found for ${stream.name}.`);
+                const secureData = await response.json();
+                player.configure({ drm: { clearKeys: secureData.clearKey || {} } });
+                await player.load(secureData.manifestUri);
+                mobileVideoElement.play();
+            } catch (e) {
+                console.error('Player Error', e);
+                onError(e);
+            }
+        }
+        
+        updatePlayerInfo(stream);
         
         if (minimizedPlayer) minimizedPlayer.classList.remove('active');
         if (playerView) playerView.classList.add('active');
@@ -287,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             minimizedPlayer.classList.remove('active');
             if (playerView) playerView.classList.add('active');
             if (activeStream && activeStream.type !== 'youtube') {
-                 if (videoElement) videoElement.play();
+                 // The player continues to play in the background on mobile
             }
         }
     };
@@ -301,9 +371,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             youtubePlayer.src = '';
             youtubePlayer.style.display = 'none';
         }
-        if (videoElement) videoElement.style.display = 'block';
         if (ui) ui.setEnabled(false);
         if (player) await player.unload();
+        
+        // Reset desktop player state
+        document.getElementById('player-channel-name').textContent = 'Select a Channel';
+        document.getElementById('player-channel-category').textContent = 'No channel selected';
+        document.querySelector('.live-indicator').style.display = 'none';
+        videoElement.poster = "/logo/attention.png";
+
+
         activeStream = null;
         history.pushState({}, '', '/home');
     };
