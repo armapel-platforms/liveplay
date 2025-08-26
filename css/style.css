@@ -811,20 +811,22 @@ header.subpage-header h1 {
         opacity: 0; }
 }
 
-/* Desktop Layout Styles */
+/* Mobile First Layout */
 
-/* Base style (Mobile-first): Hide the desktop player container by default. */
+/* By default (on mobile), the desktop-player-container is hidden. */
 .desktop-player-container {
     display: none;
 }
 
+/* The main content container acts as a simple block wrapper on mobile. */
 .desktop-layout-container {
-    display: block; /* On mobile, this container is just a simple block wrapper */
+    display: block;
 }
 
-/* Styles for screens 1024px and wider */
+
+/* Desktop Layout Styles (for screens 1024px and wider) */
 @media (min-width: 1024px) {
-    /* Hide mobile-only player elements */
+    /* Hide mobile-only elements on desktop */
     .player-view, .minimized-player {
         display: none !important;
     }
@@ -835,19 +837,22 @@ header.subpage-header h1 {
         overflow: hidden; /* Prevent body scroll on desktop */
     }
 
+    /* Convert the layout container to a flex row for desktop */
     .desktop-layout-container {
         display: flex;
         flex-direction: row;
         height: calc(100vh - 60px); /* Full height minus header */
     }
 
+    /* Show and style the desktop player container */
     .desktop-player-container {
-        display: flex; /* Show the player container on desktop */
+        display: flex;
         flex: 2; /* Takes up 2/3 of the space */
         padding: 20px;
         flex-direction: column;
     }
 
+    /* Style the content container for desktop */
     .desktop-content-container {
         flex: 1; /* Takes up 1/3 of the space */
         overflow-y: auto; /* Enable scrolling for this column only */
