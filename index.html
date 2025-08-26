@@ -34,15 +34,16 @@
     </div>
 
     <div class="desktop-layout-container">
+        <!-- Desktop Player -->
         <div class="desktop-player-container">
-            <div class="video-player-container" id="video-player-wrapper">
-                <video id="video-player" poster="/logo/attention.png"></video>
-                <iframe id="youtube-player" style="display: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div id="video-player-wrapper-desktop" class="video-player-container">
+                <video id="video-player-desktop" poster="/logo/attention.png"></video>
+                <iframe id="youtube-player-desktop" style="display: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
-            <div class="player-info">
+            <div id="player-info-desktop" class="player-info">
                 <div class="player-info-left">
-                    <h3 id="player-channel-name">Select a Channel</h3>
-                    <p id="player-channel-category">No channel selected</p>
+                    <h3 id="player-channel-name-desktop">Select a Channel</h3>
+                    <p id="player-channel-category-desktop">No channel selected</p>
                 </div>
                 <div class="live-indicator" style="display: none;">
                     <span class="material-symbols-outlined">sensors</span>LIVE
@@ -50,6 +51,7 @@
             </div>
         </div>
 
+        <!-- Main Content (Channels, Footer, etc.) -->
         <div class="desktop-content-container">
             <main>
                 <section id="featured-slider" class="featured-slider">
@@ -64,7 +66,6 @@
                                 <div class="slide-badge catchup-badge">CATCH-UP TV</div>
                             </div>
                         </div>
-
                         <a href="https://youtu.be/Z881RvcEcVA?si=JJHn0eUxR5jUj4fQ" target="_blank" rel="noopener noreferrer" class="slide">
                             <img src="/logo/ads/dito.ph_ads.jpeg" alt="Promotion Background" class="slide-bg">
                             <div class="slide-overlay"></div>
@@ -74,7 +75,6 @@
                                 <div class="slide-badge visit-badge">SPONSORED</div>
                             </div>
                         </a>
-
                         <div class="slide">
                             <img src="https://pql-static.abs-cbn.com/images/itsokaytonotbeokay.herobg-tv.JPG?im_policy=landscapeHero_tv_hd" alt="Show Background" class="slide-bg">
                              <div class="slide-overlay"></div>
@@ -85,7 +85,6 @@
                                 <div class="slide-badge catchup-badge">CATCH-UP TV</div>
                             </div>
                         </div>
-                        
                         <a href="https://www.coca-cola.com/ph/en/offerings/kolek-and-win#:~:text=Redemption%20Center%20Locations-,Kolek%20&%20Win%20Promo,21%20to%20October%2016%2C%202025." target="_blank" rel="noopener noreferrer" class="slide">
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShKqphp9oWsB22dC7kdgafpg1aJRkhBGnVk-n-iUNENAQw8yikODmi-Ik&s=10" alt="Promotion Background" class="slide-bg">
                             <div class="slide-overlay"></div>
@@ -95,7 +94,6 @@
                                 <div class="slide-badge visit-badge">SPONSORED</div>
                             </div>
                         </a>
-
                         <a href="/home?play=NBA-TV-Philippines" class="slide">
                             <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*7OmCmTMBu1adOhD6vP9BFw.jpeg" alt="Promotion Background" class="slide-bg">
                             <div class="slide-overlay"></div>
@@ -105,7 +103,6 @@
                                 <div class="slide-badge catchup-badge">WATCH NOW</div>
                             </div>
                         </a>
-                        
                         <a href="/home?play=HBO" class="slide">
                             <img src="https://beam-images.warnermediacdn.com/2025-03/Max_BrandQuilt_2025_Q1_Global_1920x1080.jpg?host=wbd-dotcom-drupal-prd-us-east-1.s3.amazonaws.com&w=1920" class="slide-bg" alt="Show Background">
                             <div class="slide-overlay"></div>
@@ -115,25 +112,22 @@
                                 <div class="slide-badge catchup-badge">WATCH NOW</div>
                             </div>
                         </a>
-
-                    <div class="slider-nav">
-                        <button class="dot active"></button>
-                        <button class="dot"></button>
-                        <button class="dot"></button>
-                        <button class="dot"></button>
-                        <button class="dot"></button>
-                        <button class="dot"></button>
+                        <div class="slider-nav">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
+                        </div>
                     </div>
                 </section>
-
                 <section id="category-nav" class="category-nav">
                     <div class="category-pills"></div>
                 </section>
-
                 <section id="channel-listings" class="channel-listings">
                 </section>
             </main>
-            
             <footer class="site-footer">
                 <div class="footer-content">
                     <p class="developer-credit">from <img src="/logo/armapel-logo-white.png" alt="armapel logo" class="developer-logo"></p>
@@ -144,18 +138,25 @@
         </div>
     </div>
 
-    <!-- Mobile-only player -->
+    <!-- Mobile-only Player -->
     <div id="player-view" class="player-view">
         <div class="player-header">
             <button id="minimize-player-btn" class="icon-link">
                 <span class="material-symbols-outlined">expand_more</span>
             </button>
         </div>
-        <div class="video-player-container-mobile">
-            <!-- Mobile player video elements will be cloned here by JS -->
+        <div id="video-player-wrapper-mobile" class="video-player-container">
+            <video id="video-player-mobile" poster="/logo/attention.png"></video>
+            <iframe id="youtube-player-mobile" style="display: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        <div class="player-info-mobile">
-            <!-- Mobile player info will be cloned here by JS -->
+        <div id="player-info-mobile" class="player-info">
+            <div class="player-info-left">
+                <h3 id="player-channel-name-mobile">Channel Name</h3>
+                <p id="player-channel-category-mobile">Category</p>
+            </div>
+            <div class="live-indicator">
+                <span class="material-symbols-outlined">sensors</span>LIVE
+            </div>
         </div>
     </div>
     
@@ -175,10 +176,10 @@
         </div>
     </div>
 
-        <div id="auth-popup-overlay" class="auth-popup-overlay">
-            <div class="auth-popup">
+    <div id="auth-popup-overlay" class="auth-popup-overlay">
+        <div class="auth-popup">
             <button id="close-popup" class="popup-close-btn">
-            <span class="material-symbols-outlined">close</span>
+                <span class="material-symbols-outlined">close</span>
             </button>
             <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="popup-logo">
             <p class="popup-subtitle">Join to Watch Free</p>
