@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     let player = null;
     let ui = null;
     let currentUser = null;
+    const isDesktop = () => window.innerWidth >= 1024;
+
 
     if (document.getElementById('featured-slider')) {
         window.addEventListener('scroll', () => {
@@ -203,7 +205,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (channelToPlay) {
              if (currentUser) {
                 const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
-                if (streamToPlay) openPlayer(streamToPlay);
+                if (streamToPlay && isDesktop()) {
+                    openPlayer(streamToPlay);
+                }
             } else {
                 history.replaceState({}, '', '/home'); 
                 showAuthPopup();
@@ -266,15 +270,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
-        document.getElementById('minimized-player-logo').src = stream.logo;
-        document.getElementById('minimized-player-name').textContent = stream.name;
-        document.getElementById('minimized-player-category').textContent = stream.category;
         
-        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-        if (playerView) playerView.classList.add('active');
+        if (!isDesktop()) {
+            document.getElementById('minimized-player-logo').src = stream.logo;
+            document.getElementById('minimized-player-name').textContent = stream.name;
+            document.getElementById('minimized-player-category').textContent = stream.category;
+            if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+            if (playerView) playerView.classList.add('active');
+        }
     };
 
     const minimizePlayer = () => {
+        if (isDesktop()) return;
         if (playerView && playerView.classList.contains('active')) {
             playerView.classList.remove('active');
             if (minimizedPlayer) minimizedPlayer.classList.add('active');
@@ -282,7 +289,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const restorePlayer = (e) => {
-        if (e.target.closest('#exit-player-btn')) return;
+        if (isDesktop() || e.target.closest('#exit-player-btn')) return;
         if (minimizedPlayer && minimizedPlayer.classList.contains('active')) {
             minimizedPlayer.classList.remove('active');
             if (playerView) playerView.classList.add('active');
@@ -294,8 +301,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const closePlayer = async (e) => {
         e.stopPropagation();
-        if (playerView) playerView.classList.remove('active');
-        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+        if (!isDesktop()) {
+            if (playerView) playerView.classList.remove('active');
+            if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+        }
         const youtubePlayer = document.getElementById('youtube-player');
         if (youtubePlayer) {
             youtubePlayer.src = '';
