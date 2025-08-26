@@ -1,0 +1,41 @@
+@media (min-width: 1024px) {
+    main .main-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    #player-view {
+        position: static;
+        transform: none;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 0;
+        height: auto;
+        z-index: 1;
+    }
+
+    .player-header {
+        display: none;
+    }
+
+    .video-player-container {
+        max-width: none;
+        margin: 0;
+    }
+
+    .player-info {
+        max-width: none;
+        padding: 10px 0;
+    }
+
+    .content-container {
+        width: 100%;
+    }
+
+    #minimized-player {
+        display: none !important;
+    }
+}
