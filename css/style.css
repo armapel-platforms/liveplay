@@ -813,20 +813,22 @@ header.subpage-header h1 {
 
 /* Desktop Layout Styles */
 
-/* Hide mobile-only elements on desktop */
+/* Base style (Mobile-first): Hide the desktop player container by default. */
+.desktop-player-container {
+    display: none;
+}
+
+.desktop-layout-container {
+    display: block; /* On mobile, this container is just a simple block wrapper */
+}
+
+/* Styles for screens 1024px and wider */
 @media (min-width: 1024px) {
+    /* Hide mobile-only player elements */
     .player-view, .minimized-player {
         display: none !important;
     }
-}
 
-/* Show desktop layout and hide mobile player on desktop */
-.desktop-layout-container {
-    display: flex;
-    flex-direction: column; /* Mobile-first default */
-}
-
-@media (min-width: 1024px) {
     body {
         padding-top: 60px;
         height: 100vh;
@@ -840,9 +842,9 @@ header.subpage-header h1 {
     }
 
     .desktop-player-container {
+        display: flex; /* Show the player container on desktop */
         flex: 2; /* Takes up 2/3 of the space */
         padding: 20px;
-        display: flex;
         flex-direction: column;
     }
 
@@ -852,7 +854,6 @@ header.subpage-header h1 {
         border-left: 1px solid var(--glass-border);
     }
     
-    /* Make right-side scrollbar less obtrusive */
     .desktop-content-container::-webkit-scrollbar {
         width: 8px;
     }
@@ -867,11 +868,13 @@ header.subpage-header h1 {
         background: #666;
     }
 
+    header {
+        border-bottom: 1px solid var(--glass-border);
+    }
     header.scrolled {
-        background: var(--background-color); /* Solid background on desktop */
+        background: var(--background-color);
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
-        border-bottom: 1px solid var(--glass-border);
     }
 
     .featured-slider {
