@@ -33,107 +33,129 @@
     <div id="floating-menu" class="floating-menu">
     </div>
 
-    <main>
-        <section id="featured-slider" class="featured-slider">
-            <div class="slider">
-                <div class="slide active">
-                    <img src="https://pql-static.abs-cbn.com/images/batangquiapo.herobg-tv.v2.JPG?im_policy=landscapeHero_tv_hd" alt="Featured Show Background" class="slide-bg">
-                    <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <h2 class="slide-title">FPJ's Batang Quiapo</h2>
-                        <p class="slide-time">MON-FRI | 8PM</p>
-                        <p class="slide-subdescription">Kapamilya Channel, Kapamilya Online Live, A2Z, and TV5</p>
-                        <div class="slide-badge catchup-badge">CATCH-UP TV</div>
-                    </div>
-                </div>
-
-                <a href="https://youtu.be/Z881RvcEcVA?si=JJHn0eUxR5jUj4fQ" target="_blank" rel="noopener noreferrer" class="slide">
-                    <img src="/logo/ads/dito.ph_ads.jpeg" alt="Promotion Background" class="slide-bg">
-                    <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <h2 class="slide-title">Kaya DITO</h2>
-                        <p class="slide-description">DITO Telecommunity</p>
-                        <div class="slide-badge visit-badge">SPONSORED</div>
-                    </div>
-                </a>
-
-                <div class="slide">
-                    <img src="https://pql-static.abs-cbn.com/images/itsokaytonotbeokay.herobg-tv.JPG?im_policy=landscapeHero_tv_hd" alt="Show Background" class="slide-bg">
-                     <div class="slide-overlay"></div>
-                     <div class="slide-content">
-                       <h2 class="slide-title">It's Okay to Not Be Okay</h2>
-                       <p class="slide-time">MON-FRI | 8:45PM</p>
-                       <p class="slide-subdescription">Kapamilya Channel, Kapamilya Online Live, A2Z, and TV5</p>
-                        <div class="slide-badge catchup-badge">CATCH-UP TV</div>
-                    </div>
-                </div>
-                
-                <a href="https://www.coca-cola.com/ph/en/offerings/kolek-and-win#:~:text=Redemption%20Center%20Locations-,Kolek%20&%20Win%20Promo,21%20to%20October%2016%2C%202025." target="_blank" rel="noopener noreferrer" class="slide">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShKqphp9oWsB22dC7kdgafpg1aJRkhBGnVk-n-iUNENAQw8yikODmi-Ik&s=10" alt="Promotion Background" class="slide-bg">
-                    <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <h2 class="slide-title">Kolek & Win Promo</h2>
-                        <p class="slide-description">Coca-Cola Philippines</p>
-                        <div class="slide-badge visit-badge">SPONSORED</div>
-                    </div>
-                </a>
-
-                <a href="/home?play=NBA-TV-Philippines" class="slide">
-                    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*7OmCmTMBu1adOhD6vP9BFw.jpeg" alt="Promotion Background" class="slide-bg">
-                    <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <h2 class="slide-title">NBA TV Philippines</h2>
-                        <p class="slide-description">SPORTS</p>
-                        <div class="slide-badge catchup-badge">WATCH NOW</div>
-                    </div>
-                </a>
-                
-                <a href="/home?play=HBO" class="slide">
-                    <img src="https://beam-images.warnermediacdn.com/2025-03/Max_BrandQuilt_2025_Q1_Global_1920x1080.jpg?host=wbd-dotcom-drupal-prd-us-east-1.s3.amazonaws.com&w=1920" class="slide-bg" alt="Show Background">
-                    <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <h2 class="slide-title">HBO</h2>
-                        <p class="slide-description">MOVIES</p>
-                        <div class="slide-badge catchup-badge">WATCH NOW</div>
-                    </div>
-                </a>
-
-            <div class="slider-nav">
-                <button class="dot active"></button>
-                <button class="dot"></button>
-                <button class="dot"></button>
-                <button class="dot"></button>
-                <button class="dot"></button>
-                <button class="dot"></button>
+    <div class="desktop-layout-container">
+        <div class="desktop-player-container">
+            <div class="video-player-container" id="video-player-wrapper">
+                <video id="video-player" poster="/logo/attention.png"></video>
+                <iframe id="youtube-player" style="display: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
-        </section>
+            <div class="player-info">
+                <div class="player-info-left">
+                    <h3 id="player-channel-name">Select a Channel</h3>
+                    <p id="player-channel-category">No channel selected</p>
+                </div>
+                <div class="live-indicator" style="display: none;">
+                    <span class="material-symbols-outlined">sensors</span>LIVE
+                </div>
+            </div>
+        </div>
 
-        <section id="category-nav" class="category-nav">
-            <div class="category-pills"></div>
-        </section>
+        <div class="desktop-content-container">
+            <main>
+                <section id="featured-slider" class="featured-slider">
+                    <div class="slider">
+                        <div class="slide active">
+                            <img src="https://pql-static.abs-cbn.com/images/batangquiapo.herobg-tv.v2.JPG?im_policy=landscapeHero_tv_hd" alt="Featured Show Background" class="slide-bg">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h2 class="slide-title">FPJ's Batang Quiapo</h2>
+                                <p class="slide-time">MON-FRI | 8PM</p>
+                                <p class="slide-subdescription">Kapamilya Channel, Kapamilya Online Live, A2Z, and TV5</p>
+                                <div class="slide-badge catchup-badge">CATCH-UP TV</div>
+                            </div>
+                        </div>
 
-        <section id="channel-listings" class="channel-listings">
-        </section>
-    </main>
+                        <a href="https://youtu.be/Z881RvcEcVA?si=JJHn0eUxR5jUj4fQ" target="_blank" rel="noopener noreferrer" class="slide">
+                            <img src="/logo/ads/dito.ph_ads.jpeg" alt="Promotion Background" class="slide-bg">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h2 class="slide-title">Kaya DITO</h2>
+                                <p class="slide-description">DITO Telecommunity</p>
+                                <div class="slide-badge visit-badge">SPONSORED</div>
+                            </div>
+                        </a>
 
+                        <div class="slide">
+                            <img src="https://pql-static.abs-cbn.com/images/itsokaytonotbeokay.herobg-tv.JPG?im_policy=landscapeHero_tv_hd" alt="Show Background" class="slide-bg">
+                             <div class="slide-overlay"></div>
+                             <div class="slide-content">
+                               <h2 class="slide-title">It's Okay to Not Be Okay</h2>
+                               <p class="slide-time">MON-FRI | 8:45PM</p>
+                               <p class="slide-subdescription">Kapamilya Channel, Kapamilya Online Live, A2Z, and TV5</p>
+                                <div class="slide-badge catchup-badge">CATCH-UP TV</div>
+                            </div>
+                        </div>
+                        
+                        <a href="https://www.coca-cola.com/ph/en/offerings/kolek-and-win#:~:text=Redemption%20Center%20Locations-,Kolek%20&%20Win%20Promo,21%20to%20October%2016%2C%202025." target="_blank" rel="noopener noreferrer" class="slide">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShKqphp9oWsB22dC7kdgafpg1aJRkhBGnVk-n-iUNENAQw8yikODmi-Ik&s=10" alt="Promotion Background" class="slide-bg">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h2 class="slide-title">Kolek & Win Promo</h2>
+                                <p class="slide-description">Coca-Cola Philippines</p>
+                                <div class="slide-badge visit-badge">SPONSORED</div>
+                            </div>
+                        </a>
+
+                        <a href="/home?play=NBA-TV-Philippines" class="slide">
+                            <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*7OmCmTMBu1adOhD6vP9BFw.jpeg" alt="Promotion Background" class="slide-bg">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h2 class="slide-title">NBA TV Philippines</h2>
+                                <p class="slide-description">SPORTS</p>
+                                <div class="slide-badge catchup-badge">WATCH NOW</div>
+                            </div>
+                        </a>
+                        
+                        <a href="/home?play=HBO" class="slide">
+                            <img src="https://beam-images.warnermediacdn.com/2025-03/Max_BrandQuilt_2025_Q1_Global_1920x1080.jpg?host=wbd-dotcom-drupal-prd-us-east-1.s3.amazonaws.com&w=1920" class="slide-bg" alt="Show Background">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h2 class="slide-title">HBO</h2>
+                                <p class="slide-description">MOVIES</p>
+                                <div class="slide-badge catchup-badge">WATCH NOW</div>
+                            </div>
+                        </a>
+
+                    <div class="slider-nav">
+                        <button class="dot active"></button>
+                        <button class="dot"></button>
+                        <button class="dot"></button>
+                        <button class="dot"></button>
+                        <button class="dot"></button>
+                        <button class="dot"></button>
+                    </div>
+                </section>
+
+                <section id="category-nav" class="category-nav">
+                    <div class="category-pills"></div>
+                </section>
+
+                <section id="channel-listings" class="channel-listings">
+                </section>
+            </main>
+            
+            <footer class="site-footer">
+                <div class="footer-content">
+                    <p class="developer-credit">from <img src="/logo/armapel-logo-white.png" alt="armapel logo" class="developer-logo"></p>
+                    <p class="copyright">©2025 <span class="footer-brand">liveplay</span>, All Rights Reserved.</p>
+                    <p class="version">Version 9.0.9</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Mobile-only player -->
     <div id="player-view" class="player-view">
         <div class="player-header">
             <button id="minimize-player-btn" class="icon-link">
                 <span class="material-symbols-outlined">expand_more</span>
             </button>
         </div>
-        <div class="video-player-container" id="video-player-wrapper">
-            <video id="video-player" poster="/logo/attention.png"></video>
-            <iframe id="youtube-player" style="display: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="video-player-container-mobile">
+            <!-- Mobile player video elements will be cloned here by JS -->
         </div>
-        <div class="player-info">
-            <div class="player-info-left">
-                <h3 id="player-channel-name">Channel Name</h3>
-                <p id="player-channel-category">Category</p>
-            </div>
-            <div class="live-indicator">
-                <span class="material-symbols-outlined">sensors</span>LIVE
-            </div>
+        <div class="player-info-mobile">
+            <!-- Mobile player info will be cloned here by JS -->
         </div>
     </div>
     
@@ -164,14 +186,6 @@
         </div>
     </div>
     
-    <footer class="site-footer">
-    <div class="footer-content">
-        <p class="developer-credit">from <img src="/logo/armapel-logo-white.png" alt="armapel logo" class="developer-logo"></p>
-        <p class="copyright">©2025 <span class="footer-brand">liveplay</span>, All Rights Reserved.</p>
-        <p class="version">Version 9.0.9</p>
-    </div>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/ui.js"></script>
