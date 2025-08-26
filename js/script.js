@@ -2,14 +2,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const createRipple = (event) => {
         const target = event.currentTarget;
+        // Ensure the ripple effect doesn't trigger on child elements of the intended target
+        if (event.target !== target) return;
+        
         const circle = document.createElement("span");
         const diameter = Math.max(target.clientWidth, target.clientHeight);
         const radius = diameter / 2;
         const rect = target.getBoundingClientRect();
+
         circle.style.width = circle.style.height = `${diameter}px`;
         circle.style.left = `${event.clientX - rect.left - radius}px`;
         circle.style.top = `${event.clientY - rect.top - radius}px`;
         circle.classList.add("ripple");
+
         const ripple = target.getElementsByClassName("ripple")[0];
         if (ripple) { ripple.remove(); }
         target.appendChild(circle);
@@ -202,8 +207,61 @@ document.addEventListener('DOMContentLoaded', async () => {
             channelListingsContainer.appendChild(section);
         });
     };
+    
+    // --- Auth, Menu, and General UI Setup ---
+    
+    const showAuthPopup = () => { if (!currentUser && authPopup) authPopup.classList.add('active'); };
+    const hideAuthPopup = () => { if (authPopup) authPopup.classList.remove('active'); };
+
+    const renderMenu = (user) => {
+        let menuContent = '';
+        if (user) {
+            menuContent = `
+                <div class="menu-header">Hi, ${user.first_name || 'User'}</div>
+                <div class="menu-divider"></div>
+                <ul>
+                    <li><a href="/home/manage-account"><span class="material-symbols-outlined">manage_accounts</span> My Account</a></li>
+                </ul>`;
+        } else {
+            menuContent = `
+                <div class="menu-header">Hi, Guest</div>
+                <div class="menu-divider"></div>
+                <ul>
+                    <li><a href="/home/login"><span class="material-symbols-outlined">login</span> Log In / Sign Up</a></li>
+                </ul>`;
+        }
+        menuContent += `
+            <div class="menu-divider"></div>
+            <ul>
+                <li><a href="/home/about-us"><span class="material-symbols-outlined">info</span> About Us</a></li>
+                <li><a href="/home/faq"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
+                <li><a href="/home/privacy-policy"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
+                <li><a href="/home/terms-of-service"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
+            </ul>`;
+        
+        if (floatingMenu) floatingMenu.innerHTML = menuContent;
+        
+        if (floatingMenu) {
+            floatingMenu.querySelectorAll('li').forEach(li => {
+                const link = li.querySelector('a');
+                li.addEventListener('mousedown', () => li.classList.add('active-press'));
+                li.addEventListener('touchstart', () => li.classList.add('active-press'));
+                const releaseAction = (e) => {
+                    li.classList.remove('active-press');
+                    if (link && link.href) setTimeout(() => { window.location.href = link.href; }, 150);
+                };
+                li.addEventListener('mouseup', releaseAction);
+                li.addEventListener('touchend', releaseAction);
+                li.addEventListener('mouseleave', () => li.classList.remove('active-press'));
+            });
+        }
+    };
 
     const initializePage = async () => {
+        currentUser = await window.auth.getCurrentUser();
+        renderMenu(currentUser);
+        window.auth.onAuthStateChange(user => { currentUser = user; renderMenu(user); });
+
         try {
             const response = await fetch('/api/getChannels');
             streamsData = await response.json();
@@ -213,6 +271,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             streamsData = [...yt_live];
         }
 
+        // Initialize Slider
+        const slider = document.querySelector('.slider');
+        if (slider) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.slider-nav .dot');
+            let currentSlide = 0;
+            const showSlide = (index) => {
+                slides.forEach((s) => s.classList.remove('active'));
+                dots.forEach(d => d.classList.remove('active'));
+                if (slides[index]) slides[index].classList.add('active');
+                if (dots[index]) dots[index].classList.add('active');
+            };
+            const nextSlide = () => { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); };
+            dots.forEach((dot, index) => dot.addEventListener('click', () => { currentSlide = index; showSlide(currentSlide); }));
+            setInterval(nextSlide, 5000);
+        }
+
+        // Initialize Pills and Channels
         const categoryPillsContainer = document.querySelector('.category-pills');
         if (categoryPillsContainer) {
             const categories = ['ALL', ...new Set(streamsData.map(s => s.category))];
@@ -236,6 +312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         renderChannelRows();
 
+        // Check URL for a channel to autoplay
         const params = new URLSearchParams(window.location.search);
         const channelToPlay = params.get('play');
         if (channelToPlay) {
@@ -243,29 +320,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (streamToPlay) handleChannelClick(streamToPlay);
         }
     };
-
-    const showAuthPopup = () => { if (!currentUser && authPopup) authPopup.classList.add('active'); };
-    const hideAuthPopup = () => { if (authPopup) authPopup.classList.remove('active'); };
-    const renderMenu = (user) => { /* ... existing menu logic ... */ };
     
-    currentUser = await window.auth.getCurrentUser();
-    renderMenu(currentUser);
-    window.auth.onAuthStateChange(user => { currentUser = user; renderMenu(user); });
-    
+    // Attach all general event listeners
     if (authPopup) authPopup.addEventListener('click', (e) => { if (e.target === authPopup) hideAuthPopup(); });
     if (closePopupBtn) closePopupBtn.addEventListener('click', hideAuthPopup);
     if (menuBtn) menuBtn.addEventListener('click', (e) => { e.stopPropagation(); floatingMenu.classList.toggle('active'); });
     document.addEventListener('click', (e) => { if (floatingMenu.classList.contains('active') && !floatingMenu.contains(e.target) && e.target !== menuBtn) floatingMenu.classList.remove('active'); });
 
+    // Attach device-specific listeners
     if (!isDesktop) {
         minimizeBtn.addEventListener('click', minimizeMobilePlayer);
         minimizedPlayer.addEventListener('click', restoreMobilePlayer);
         exitBtn.addEventListener('click', closeMobilePlayer);
-    }
-
-    if (header && !isDesktop) {
         window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 10));
     }
 
-    await initializePage();
+    // Start the application
+    initializePage();
 });
