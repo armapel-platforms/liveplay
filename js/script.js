@@ -15,164 +15,196 @@ document.addEventListener('DOMContentLoaded', async () => {
         target.appendChild(circle);
     };
 
-    const staticRippleElements = document.querySelectorAll('.icon-link, #minimized-player, .back-link, .video-player-container');
-    staticRippleElements.forEach(elem => elem.addEventListener("click", createRipple));
+    document.querySelectorAll('.icon-link, #minimized-player, .back-link, .channel-logo-bg').forEach(elem => elem.addEventListener("click", createRipple));
 
+    // --- General UI Elements ---
     const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
-    let streamsData = [];
-    const videoElement = document.getElementById('video-player');
-    const playerWrapper = document.getElementById('video-player-wrapper');
     const authPopup = document.getElementById('auth-popup-overlay');
     const closePopupBtn = document.getElementById('close-popup');
-    let player = null;
-    let ui = null;
+
+    // --- Player Elements ---
+    const desktopVideoElement = document.getElementById('video-player-desktop');
+    const desktopPlayerWrapper = document.getElementById('video-player-wrapper-desktop');
+    const desktopYoutubePlayer = document.getElementById('youtube-player-desktop');
+    const desktopInfoContainer = document.getElementById('player-info-desktop');
+
+    const mobilePlayerView = document.getElementById('player-view');
+    const mobileVideoElement = document.getElementById('video-player-mobile');
+    const mobilePlayerWrapper = document.getElementById('video-player-wrapper-mobile');
+    const mobileYoutubePlayer = document.getElementById('youtube-player-mobile');
+    const mobileInfoContainer = document.getElementById('player-info-mobile');
+
+    const minimizedPlayer = document.getElementById('minimized-player');
+    const minimizeBtn = document.getElementById('minimize-player-btn');
+    const exitBtn = document.getElementById('exit-player-btn');
+
+    // --- State Variables ---
+    let streamsData = [];
+    let playerDesktop = null, uiDesktop = null;
+    let playerMobile = null, uiMobile = null;
     let currentUser = null;
+    let activeStream = null;
     let isDesktop = window.innerWidth >= 1024;
 
-    if (document.getElementById('featured-slider')) {
-        window.addEventListener('scroll', () => {
-             if (!isDesktop) {
-                header.classList.toggle('scrolled', window.scrollY > 10);
-            }
-        });
-    }
-    
-    window.addEventListener('resize', () => {
-        isDesktop = window.innerWidth >= 1024;
-    });
+    window.addEventListener('resize', () => { isDesktop = window.innerWidth >= 1024; });
 
-    const renderMenu = (user) => {
-        let menuContent = '';
-        if (user) {
-            menuContent = `
-                <div class="menu-header">Hi, ${user.first_name || 'User'}</div>
-                <div class="menu-divider"></div>
-                <ul>
-                    <li><a href="/home/manage-account"><span class="material-symbols-outlined">manage_accounts</span> My Account</a></li>
-                </ul>`;
+    // --- Core Functions ---
+
+    // Initializes a new Shaka Player instance for a given video element.
+    const initShakaPlayer = async (videoElement, wrapperElement) => {
+        shaka.polyfill.installAll();
+        if (!shaka.Player.isBrowserSupported()) {
+            console.error('Browser not supported!');
+            return { player: null, ui: null };
+        }
+        const player = new shaka.Player(videoElement);
+        const ui = new shaka.ui.Overlay(player, wrapperElement, videoElement);
+        ui.getControls();
+        player.addEventListener('error', (e) => console.error('Shaka Player Error', e.detail));
+        return { player, ui };
+    };
+
+    // Main dispatcher to open player based on device
+    const openPlayer = (stream) => {
+        if (!currentUser) {
+            showAuthPopup();
+            return;
+        }
+        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
+        history.pushState({ channel: stream.name }, ``, `/home?play=${channelName}`);
+        activeStream = stream;
+
+        if (isDesktop) {
+            openDesktopPlayer(stream);
         } else {
-            menuContent = `
-                <div class="menu-header">Hi, Guest</div>
-                <div class="menu-divider"></div>
-                <ul>
-                    <li><a href="/home/login"><span class="material-symbols-outlined">login</span> Log In / Sign Up</a></li>
-                </ul>`;
-        }
-                menuContent += `
-            <ul>
-                <li><a href="/home/about-us"><span class="material-symbols-outlined">info</span> About Us</a></li>
-                <li><a href="/home/faq"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
-                <li><a href="/home/privacy-policy"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
-                <li><a href="/home/terms-of-service"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
-            </ul>`;
-        if (floatingMenu) floatingMenu.innerHTML = menuContent;
-        
-        if (floatingMenu) {
-            floatingMenu.querySelectorAll('li').forEach(li => {
-                const link = li.querySelector('a');
-                li.addEventListener('mousedown', () => li.classList.add('active-press'));
-                li.addEventListener('touchstart', () => li.classList.add('active-press'));
-                const releaseAction = (e) => {
-                    li.classList.remove('active-press');
-                    createRipple(e);
-                    if (link && link.href) {
-                        setTimeout(() => { window.location.href = link.href; }, 150);
-                    }
-                };
-                li.addEventListener('mouseup', releaseAction);
-                li.addEventListener('touchend', releaseAction);
-                li.addEventListener('mouseleave', () => li.classList.remove('active-press'));
-            });
+            openMobilePlayer(stream);
         }
     };
     
-    const showAuthPopup = () => { if (!currentUser && authPopup) authPopup.classList.add('active'); };
-    const hideAuthPopup = () => { if (authPopup) authPopup.classList.remove('active'); };
-
-    currentUser = await window.auth.getCurrentUser();
-    renderMenu(currentUser);
-
-    window.auth.onAuthStateChange(user => {
-        currentUser = user;
-        renderMenu(currentUser);
-    });
-
-    if (authPopup) authPopup.addEventListener('click', (e) => { if (e.target === authPopup) hideAuthPopup(); });
-    if (closePopupBtn) closePopupBtn.addEventListener('click', hideAuthPopup);
-    
-    if (menuBtn) menuBtn.addEventListener('click', (e) => { e.stopPropagation(); if (floatingMenu) floatingMenu.classList.toggle('active'); });
-    document.addEventListener('click', (e) => { if (floatingMenu && floatingMenu.classList.contains('active') && !floatingMenu.contains(e.target) && e.target !== menuBtn) floatingMenu.classList.remove('active'); });
-
-    const slider = document.querySelector('.slider');
-    if (slider) {
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.slider-nav .dot');
-        let currentSlide = 0;
-        const slideInterval = 5000;
-        const showSlide = (index) => {
-            slides.forEach((slide) => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            if (slides[index]) slides[index].classList.add('active');
-            if (dots[index]) dots[index].classList.add('active');
-        };
-        const nextSlide = () => { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); };
-        dots.forEach((dot, index) => dot.addEventListener('click', () => { currentSlide = index; showSlide(currentSlide); }));
-        setInterval(nextSlide, slideInterval);
-    }
-    
-    const categoryPillsContainer = document.querySelector('.category-pills');
-    const channelListingsContainer = document.getElementById('channel-listings');
-    
-    const renderChannels = (filter) => {
-        if (!channelListingsContainer) return;
-        channelListingsContainer.innerHTML = '';
-        const filteredStreams = (filter === 'ALL') ? streamsData : streamsData.filter(s => s.category === filter);
-        const groupedByCategory = filteredStreams.reduce((acc, stream) => {
-            (acc[stream.category] = acc[stream.category] || []).push(stream);
-            return acc;
-        }, {});
-
-        const categories = ['ALL', 'LOCAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'INFOTAINMENT', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGIOUS', 'NATURE + ANIMAL', 'YOUTUBE LIVE'];
-        const categoryIcons = { ALL: 'apps', LOCAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', OVERSEAS: 'globe', RELIGIOUS: 'church', 'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display' };
+    // Handles playing a stream on Desktop
+    const openDesktopPlayer = async (stream) => {
+        if (!playerDesktop) {
+            ({ player: playerDesktop, ui: uiDesktop } = await initShakaPlayer(desktopVideoElement, desktopPlayerWrapper));
+        }
         
-        const orderedCategories = categories.filter(c => c !== 'ALL' && groupedByCategory[c]);
-        orderedCategories.forEach(category => {
-            const section = document.createElement('div');
-            section.className = 'category-section';
-            const title = document.createElement('div');
-            title.className = 'category-title';
-            title.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span><h3>${category}</h3>`;
-            section.appendChild(title);
-            const row = document.createElement('div');
-            row.className = 'channel-row';
-            groupedByCategory[category].forEach(stream => {
-                const card = document.createElement('div');
-                card.className = 'channel-card';
-                const logoBg = document.createElement('div');
-                logoBg.className = 'channel-logo-bg';
-                logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
-                logoBg.addEventListener("click", createRipple);
-                logoBg.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (currentUser) {
-                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
-                        history.pushState({ channel: stream.name }, ``, `/home?play=${channelName}`);
-                        openPlayer(stream);
-                    } else {
-                        showAuthPopup();
-                    }
-                });
-                card.appendChild(logoBg);
-                row.appendChild(card);
-            });
-            section.appendChild(row);
-            channelListingsContainer.appendChild(section);
-        });
+        if (stream.type === 'youtube') {
+            if (playerDesktop) await playerDesktop.unload();
+            if (uiDesktop) uiDesktop.setEnabled(false);
+            desktopVideoElement.style.display = 'none';
+            desktopYoutubePlayer.src = stream.embedUrl;
+            desktopYoutubePlayer.style.display = 'block';
+        } else {
+            desktopYoutubePlayer.style.display = 'none';
+            desktopYoutubePlayer.src = '';
+            desktopVideoElement.style.display = 'block';
+            if (uiDesktop) uiDesktop.setEnabled(true);
+
+            try {
+                const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
+                if (!response.ok) throw new Error(`Stream data not found`);
+                const secureData = await response.json();
+                playerDesktop.configure({ drm: { clearKeys: secureData.clearKey || {} } });
+                await playerDesktop.load(secureData.manifestUri);
+            } catch (e) {
+                console.error('Player Load Error:', e);
+            }
+        }
+        updatePlayerInfo(stream, 'desktop');
     };
 
-    async function initializePage() {
+    // Handles playing a stream on Mobile
+    const openMobilePlayer = async (stream) => {
+        if (!playerMobile) {
+            ({ player: playerMobile, ui: uiMobile } = await initShakaPlayer(mobileVideoElement, mobilePlayerWrapper));
+        }
+        
+        if (stream.type === 'youtube') {
+            if (playerMobile) await playerMobile.unload();
+            if (uiMobile) uiMobile.setEnabled(false);
+            mobileVideoElement.style.display = 'none';
+            mobileYoutubePlayer.src = stream.embedUrl;
+            mobileYoutubePlayer.style.display = 'block';
+        } else {
+            mobileYoutubePlayer.style.display = 'none';
+            mobileYoutubePlayer.src = '';
+            mobileVideoElement.style.display = 'block';
+            if (uiMobile) uiMobile.setEnabled(true);
+            
+            try {
+                const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
+                if (!response.ok) throw new Error(`Stream data not found`);
+                const secureData = await response.json();
+                playerMobile.configure({ drm: { clearKeys: secureData.clearKey || {} } });
+                await playerMobile.load(secureData.manifestUri);
+            } catch (e) {
+                console.error('Player Load Error:', e);
+            }
+        }
+        updatePlayerInfo(stream, 'mobile');
+        minimizedPlayer.classList.remove('active');
+        mobilePlayerView.classList.add('active');
+    };
+
+    // Updates the channel name, category, etc., for the correct player
+    const updatePlayerInfo = (stream, device) => {
+        if (device === 'desktop') {
+            desktopInfoContainer.querySelector('h3').textContent = stream.name;
+            desktopInfoContainer.querySelector('p').textContent = stream.category;
+            desktopInfoContainer.querySelector('.live-indicator').style.display = 'flex';
+        } else { // mobile
+            mobileInfoContainer.querySelector('h3').textContent = stream.name;
+            mobileInfoContainer.querySelector('p').textContent = stream.category;
+            // Minimized player
+            document.getElementById('minimized-player-logo').src = stream.logo;
+            document.getElementById('minimized-player-name').textContent = stream.name;
+            document.getElementById('minimized-player-category').textContent = stream.category;
+        }
+    };
+
+    const minimizePlayer = () => {
+        if (mobilePlayerView.classList.contains('active')) {
+            mobilePlayerView.classList.remove('active');
+            minimizedPlayer.classList.add('active');
+        }
+    };
+
+    const restorePlayer = (e) => {
+        if (e.target.closest('#exit-player-btn')) return;
+        if (minimizedPlayer.classList.contains('active')) {
+            minimizedPlayer.classList.remove('active');
+            mobilePlayerView.classList.add('active');
+        }
+    };
+    
+    const closePlayer = async (e) => {
+        if(e) e.stopPropagation();
+        
+        // Unload both players to be safe
+        if (playerDesktop) await playerDesktop.unload();
+        if (playerMobile) await playerMobile.unload();
+
+        // Hide mobile UI
+        mobilePlayerView.classList.remove('active');
+        minimizedPlayer.classList.remove('active');
+
+        // Reset desktop UI
+        desktopInfoContainer.querySelector('h3').textContent = 'Select a Channel';
+        desktopInfoContainer.querySelector('p').textContent = 'No channel selected';
+        desktopInfoContainer.querySelector('.live-indicator').style.display = 'none';
+        desktopVideoElement.poster = "/logo/attention.png";
+        
+        // Clean up iframes
+        if (desktopYoutubePlayer) desktopYoutubePlayer.src = '';
+        if (mobileYoutubePlayer) mobileYoutubePlayer.src = '';
+
+        activeStream = null;
+        history.pushState({}, '', '/home');
+    };
+
+    // --- Page Initialization & Event Listeners ---
+    const initializePage = async () => {
         try {
             const response = await fetch('/api/getChannels');
             if (!response.ok) throw new Error('Network response was not ok');
@@ -180,10 +212,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             streamsData = [...publicStreams, ...yt_live];
         } catch (error) {
             console.error("Failed to fetch channel list:", error);
-            streamsData = [...yt_live];
+            streamsData = [...yt_live]; // Fallback
         }
 
-        if (categoryPillsContainer && channelListingsContainer) {
+        // Render Channel Categories and Pills
+        const categoryPillsContainer = document.querySelector('.category-pills');
+        if (categoryPillsContainer) {
             const categories = ['ALL', ...new Set(streamsData.map(s => s.category))];
             const categoryIcons = { ALL: 'apps', LOCAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', OVERSEAS: 'globe', RELIGIOUS: 'church', 'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display' };
             
@@ -194,197 +228,73 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
-                pill.addEventListener('click', createRipple);
-                pill.addEventListener('click', () => {
+                pill.addEventListener('click', (e) => {
+                    createRipple(e);
                     document.querySelector('.pill.active')?.classList.remove('active');
                     pill.classList.add('active');
-                    renderChannels(category);
+                    renderChannelRows(category);
                 });
                 categoryPillsContainer.appendChild(pill);
             });
-            renderChannels('ALL');
+            renderChannelRows('ALL');
         }
 
         const params = new URLSearchParams(window.location.search);
         const channelToPlay = params.get('play');
-        if (channelToPlay) {
-             if (currentUser) {
-                const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
-                if (streamToPlay) openPlayer(streamToPlay);
-            } else {
-                history.replaceState({}, '', '/home'); 
-                showAuthPopup();
-            }
+        if (channelToPlay && currentUser) {
+            const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
+            if (streamToPlay) openPlayer(streamToPlay);
+        } else if (channelToPlay && !currentUser) {
+             history.replaceState({}, '', '/home'); 
+             showAuthPopup();
         }
-    }
-
-    const playerView = document.getElementById('player-view');
-    const minimizedPlayer = document.getElementById('minimized-player');
-    const minimizeBtn = document.getElementById('minimize-player-btn');
-    const exitBtn = document.getElementById('exit-player-btn');
-    let activeStream = null;
-
-    const initPlayer = async () => {
-        shaka.polyfill.installAll();
-        if (shaka.Player.isBrowserSupported()) {
-            player = new shaka.Player(videoElement);
-            ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
-            ui.getControls();
-            player.addEventListener('error', onError);
-        } else { console.error('Browser not supported!'); }
     };
 
-    const onError = (event) => console.error('Player Error', event.detail);
+    const renderChannelRows = (filter) => {
+        const channelListingsContainer = document.getElementById('channel-listings');
+        if (!channelListingsContainer) return;
+        channelListingsContainer.innerHTML = '';
+        const filteredStreams = (filter === 'ALL') ? streamsData : streamsData.filter(s => s.category === filter);
+        const groupedByCategory = filteredStreams.reduce((acc, stream) => {
+            (acc[stream.category] = acc[stream.category] || []).push(stream);
+            return acc;
+        }, {});
 
-    const updatePlayerInfo = (stream) => {
-        // Update desktop player info
-        document.getElementById('player-channel-name').textContent = stream.name;
-        document.getElementById('player-channel-category').textContent = stream.category;
-        document.querySelector('.live-indicator').style.display = 'flex';
-
-        // Update mobile minimized player info
-        document.getElementById('minimized-player-logo').src = stream.logo;
-        document.getElementById('minimized-player-name').textContent = stream.name;
-        document.getElementById('minimized-player-category').textContent = stream.category;
+        const categories = ['LOCAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'INFOTAINMENT', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGIOUS', 'NATURE + ANIMAL', 'YOUTUBE LIVE'];
+        const categoryIcons = { LOCAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', OVERSEAS: 'globe', RELIGIOUS: 'church', 'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display' };
+        
+        const orderedCategories = categories.filter(c => groupedByCategory[c]);
+        orderedCategories.forEach(category => {
+            const section = document.createElement('div');
+            section.className = 'category-section';
+            section.innerHTML = `<div class="category-title"><span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span><h3>${category}</h3></div>`;
+            const row = document.createElement('div');
+            row.className = 'channel-row';
+            groupedByCategory[category].forEach(stream => {
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                const logoBg = document.createElement('div');
+                logoBg.className = 'channel-logo-bg';
+                logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
+                logoBg.addEventListener('click', () => openPlayer(stream));
+                card.appendChild(logoBg);
+                row.appendChild(card);
+            });
+            section.appendChild(row);
+            channelListingsContainer.appendChild(section);
+        });
     };
     
-    const openPlayer = async (stream) => {
-        if (isDesktop) {
-            openDesktopPlayer(stream);
-        } else {
-            openMobilePlayer(stream);
-        }
-    };
-
-    const openDesktopPlayer = async (stream) => {
-        const youtubePlayer = document.getElementById('youtube-player');
-        activeStream = stream;
-
-        if (stream.type === 'youtube') {
-            if (player) await player.unload();
-            if (ui) ui.setEnabled(false);
-            if (videoElement) videoElement.style.display = 'none';
-            if (youtubePlayer) {
-                youtubePlayer.src = stream.embedUrl;
-                youtubePlayer.style.display = 'block';
-            }
-        } else {
-            if (youtubePlayer) {
-                youtubePlayer.style.display = 'none';
-                youtubePlayer.src = '';
-            }
-            if (videoElement) videoElement.style.display = 'block';
-            
-            if (!player) await initPlayer();
-            if (ui) ui.setEnabled(true);
-
-            try {
-                const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
-                if (!response.ok) throw new Error(`Stream data not found for ${stream.name}.`);
-                const secureData = await response.json();
-
-                player.configure({ drm: { clearKeys: secureData.clearKey || {} } });
-                await player.load(secureData.manifestUri);
-                videoElement.play();
-            } catch (e) {
-                console.error('Player Error', e);
-                onError(e);
-            }
-        }
-        updatePlayerInfo(stream);
-    };
-
-    const openMobilePlayer = async (stream) => {
-        // Clone player elements for the mobile view to avoid conflicts
-        const mobilePlayerContainer = document.querySelector('.video-player-container-mobile');
-        const mobileInfoContainer = document.querySelector('.player-info-mobile');
-        mobilePlayerContainer.innerHTML = '';
-        mobileInfoContainer.innerHTML = '';
-        mobilePlayerContainer.appendChild(playerWrapper.cloneNode(true));
-        mobileInfoContainer.appendChild(document.querySelector('.player-info').cloneNode(true));
-
-        const mobileVideoElement = mobilePlayerContainer.querySelector('video');
-        const mobilePlayerWrapper = mobilePlayerContainer.querySelector('.video-player-container');
-        const mobileYoutubePlayer = mobilePlayerContainer.querySelector('#youtube-player');
-        
-        activeStream = stream;
-        
-        if (stream.type === 'youtube') {
-            if (player) await player.unload();
-            mobileVideoElement.style.display = 'none';
-            mobileYoutubePlayer.src = stream.embedUrl;
-            mobileYoutubePlayer.style.display = 'block';
-
-        } else {
-            mobileYoutubePlayer.style.display = 'none';
-            mobileYoutubePlayer.src = '';
-            mobileVideoElement.style.display = 'block';
-            
-            if (!player) await initPlayer(); // Ensure main player instance is initialized
-             // Re-initialize UI on the cloned element
-            let mobileUi = new shaka.ui.Overlay(player, mobilePlayerWrapper, mobileVideoElement);
-            mobileUi.getControls();
-            
-            try {
-                const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
-                if (!response.ok) throw new Error(`Stream data not found for ${stream.name}.`);
-                const secureData = await response.json();
-                player.configure({ drm: { clearKeys: secureData.clearKey || {} } });
-                await player.load(secureData.manifestUri);
-                mobileVideoElement.play();
-            } catch (e) {
-                console.error('Player Error', e);
-                onError(e);
-            }
-        }
-        
-        updatePlayerInfo(stream);
-        
-        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-        if (playerView) playerView.classList.add('active');
-    };
-
-    const minimizePlayer = () => {
-        if (playerView && playerView.classList.contains('active')) {
-            playerView.classList.remove('active');
-            if (minimizedPlayer) minimizedPlayer.classList.add('active');
-        }
-    };
-
-    const restorePlayer = (e) => {
-        if (e.target.closest('#exit-player-btn')) return;
-        if (minimizedPlayer && minimizedPlayer.classList.contains('active')) {
-            minimizedPlayer.classList.remove('active');
-            if (playerView) playerView.classList.add('active');
-            if (activeStream && activeStream.type !== 'youtube') {
-                 // The player continues to play in the background on mobile
-            }
-        }
-    };
-
-    const closePlayer = async (e) => {
-        e.stopPropagation();
-        if (playerView) playerView.classList.remove('active');
-        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-        const youtubePlayer = document.getElementById('youtube-player');
-        if (youtubePlayer) {
-            youtubePlayer.src = '';
-            youtubePlayer.style.display = 'none';
-        }
-        if (ui) ui.setEnabled(false);
-        if (player) await player.unload();
-        
-        // Reset desktop player state
-        document.getElementById('player-channel-name').textContent = 'Select a Channel';
-        document.getElementById('player-channel-category').textContent = 'No channel selected';
-        document.querySelector('.live-indicator').style.display = 'none';
-        videoElement.poster = "/logo/attention.png";
-
-
-        activeStream = null;
-        history.pushState({}, '', '/home');
-    };
+    // --- Auth & Menu Setup ---
+    currentUser = await window.auth.getCurrentUser();
+    renderMenu(currentUser);
+    window.auth.onAuthStateChange(user => { currentUser = user; renderMenu(user); });
     
+    // --- Final Setup ---
+    if (authPopup) authPopup.addEventListener('click', (e) => { if (e.target === authPopup) hideAuthPopup(); });
+    if (closePopupBtn) closePopupBtn.addEventListener('click', hideAuthPopup);
+    if (menuBtn) menuBtn.addEventListener('click', (e) => { e.stopPropagation(); floatingMenu.classList.toggle('active'); });
+    document.addEventListener('click', (e) => { if (floatingMenu.classList.contains('active') && !floatingMenu.contains(e.target) && e.target !== menuBtn) floatingMenu.classList.remove('active'); });
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
