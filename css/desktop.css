@@ -16,7 +16,7 @@
 
     #player-view {
         position: sticky;
-        top: 80px;
+        top: 80px; /* 60px header + 20px main padding */
         transform: none;
         background: transparent;
         backdrop-filter: none;
@@ -33,12 +33,14 @@
     .video-player-container {
         max-width: none;
         margin: 0;
-        border-radius: 15px; /* <-- ADJUST PLAYER BORDER RADIUS HERE */
+        border-radius: 15px;
     }
 
     .player-info {
         max-width: none;
-        padding: 10px 0;
+        /* ADJUST LEFT/RIGHT MARGINS HERE */
+        /* The first value is for top/bottom, the second is for left/right */
+        padding: 10px 10px; 
     }
 
     .content-container {
@@ -67,7 +69,7 @@
     }
     
     .content-container .featured-slider {
-        margin-top: 0; /* <-- ADJUST SLIDER TOP SPACING HERE */
+        margin-top: 0;
     }
 
     .content-container .category-nav {
