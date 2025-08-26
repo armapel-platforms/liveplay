@@ -38,8 +38,7 @@
 
     .player-info {
         max-width: none;
-        /* ADJUST LEFT/RIGHT MARGINS HERE */
-        /* The first value is for top/bottom, the second is for left/right */
+        margin: 20px 10px 20px 10px;
         padding: 10px 10px; 
     }
 
