@@ -37,6 +37,10 @@
         overflow-y: auto;
     }
 
+    .content-container::-webkit-scrollbar {
+        display: none;
+    }
+
     #minimized-player {
         display: none !important;
     }
