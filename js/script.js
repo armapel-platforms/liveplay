@@ -313,4 +313,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
     
     await initializePage();
-});```
+});
