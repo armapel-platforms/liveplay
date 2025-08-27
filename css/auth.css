@@ -32,19 +32,16 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+.subpage-header h1 > strong {
+    font-weight: 800;
+}
+
 .form-header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
     margin-bottom: 25px;
-}
-
-.auth-logo {
-    width: 100px;
-    height: auto;
-    margin-bottom: 5px;
-    pointer-events: none;
 }
 
 .form-header h2 {
@@ -360,64 +357,38 @@
 .resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; text-decoration: none; }
 .resend-link.disabled { display: none; color: var(--text-secondary); cursor: not-allowed; pointer-events: none; }
 
-
 /* ==========================================================================
-   Desktop Layout (Google Inspired)
+   Desktop Layout (Dark Theme)
    ========================================================================== */
 @media (min-width: 1024px) {
-    /* --- Light Theme for Auth Pages on Desktop --- */
-    body.subpage.auth-page {
-        background-color: #f9f9f9;
-    }
-    
-    .auth-page .subpage-header {
-        background-color: #fff;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .auth-page .subpage-header h1,
-    .auth-page .subpage-header .back-link {
-        color: #202124;
-    }
-
     .auth-container {
         padding-top: 60px;
+        min-height: calc(100vh - 120px);
+        justify-content: center;
     }
 
     .auth-form {
         max-width: 880px;
         padding: 48px 40px;
-        border: 1px solid #dadce0;
-        background-color: #fff;
-        /* --- Two-Column Grid Layout --- */
-        display: none; /* Hide by default on desktop too */
+        display: none;
         grid-template-columns: 1fr 1fr;
-        gap: 0 60px; /* 0 row-gap, 60px column-gap */
+        gap: 0 80px;
         align-items: center;
     }
     
     .auth-form.active {
-        display: grid; /* Show active form as grid */
+        display: grid;
     }
 
     .form-header {
         grid-column: 1;
-        display: flex;
-        flex-direction: column;
         align-items: center;
         text-align: center;
         margin: 0;
     }
 
-    .form-header .auth-logo {
-        content: url('/logo/liveplay-logo-color.png'); /* Swap to color logo on light bg */
-        width: 150px;
-        margin-bottom: 15px;
-    }
-
     .form-header h2 {
-        color: #202124;
-        font-size: 2rem;
+        font-size: 2.5rem;
         text-align: center;
     }
 
@@ -426,37 +397,8 @@
     }
     
     .form-footer {
-        grid-column: 1 / -1; /* Span both columns */
-        padding: 0 40px;
+        grid-column: 1 / -1;
+        justify-content: center;
         margin-top: 40px;
-    }
-    
-    /* --- Light Theme Overrides --- */
-    .auth-form .input-group input {
-        background: #fff;
-        border: 1px solid #ccc;
-        color: #202124;
-    }
-
-    .auth-form .input-group input:focus {
-        border-color: var(--theme-color);
-        background-color: #fff;
-    }
-    
-    .auth-form .input-group .material-symbols-outlined {
-        color: #5f6368;
-    }
-
-    .auth-form .forgot-password,
-    .auth-form .toggle-form,
-    .auth-form .form-description {
-        color: #5f6368;
-    }
-
-    .auth-form .form-footer a {
-        color: #5f6368;
-    }
-    .auth-form .form-footer a:hover {
-        color: #202124;
     }
 }
