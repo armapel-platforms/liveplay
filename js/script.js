@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="menu-header">Hi, ${user.first_name || 'User'}</div>
                 <div class="menu-divider"></div>
                 <ul>
-                    <li><a href="/home/manage-account"><span class="material-symbols-outlined">manage_accounts</span> My Account</a></li>
+                    <li><a href="/home/my-account"><span class="material-symbols-outlined">manage_accounts</span> My Account</a></li>
                 </ul>`;
         } else {
             menuContent = `
