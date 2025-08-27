@@ -10,13 +10,13 @@
     .main-container {
         display: grid;
         grid-template-columns: 2fr 1fr;
-        gap: 20px; /* Increased gap for better separation */
+        gap: 20px;
         align-items: start;
     }
 
     #player-view {
         position: sticky;
-        top: 80px; /* 60px header + 20px main padding */
+        top: 80px;
         transform: none;
         background: transparent;
         backdrop-filter: none;
@@ -37,11 +37,11 @@
 
     .player-info {
         max-width: none;
-        padding: 10px 20px;
+        padding: 20px 20px 0;
     }
 
     .content-container {
-        height: calc(100vh - 100px); /* Adjusts for header and main padding */
+        height: calc(100vh - 100px);
         overflow-y: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
