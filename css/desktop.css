@@ -38,19 +38,7 @@
 
     .player-info {
         max-width: none;
-        padding: 30px 20px; 
-    }
-
-    .player-info-left h3 {
-        font-size: 1.4rem; /* Significantly larger channel name */
-    }
-
-    .player-info-left p {
-        font-size: 1.0rem; /* Significantly larger category name */
-    }
-    
-    .live-indicator {
-        font-size: 1.0rem;
+        padding: 30px 20px;
     }
 
     .content-container {
