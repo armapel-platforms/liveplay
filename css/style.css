@@ -341,8 +341,7 @@ header.subpage-header h1 {
     display: flex; 
     gap: 10px; 
     overflow-x: auto; 
-    scrollbar-width: none; 
-    padding-bottom: 10px; 
+    scrollbar-width: none;
 }
 
 .category-pills::-webkit-scrollbar { 
