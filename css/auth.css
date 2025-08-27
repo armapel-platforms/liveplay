@@ -1,4 +1,7 @@
-/* === [MODIFIED] - This rule makes the page container match the width of other pages like 'Terms of Service' and centers the content inside it. === */
+/* ==========================================================================
+   Base Styles & Mobile First Layout
+   ========================================================================== */
+
 .auth-container, .account-container {
     max-width: 800px;
     margin: 20px auto;
@@ -8,22 +11,15 @@
     align-items: center;
 }
 
-/* === [MODIFIED] - This new rule sets a readable width for the forms and account sections inside their new, wider container. === */
-.auth-form,
-.account-card {
-    width: 100%;
-    max-width: 800px;
-    box-sizing: border-box;
-}
-
 .auth-form {
     background: var(--card-background);
     border-radius: var(--border-radius);
-    padding: 30px;
+    padding: 25px;
     display: none;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
     animation: fadeIn 0.5s ease-in-out;
 }
 
@@ -36,18 +32,48 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+.form-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
 .auth-logo {
     width: 100px;
     height: auto;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     pointer-events: none;
 }
 
-.auth-form h2 {
-    margin-top: 0;
-    font-size: 1.5rem;
-    margin-bottom: 25px;
+.form-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
     font-weight: 600;
+    text-align: left;
+}
+
+.form-content {
+    width: 100%;
+}
+
+.form-footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 30px;
+    font-size: 0.8rem;
+}
+
+.form-footer a {
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+.form-footer a:hover {
+    color: var(--text-color);
 }
 
 .input-group {
@@ -92,9 +118,11 @@
 }
 
 .forgot-password {
-    align-self: flex-end;
+    display: block;
+    text-align: right;
     font-size: 0.8rem;
     color: var(--text-secondary);
+    margin-top: -10px;
     margin-bottom: 25px;
 }
 
@@ -136,12 +164,30 @@
     margin-top: 30px;
     font-size: 0.8rem;
     color: var(--text-secondary);
+    text-align: center;
 }
 
 .toggle-form a {
     color: var(--theme-color);
     font-weight: 600;
     cursor: pointer;
+}
+
+.form-description {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+/* ==========================================================================
+   Account Page Styles
+   ========================================================================== */
+
+.account-card, .account-actions, .account-container > #save-changes-button {
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
 }
 
 .account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; }
@@ -158,14 +204,6 @@
 .account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
 .account-row.editing .edit-icon { color: var(--theme-color); }
 
-/* === [MODIFIED] - This rule ensures the buttons on the account page match the width of the card above them. === */
-.account-actions,
-.account-container > #save-changes-button {
-    width: 100%;
-    max-width: 450px;
-    box-sizing: border-box;
-}
-
 .account-actions { margin-top: 30px; text-align: center; }
 #delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
 
@@ -181,9 +219,14 @@
 }
 
 #delete-account-survey h3 { margin-top: 0; text-align: center; }
-#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
+#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
+#delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
 .other-reason-label { flex-wrap: wrap; }
 #other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
+
+/* ==========================================================================
+   Popup & Menu Styles
+   ========================================================================== */
 
 .auth-popup-overlay {
     position: fixed;
@@ -289,6 +332,9 @@
     margin: 5px 10px 10px;
 }
 
+/* ==========================================================================
+   OTP Styles
+   ========================================================================== */
 
 .otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.0rem; font-weight: 600; }
 .otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.8rem; }
@@ -298,7 +344,7 @@
     box-sizing: border-box;
     padding: 12px;
     font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 1.0rem;
+    font-size: 1.5rem;
     font-weight: 600;
     text-align: center;
     letter-spacing: 0.5em;
@@ -309,17 +355,108 @@
     color: var(--text-color);
 }
 #otp-input:focus { outline: none; border-color: var(--theme-color); }
-#resend-container { margin-top: 25px; text-align: center; font-size: 0.9rem; }
-.timer-display { color: var(--text-secondary); }
-.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; }
-.resend-link.disabled { display: none; }
-
-.form-description { font-size: 0.8rem; color: var(--text-secondary); margin-top: -10px; margin-bottom: 25px; }
-.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
-.otp-input-container { margin-bottom: 25px; width: 100%; }
-#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1.5rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
-#otp-input:focus { outline: none; border-color: var(--theme-color); }
 #resend-container { margin-top: 25px; text-align: center; font-size: 0.8rem; }
 .timer-display { color: var(--text-secondary); }
 .resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; text-decoration: none; }
 .resend-link.disabled { display: none; color: var(--text-secondary); cursor: not-allowed; pointer-events: none; }
+
+
+/* ==========================================================================
+   Desktop Layout (Google Inspired)
+   ========================================================================== */
+@media (min-width: 1024px) {
+    /* --- Light Theme for Auth Pages on Desktop --- */
+    body.subpage.auth-page {
+        background-color: #f9f9f9;
+    }
+    
+    .auth-page .subpage-header {
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .auth-page .subpage-header h1,
+    .auth-page .subpage-header .back-link {
+        color: #202124;
+    }
+
+    .auth-container {
+        padding-top: 60px;
+    }
+
+    .auth-form {
+        max-width: 880px;
+        padding: 48px 40px;
+        border: 1px solid #dadce0;
+        background-color: #fff;
+        /* --- Two-Column Grid Layout --- */
+        display: none; /* Hide by default on desktop too */
+        grid-template-columns: 1fr 1fr;
+        gap: 0 60px; /* 0 row-gap, 60px column-gap */
+        align-items: center;
+    }
+    
+    .auth-form.active {
+        display: grid; /* Show active form as grid */
+    }
+
+    .form-header {
+        grid-column: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: 0;
+    }
+
+    .form-header .auth-logo {
+        content: url('/logo/liveplay-logo-color.png'); /* Swap to color logo on light bg */
+        width: 150px;
+        margin-bottom: 15px;
+    }
+
+    .form-header h2 {
+        color: #202124;
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .form-content {
+        grid-column: 2;
+    }
+    
+    .form-footer {
+        grid-column: 1 / -1; /* Span both columns */
+        padding: 0 40px;
+        margin-top: 40px;
+    }
+    
+    /* --- Light Theme Overrides --- */
+    .auth-form .input-group input {
+        background: #fff;
+        border: 1px solid #ccc;
+        color: #202124;
+    }
+
+    .auth-form .input-group input:focus {
+        border-color: var(--theme-color);
+        background-color: #fff;
+    }
+    
+    .auth-form .input-group .material-symbols-outlined {
+        color: #5f6368;
+    }
+
+    .auth-form .forgot-password,
+    .auth-form .toggle-form,
+    .auth-form .form-description {
+        color: #5f6368;
+    }
+
+    .auth-form .form-footer a {
+        color: #5f6368;
+    }
+    .auth-form .form-footer a:hover {
+        color: #202124;
+    }
+}
