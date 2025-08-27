@@ -1,3 +1,4 @@
+/* === [MODIFIED] - This rule makes the page container match the width of other pages like 'Terms of Service' and centers the content inside it. === */
 .auth-container, .account-container {
     max-width: 800px;
     margin: 20px auto;
@@ -7,17 +8,23 @@
     align-items: center;
 }
 
+/* === [MODIFIED] - This new rule sets a readable width for the forms and account sections inside their new, wider container. === */
 .auth-form,
 .account-card {
-width: 100%;
-max-width: 450px; / Set a max-width for readability */
-box-sizing: border-box;
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
 }
-.account-actions,
-.account-container > #save-changes-button {
-width: 100%;
-max-width: 450px; /* Match the width of the account card */
-box-sizing: border-box;
+
+.auth-form {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .auth-form.active {
@@ -150,12 +157,30 @@ box-sizing: border-box;
 .account-row.editing .row-input { display: block; }
 .account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
 .account-row.editing .edit-icon { color: var(--theme-color); }
-.account-actions { 
-    margin-top: 30px; 
-    text-align: center; 
+
+/* === [MODIFIED] - This rule ensures the buttons on the account page match the width of the card above them. === */
+.account-actions,
+.account-container > #save-changes-button {
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
 }
+
+.account-actions { margin-top: 30px; text-align: center; }
 #delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
-#delete-account-survey { display: none; margin-top: 20px; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
+
+#delete-account-survey {
+    display: none;
+    margin-top: 20px;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
+}
+
+#delete-account-survey h3 { margin-top: 0; text-align: center; }
 #delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
 .other-reason-label { flex-wrap: wrap; }
 #other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
@@ -272,7 +297,7 @@ box-sizing: border-box;
     width: 100%;
     box-sizing: border-box;
     padding: 12px;
-    font-family: 'TT Hoves Pro Trail', sans-serif;
+    font-family: 'TT Hoves Pro Trial', sans-serif;
     font-size: 1.0rem;
     font-weight: 600;
     text-align: center;
