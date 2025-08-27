@@ -31,6 +31,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentUser = null;
     const isDesktop = () => window.innerWidth >= 1024;
 
+    const setVideoPoster = () => {
+        if (!videoElement) return;
+
+        if (isDesktop()) {
+            videoElement.poster = '/path/to/your/desktop-poster.jpg'; // CHANGE THIS PATH
+        } else {
+            videoElement.poster = '/logo/attention.png';
+        }
+    };
+
+    setVideoPoster();
+    window.addEventListener('resize', setVideoPoster);
 
     if (document.getElementById('featured-slider')) {
         window.addEventListener('scroll', () => {
