@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Log In / Sign Up - Liveplay</title>
+    <title>Account - Liveplay</title>
     <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
     <link rel="shortcut" href="/logo/favicon.ico" />
@@ -19,14 +19,13 @@
         <a href="/home" class="back-link">
             <span class="material-symbols-outlined">arrow_back_ios_new</span>
         </a>
-        <h1 id="page-title">Log In</h1>
+        <h1><strong>liveplay</strong> > Account</h1>
     </header>
 
     <main class="subpage-content auth-container">
         <!-- Log In Form -->
         <div id="login-form" class="auth-form">
             <div class="form-header">
-                <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="auth-logo">
                 <h2>Log In</h2>
             </div>
             <div class="form-content">
@@ -52,7 +51,6 @@
         <!-- Sign Up Form -->
         <div id="signup-form" class="auth-form">
             <div class="form-header">
-                <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="auth-logo">
                 <h2>Sign Up</h2>
             </div>
             <div class="form-content">
@@ -115,21 +113,14 @@
     document.addEventListener('DOMContentLoaded', () => {
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
-        const pageTitle = document.getElementById('page-title');
 
-        function showFormBasedOnUrl() {
-            if (window.location.pathname.endsWith('/signup')) {
-                loginForm.classList.remove('active');
-                signupForm.classList.add('active');
-                pageTitle.textContent = 'Sign Up';
-            } else {
-                signupForm.classList.remove('active');
-                loginForm.classList.add('active');
-                pageTitle.textContent = 'Log In';
-            }
+        if (window.location.pathname.endsWith('/signup')) {
+            loginForm.classList.remove('active');
+            signupForm.classList.add('active');
+        } else {
+            signupForm.classList.remove('active');
+            loginForm.classList.add('active');
         }
-        
-        showFormBasedOnUrl();
     });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
