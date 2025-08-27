@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!videoElement) return;
 
         if (isDesktop()) {
-            videoElement.poster = '/logo/desktop-poster.png'; // CHANGE THIS PATH
+            videoElement.poster = '/logo/desktop-poster.png';
         } else {
             videoElement.poster = '/logo/attention.png';
         }
