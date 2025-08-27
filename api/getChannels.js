@@ -109,7 +109,7 @@ const streams = [
     { name: 'MTV Live', logo: 'https://static.wikia.nocookie.net/logopedia/images/1/1f/MTV_Live_2021_(horizontal).svg', type: 'mpegdash', manifestUri: 'https://linearjitp-playback.astro.com.my/dash-wv/linear/5014/default_ott.mpd', clearKey: { '3ac2542a4f7be746633db07647451710': '22f964a6d6927ccdba482e775cdff190' }, category: "MUSIC" },    
     { name: 'MTV US (USA)', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/MTV_2021_%28brand_version%29.svg/1200px-MTV_2021_%28brand_version%29.svg.png', type: 'hls', manifestUri: 'https://fl3.moveonjoy.com/MTV/index.m3u8', category: "MUSIC" },
     { name: 'Nick Music (USA)', logo: 'https://raw.githubusercontent.com/armapeltech/liveplay/refs/heads/main/logo/nickmusic-logo.png', type: 'hls', manifestUri: 'https://fl3.moveonjoy.com/NICK_MUSIC/index.m3u8', category: "MUSIC" },
-    { name: 'Vevo Pop (USA)', logo: 'https://images.viaway.com/26295749_640.png', type: 'hls', manifestUri: 'https://jmp2.uk/sam-GBBC19000017V.m3u8', category: "MUSIC" },
+    { name: 'Vevo Pop (USA)', logo: 'https://images.viaway.com/26295749_640.png', type: 'hls', manifestUri: 'https://amg00056-amg00056c6-rakuten-uk-3235.playouts.now.amagi.tv/playlist.m3u8', category: "MUSIC" },
     
     // NATURE + ANIMAL
     { name: 'Animal Planet', logo: 'https://comcastadvertising.com/wp-content/uploads/2021/09/Animal-Planet-White-Small.png', type: 'mpegdash', manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cg_animal_planet_sd.mpd', clearKey: { '436b69f987924fcbbc06d40a69c2799a': 'c63d5b0d7e52335b61aeba4f6537d54d' }, category: "NATURE + ANIMAL" },
