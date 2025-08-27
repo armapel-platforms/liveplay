@@ -1,25 +1,17 @@
-/* ==========================================================================
-   Auth Page Layout & Form Styles
-   ========================================================================== */
-
-.auth-container {
-    max-width: 800px;
+.auth-container, .account-container {
+    max-width: 400px;
     margin: 20px auto;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
-.auth-form {
+.auth-form, .account-section, #delete-account-survey {
     background: var(--card-background);
     border-radius: var(--border-radius);
-    padding: 30px 40px;
+    padding: 30px;
     display: none;
     flex-direction: column;
-    width: 100%;
-    max-width: 550px; /* A wider, more modern form width */
-    box-sizing: border-box;
+    align-items: center;
+    text-align: center;
     animation: fadeIn 0.5s ease-in-out;
 }
 
@@ -32,27 +24,18 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.form-header {
-    width: 100%;
-    margin-bottom: 35px;
-    text-align: left;
+.auth-logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+    pointer-events: none;
 }
 
-.form-main-title {
+.auth-form h2 {
+    margin-top: 0;
     font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 5px 0;
-}
-
-.form-sub-title {
-    font-size: 1.0rem;
-    font-weight: 500;
-    margin: 0;
-    color: var(--text-secondary);
-}
-
-.form-content {
-    width: 100%;
+    margin-bottom: 25px;
+    font-weight: 600;
 }
 
 .input-group {
@@ -72,13 +55,13 @@
 
 .input-group input {
     width: 100%;
-    padding: 14px 14px 14px 50px;
+    padding: 12px 12px 12px 50px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid transparent;
     border-radius: 10px;
     color: var(--text-color);
     font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     box-sizing: border-box;
     transition: border-color 0.3s, background-color 0.3s;
 }
@@ -97,11 +80,9 @@
 }
 
 .forgot-password {
-    display: block;
-    text-align: right;
-    font-size: 0.65rem;
+    align-self: flex-end;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    margin-top: -10px;
     margin-bottom: 25px;
 }
 
@@ -119,52 +100,38 @@
     transition: background-color 0.3s;
 }
 
-.auth-btn:hover:not(:disabled) { background-color: #ff6a29; }
-.auth-btn:disabled { background-color: #555; cursor: not-allowed; opacity: 0.7; }
+.auth-btn:hover:not(:disabled) {
+    background-color: #ff6a29;
+}
 
-.auth-btn.secondary { background-color: #FF4D00; }
-.auth-btn.secondary:hover { background-color: #444; }
-.auth-btn.danger { background-color: #FF0000; }
+.auth-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.auth-btn.secondary {
+    background-color: #FF4D00;
+}
+.auth-btn.secondary:hover {
+    background-color: #444;
+}
+.auth-btn.danger {
+    background-color: #FF0000;
+}
 
 .toggle-form {
     margin-top: 30px;
     font-size: 0.8rem;
     color: var(--text-secondary);
-    text-align: center;
 }
 
-.toggle-form a { color: var(--theme-color); font-weight: 600; cursor: pointer; }
-
-.form-description {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-bottom: 25px;
-    text-align: left;
-    line-height: 1.5;
+.toggle-form a {
+    color: var(--theme-color);
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.page-footer {
-    width: 100%;
-    max-width: 550px;
-    padding: 20px 5px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 25px;
-    font-size: 0.65rem;
-}
-
-.page-footer a { color: var(--text-secondary); transition: color 0.2s; }
-.page-footer a:hover { color: var(--text-color); }
-
-
-/* ==========================================================================
-   Account Page Styles
-   ========================================================================== */
-
-.account-container { align-items: center; }
-.account-card, .account-actions, .account-container > #save-changes-button {
-    width: 100%; max-width: 800px; box-sizing: border-box;
-}
 .account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; }
 .account-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .account-row:last-child { border-bottom: none; }
@@ -178,54 +145,146 @@
 .account-row.editing .row-input { display: block; }
 .account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
 .account-row.editing .edit-icon { color: var(--theme-color); }
-
 .account-actions { margin-top: 30px; text-align: center; }
 #delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
-
-#delete-account-survey {
-    display: none; margin-top: 20px; background: var(--card-background); border-radius: var(--border-radius); padding: 30px; width: 100%; max-width: 450px; box-sizing: border-box;
-}
-#delete-account-survey h3 { margin-top: 0; text-align: center; }
-#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
-#delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
+#delete-account-survey { display: none; margin-top: 20px; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
+#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
 .other-reason-label { flex-wrap: wrap; }
 #other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
 
-
-/* ==========================================================================
-   Popups, Menus & OTP Styles
-   ========================================================================== */
-
 .auth-popup-overlay {
-    position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-.auth-popup-overlay.active { opacity: 1; visibility: visible; }
-.auth-popup {
-    background: var(--card-background); border-radius: 24px; padding: 30px; text-align: center; position: relative; transform: scale(0.95); transition: transform 0.3s ease; max-width: 340px; width: 90%; box-sizing: border-box;
-}
-.auth-popup-overlay.active .auth-popup { transform: scale(1); }
-.popup-close-btn {
-    position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 5px; display: flex; align-items: center; justify-content: center;
-}
-.popup-logo {
-    width: 120px; height: auto; margin: 10px 0 15px 0; pointer-events: none;
-}
-.popup-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin: 0 0 25px 0; }
-.popup-action-btn {
-    display: block; width: 100%; padding: 14px; background-color: var(--theme-color); border: none; border-radius: 50px; color: var(--text-color); font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s; text-decoration: none; box-sizing: border-box;
-}
-.popup-action-btn:hover { background-color: #ff6a29; }
-.auth-popup h3 { margin: 0 0 25px 0; font-size: 1.0rem; font-weight: 400; }
 
-.menu-header { padding: 10px 10px 8px; font-weight: 900; color: var(--text-secondary); font-size: 1.2rem; }
-.menu-divider { height: 1px; background-color: rgba(255, 255, 255, 0.1); margin: 5px 10px 10px; }
+.auth-popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.auth-popup {
+    background: var(--card-background);
+    border-radius: 24px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+    max-width: 340px;
+    width: 90%;
+    box-sizing: border-box;
+}
+
+.auth-popup-overlay.active .auth-popup {
+    transform: scale(1);
+}
+
+.popup-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-logo {
+    width: 120px;
+    height: auto;
+    margin: 10px 0 15px 0;
+    pointer-events: none;
+}
+
+.popup-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0 0 25px 0;
+}
+
+.popup-action-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--theme-color);
+    border: none;
+    border-radius: 50px;
+    color: var(--text-color);
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.popup-action-btn:hover {
+    background-color: #ff6a29;
+}
+
+.auth-popup h3 {
+    margin: 0 0 25px 0;
+    font-size: 1.0rem;
+    font-weight: 400;
+}
+
+.menu-header {
+    padding: 10px 10px 8px;
+    font-weight: 900;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+}
+
+.menu-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5px 10px 10px;
+}
+
 
 .otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.0rem; font-weight: 600; }
 .otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.8rem; }
 .otp-input-container { margin-bottom: 25px; width: 100%; }
 #otp-input {
-    width: 100%; box-sizing: border-box; padding: 12px; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1.5rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color);
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    font-family: 'TT Hoves Pro Trail', sans-serif;
+    font-size: 1.0rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--text-secondary);
+    border-radius: 10px;
+    color: var(--text-color);
 }
+#otp-input:focus { outline: none; border-color: var(--theme-color); }
+#resend-container { margin-top: 25px; text-align: center; font-size: 0.9rem; }
+.timer-display { color: var(--text-secondary); }
+.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; }
+.resend-link.disabled { display: none; }
+
+.form-description { font-size: 0.8rem; color: var(--text-secondary); margin-top: -10px; margin-bottom: 25px; }
+.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
+.otp-input-container { margin-bottom: 25px; width: 100%; }
+#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1.5rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
 #otp-input:focus { outline: none; border-color: var(--theme-color); }
 #resend-container { margin-top: 25px; text-align: center; font-size: 0.8rem; }
 .timer-display { color: var(--text-secondary); }
