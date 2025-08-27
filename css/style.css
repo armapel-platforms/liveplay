@@ -379,7 +379,7 @@ header.subpage-header h1 {
 
 .channel-listings { 
     padding: 0 20px; 
-    margin-top: 0px; 
+    margin-top: -5px; 
 }
 
 .category-section { 
