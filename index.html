@@ -2,38 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Lingk - Free Global IPTV Streaming</title>
-    <meta name="description" content="lingk is a free-to-watch global IPTV service, offering a variety of live TV streams from around the world.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Liveplay - Free Live Philippine TV Channels Online</title>
+    <meta name="description" content="liveplay is a free to watch online channels, offering a variety of live TV streams including local, news, sports, entertainment, and more.">
     <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
-    <link rel="shortcut icon" href="/logo/favicon.ico" />
+    <link rel="shortcut" href="/logo/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
     <link rel="manifest" href="/logo/site.webmanifest" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.cdnfonts.com/css/tt-fors-trial" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0" />
     <script src="https://ajax.googleapis.com/ajax/libs/shaka-player/4.3.4/shaka-player.ui.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/shaka-player/4.3.4/controls.css">
-    
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/auth.css">
     <link rel="stylesheet" href="/css/desktop.css">
 </head>
 <body>
     <header>
-        <div class="header-left">
-            <a href="/home" class="logo">lingk</a>
-            <div class="country-picker" id="country-picker">
-                <div class="country-picker-selection" id="country-picker-selection">
-                    <span class="material-symbols-outlined">public</span>
-                    <span id="country-display">Global</span>
-                    <span id="country-picker-arrow" class="material-symbols-outlined">expand_more</span>
-                </div>
-                <div class="country-list-popup" id="country-list-popup">
-                </div>
-            </div>
-        </div>
+        <a href="/home" class="logo">liveplay</a>
         <nav>
             <a href="/home/search" class="icon-link">
                 <span class="material-symbols-outlined">search</span>
@@ -44,73 +31,118 @@
         </nav>
     </header>
 
-    <div id="floating-menu" class="floating-menu"></div>
+    <div id="floating-menu" class="floating-menu">
+    </div>
 
     <main>
         <div class="main-container">
             <div id="player-view" class="player-view">
                 <div class="player-header">
-                    <button id="minimize-player-btn" class="icon-link"><span class="material-symbols-outlined">expand_more</span></button>
+                    <button id="minimize-player-btn" class="icon-link">
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </button>
                 </div>
-                <div class="video-player-container" id="video-player-wrapper"><video id="video-player"></video></div>
+                <div class="video-player-container" id="video-player-wrapper">
+                    <video id="video-player"></video>
+                    <iframe id="youtube-player" style="display: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
                 <div class="player-info">
                     <div class="player-info-left">
                         <h3 id="player-channel-name">Channel Name</h3>
                         <p id="player-channel-category">Category</p>
                     </div>
-                    <div class="live-indicator"><span class="material-symbols-outlined">sensors</span>LIVE</div>
+                    <div class="live-indicator">
+                        <span class="material-symbols-outlined">sensors</span>LIVE
+                    </div>
                 </div>
             </div>
-
             <div class="content-container">
                 <section id="featured-slider" class="featured-slider">
                     <div class="slider">
-                         <div class="slide active">
-                            <img src="/logo/lingk-banner1.png" alt="Featured Background" class="slide-bg">
+                        <div class="slide active">
+                            <img src="https://pql-static.abs-cbn.com/images/batangquiapo.herobg-tv.v2.JPG?im_policy=landscapeHero_tv_hd" alt="Featured Show Background" class="slide-bg">
                             <div class="slide-overlay"></div>
                             <div class="slide-content">
-                                <h2 class="slide-title"><strong>Welcome to</strong> lingk</h2>
-                                <p class="slide-description">Your free portal to global television.</p>
-                                <div class="slide-badge visit-badge">EXPLORE NOW</div>
+                                <h2 class="slide-title">FPJ's Batang Quiapo</h2>
+                                <p class="slide-time">MON-FRI | 8PM</p>
+                                <p class="slide-subdescription">Kapamilya Channel, Kapamilya Online Live, A2Z, and TV5</p>
+                                <div class="slide-badge catchup-badge">CATCH-UP TV</div>
                             </div>
                         </div>
-                         <div class="slide">
-                            <img src="/logo/lingk-banner2.png" alt="Featured Background" class="slide-bg">
+
+                        <a href="https://youtu.be/Z881RvcEcVA?si=JJHn0eUxR5jUj4fQ" target="_blank" rel="noopener noreferrer" class="slide">
+                            <img src="/logo/ads/dito.ph_ads.jpeg" alt="Promotion Background" class="slide-bg">
                             <div class="slide-overlay"></div>
                             <div class="slide-content">
-                                <h2 class="slide-title">Stay Informed</h2>
-                                 <p class="slide-description">Live news channels from across the globe.</p>
+                                <h2 class="slide-title">Kaya DITO</h2>
+                                <p class="slide-description">DITO Telecommunity</p>
+                                <div class="slide-badge visit-badge">SPONSORED</div>
+                            </div>
+                        </a>
+
+                        <div class="slide">
+                            <img src="https://pql-static.abs-cbn.com/images/itsokaytonotbeokay.herobg-tv.JPG?im_policy=landscapeHero_tv_hd" alt="Show Background" class="slide-bg">
+                             <div class="slide-overlay"></div>
+                             <div class="slide-content">
+                               <h2 class="slide-title">It's Okay to Not Be Okay</h2>
+                               <p class="slide-time">MON-FRI | 8:45PM</p>
+                               <p class="slide-subdescription">Kapamilya Channel, Kapamilya Online Live, A2Z, and TV5</p>
+                                <div class="slide-badge catchup-badge">CATCH-UP TV</div>
                             </div>
                         </div>
-                    </div>
+                        
+                        <a href="https://www.coca-cola.com/ph/en/offerings/kolek-and-win#:~:text=Redemption%20Center%20Locations-,Kolek%20&%20Win%20Promo,21%20to%20October%2016%2C%202025." target="_blank" rel="noopener noreferrer" class="slide">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShKqphp9oWsB22dC7kdgafpg1aJRkhBGnVk-n-iUNENAQw8yikODmi-Ik&s=10" alt="Promotion Background" class="slide-bg">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h2 class="slide-title">Kolek & Win Promo</h2>
+                                <p class="slide-description">Coca-Cola Philippines</p>
+                                <div class="slide-badge visit-badge">SPONSORED</div>
+                            </div>
+                        </a>
+
+                        <a href="/home?play=NBA-TV-Philippines" class="slide">
+                            <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*7OmCmTMBu1adOhD6vP9BFw.jpeg" alt="Promotion Background" class="slide-bg">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h2 class="slide-title">NBA TV Philippines</h2>
+                                <p class="slide-description">SPORTS</p>
+                                <div class="slide-badge catchup-badge">WATCH NOW</div>
+                            </div>
+                        </a>
+                        
+                        <a href="/home?play=HBO" class="slide">
+                            <img src="https://beam-images.warnermediacdn.com/2025-03/Max_BrandQuilt_2025_Q1_Global_1920x1080.jpg?host=wbd-dotcom-drupal-prd-us-east-1.s3.amazonaws.com&w=1920" class="slide-bg" alt="Show Background">
+                            <div class="slide-overlay"></div>
+                            <div class="slide-content">
+                                <h2 class="slide-title">HBO</h2>
+                                <p class="slide-description">MOVIES</p>
+                                <div class="slide-badge catchup-badge">WATCH NOW</div>
+                            </div>
+                        </a>
+
                     <div class="slider-nav">
                         <button class="dot active"></button>
                         <button class="dot"></button>
+                        <button class="dot"></button>
+                        <button class="dot"></button>
+                        <button class="dot"></button>
+                        <button class="dot"></button>
                     </div>
                 </section>
-        
+
                 <section id="category-nav" class="category-nav">
-                    <div class="category-pills">
-                    </div>
+                    <div class="category-pills"></div>
                 </section>
-        
-                <h2 id="channel-list-header" class="section-header">All Channels</h2>
-        
+
                 <section id="channel-listings" class="channel-listings">
-                    <div class="spinner-container" id="spinner">
-                        <div class="spinner"></div>
-                    </div>
                 </section>
-        
-                <div id="load-more-container" class="load-more-container">
-                    <button id="load-more-btn" class="load-more-btn">Load More</button>
-                </div>
 
                 <footer class="site-footer">
                     <div class="footer-content">
                         <p class="developer-credit">from <img src="/logo/armapel-logo-white.png" alt="armapel logo" class="developer-logo"></p>
-                        <p class="copyright">©2025 <span class="footer-brand">lingk</span>, All Rights Reserved.</p>
-                        <p class="version">Version 1.0.5</p>
+                        <p class="copyright">©2025 <span class="footer-brand">liveplay</span>, All Rights Reserved.</p>
+                        <p class="version">Version 9.0.9</p>
                     </div>
                 </footer>
             </div>
@@ -119,7 +151,7 @@
     
     <div id="minimized-player" class="minimized-player">
         <div class="minimized-player-left">
-            <img id="minimized-player-logo" src="" alt="Channel Logo" class="minimized-logo" onerror="this.src='logo/favicon.svg';">
+            <img id="minimized-player-logo" src="" alt="Channel Logo" class="minimized-logo">
             <div class="minimized-info">
                 <h4 id="minimized-player-name">Channel Name</h4>
                 <p id="minimized-player-category">Category</p>
@@ -127,10 +159,27 @@
         </div>
         <div class="minimized-player-right">
             <span class="material-symbols-outlined live-sensor-mini">sensors</span>
-            <button id="exit-player-btn" class="icon-link-mini"><span class="material-symbols-outlined">close</span></button>
+            <button id="exit-player-btn" class="icon-link-mini">
+                <span class="material-symbols-outlined">close</span>
+            </button>
         </div>
     </div>
 
+        <div id="auth-popup-overlay" class="auth-popup-overlay">
+            <div class="auth-popup">
+            <button id="close-popup" class="popup-close-btn">
+            <span class="material-symbols-outlined">close</span>
+            </button>
+            <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="popup-logo">
+            <p class="popup-subtitle">Join to Watch Free</p>
+            <a href="/home/login" class="popup-action-btn">Log In or Sign Up</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/yt-live.js"></script>
     <script src="/js/script.js"></script>
 </body>
 </html>
