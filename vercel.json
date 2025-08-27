@@ -6,7 +6,7 @@
     { "source": "/home/login", "destination": "/login-signup.html" },
     { "source": "/home/signup", "destination": "/login-signup.html" },
     { "source": "/home/forgot-password", "destination": "/forgot-password.html" },
-    { "source": "/home/manage-account", "destination": "/account.html" },
+    { "source": "/home/my-account", "destination": "/account.html" },
     { "source": "/home/about-us", "destination": "/about.html" },
     { "source": "/home/terms-of-service", "destination": "/terms.html" },
     { "source": "/home/privacy-policy", "destination": "/privacy.html" },
