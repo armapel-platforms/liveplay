@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Account - Liveplay</title>
+    <title>Log In / Sign Up - Liveplay</title>
     <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
     <link rel="shortcut" href="/logo/favicon.ico" />
@@ -14,19 +14,20 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/auth.css">
 </head>
-<body class="subpage auth-page">
+<body class="subpage">
     <header class="subpage-header">
         <a href="/home" class="back-link">
             <span class="material-symbols-outlined">arrow_back_ios_new</span>
         </a>
-        <h1><strong>liveplay</strong> > Account</h1>
+        <h1 id="page-title">Log In</h1>
     </header>
 
     <main class="subpage-content auth-container">
         <!-- Log In Form -->
         <div id="login-form" class="auth-form">
             <div class="form-header">
-                <h2>Log In</h2>
+                <h1 class="form-main-title">liveplay Account</h1>
+                <h2 class="form-sub-title">Log In</h2>
             </div>
             <div class="form-content">
                 <div class="input-group">
@@ -42,16 +43,13 @@
                 <button id="login-button" class="auth-btn">Log In</button>
                 <p class="toggle-form">Don't have an account? <a href="/home/signup" id="show-signup">Sign Up</a></p>
             </div>
-            <div class="form-footer">
-                <a href="/home/privacy-policy">Privacy</a>
-                <a href="/home/terms-of-service">Terms</a>
-            </div>
         </div>
 
         <!-- Sign Up Form -->
         <div id="signup-form" class="auth-form">
             <div class="form-header">
-                <h2>Sign Up</h2>
+                <h1 class="form-main-title">liveplay Account</h1>
+                <h2 class="form-sub-title">Sign Up</h2>
             </div>
             <div class="form-content">
                 <div class="input-group">
@@ -87,10 +85,11 @@
                 <button id="signup-button" class="auth-btn">Create Account</button>
                 <p class="toggle-form">Already have an account? <a href="/home/login" id="show-login">Log In</a></p>
             </div>
-            <div class="form-footer">
-                <a href="/home/privacy-policy">Privacy</a>
-                <a href="/home/terms-of-service">Terms</a>
-            </div>
+        </div>
+
+        <div class="page-footer">
+            <a href="/home/privacy-policy">Privacy</a>
+            <a href="/home/terms-of-service">Terms</a>
         </div>
     </main>
     
