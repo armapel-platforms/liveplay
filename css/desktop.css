@@ -34,6 +34,12 @@
         max-width: none;
         margin: 0;
     }
+    
+    #video-player {
+        width: 100%; 
+        height: 100%; 
+        background-image: url('/logo/desktop.jpg');
+    }
 
     .player-info {
         max-width: none;
