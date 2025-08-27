@@ -209,6 +209,12 @@ header.subpage-header h1 {
     font-size: 0.85rem; 
     padding: 10px 0;
 }
+ #initial-message { 
+     color: var(--text-secondary); 
+     text-align: center;
+     padding: 50px 0; 
+     font-size: 0.8rem;
+ }
 
 .featured-slider { 
     position: relative; 
