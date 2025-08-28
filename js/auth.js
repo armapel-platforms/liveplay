@@ -1,4 +1,3 @@
-// Replace with your actual Supabase URL and Anon Key
 const SUPABASE_URL = 'https://nfqkreiahnsiwrpbihqs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mcWtyZWlhaG5zaXdycGJpaHFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzNjQ4NTYsImV4cCI6MjA3MTk0MDg1Nn0.p4b-jC6X9sPZYl3jRqrLjJfyOYEIkY_R1XD2g7ef4sk';
 
@@ -77,7 +76,7 @@ const authHandler = {
   },
   
   deleteUserAccount: async () => {
-    // UPDATED: Securely calls the 'delete-user' Edge Function
+    // Securely calls the 'delete-user' Edge Function
     const { data, error } = await _supabase.functions.invoke('delete-user');
     
     if (error) {
@@ -85,7 +84,6 @@ const authHandler = {
       return { error };
     }
     
-    // The Edge Function handles the deletion; here we just log out.
     await _supabase.auth.signOut();
     return { data };
   }
