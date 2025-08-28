@@ -52,10 +52,7 @@
             <div class="account-row" data-field="password">
                 <span class="material-symbols-outlined row-icon">lock</span>
                 <div class="row-content"><label>Password</label><span class="row-value">••••••••</span><input type="password" class="row-input" placeholder="New Password"></div>
-                <div class="action-icons">
-                    <span class="material-symbols-outlined visibility-toggle" data-target-row="password">visibility_off</span>
-                    <span class="material-symbols-outlined edit-icon">edit</span>
-                </div>
+                <span class="material-symbols-outlined edit-icon">edit</span>
             </div>
         </div>
         
@@ -69,11 +66,10 @@
         <div id="delete-account-survey" style="display: none;">
             <h3>Why are you leaving?</h3>
             <form id="delete-survey-form">
-                <label><span class="material-symbols-outlined"></span><input type="checkbox" name="reason" value="missing_channels"> Missing my favorite channels</label>
-                <label><span class="material-symbols-outlined"></span><input type="checkbox" name="reason" value="poor_experience"> Poor user experience</label>
-                <label><span class="material-symbols-outlined"></span><input type="checkbox" name="reason" value="technical_issues"> Technical issues with the service</label>
-                <label class="other-reason-label"><span class="material-symbols-outlined"></span><input type="checkbox" name="reason" value="other"> Other</label>
-                <input type="text" id="other-reason-text" placeholder="Please specify">
+                <label><input type="checkbox" name="reason" value="missing_channels"> Missing my favorite channels</label>
+                <label><input type="checkbox" name="reason" value="poor_experience"> Poor user experience</label>
+                <label><input type="checkbox" name="reason" value="technical_issues"> Technical issues with the service</label>
+                <label class="other-reason-label"><input type="checkbox" name="reason" value="other"> Other<input type="text" id="other-reason-text" placeholder="Please specify"></label>
                 <button type="submit" id="final-delete-button" class="auth-btn danger" disabled>Delete My Account</button>
             </form>
         </div>
