@@ -11,7 +11,7 @@ const authHandler = {
     
     const { data: profile, error } = await _supabase
       .from('profiles')
-      .select('first_name, middle_name, last_name, username')
+      .select('first_name, last_name, username')
       .eq('id', session.user.id)
       .single();
     
@@ -26,12 +26,12 @@ const authHandler = {
   },
   
   signUp: async (credentials) => {
-    const { first_name, middle_name, last_name, username, email, password } = credentials;
+    const { first_name, last_name, username, email, password } = credentials;
     return await _supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { first_name, middle_name, last_name, username },
+        data: { first_name, last_name, username },
       }
     });
   },
@@ -66,14 +66,17 @@ const authHandler = {
   },
   
   updateUserProfile: async (profileData) => {
-    const user = await authHandler.getCurrentUser();
+    const { data: { user } } = await _supabase.auth.getUser();
     if (!user) return { error: { message: "User not logged in." } };
     return await _supabase.from('profiles').update(profileData).eq('id', user.id);
   },
   
   deleteUserAccount: async () => {
-    console.warn("User deletion should be handled by a secure Edge Function.");
-    return await authHandler.logOut();
+    // This securely calls the Edge Function you created
+    const { data, error } = await _supabase.functions.invoke('delete-user', {
+        method: 'POST',
+    });
+    return { data, error };
   }
 };
 
