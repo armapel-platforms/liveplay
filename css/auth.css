@@ -1,67 +1,57 @@
 /*******************************************************
- *  LIVEPLAY AUTHENTICATION STYLESHEET
- *  Organized for Clarity and Professional Layout
+ *  LIVEPLAY AUTHENTICATION STYLESHEET (Single Card Layout)
  *******************************************************/
 
 /* --- 1. CORE LAYOUT & STRUCTURE --- */
-/* Hides the default h1 in the subpage header for a cleaner look */
 .subpage-header h1 {
-    display: none;
+    display: none; /* Hides header title for a cleaner look */
 }
 
-/* This is the main container for the entire login/signup box */
+/* The main container is now a single, centered card */
 .auth-container {
-    max-width: 850px;
-    min-height: 600px;
-    margin: 40px auto; /* Centers the container on the page */
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center; /* Vertically centers the left/right panels */
+    max-width: 450px; /* Controls the width of the card */
+    margin: 40px auto;
+    padding: 40px 30px;
     background: var(--card-background);
     border-radius: var(--border-radius);
     box-sizing: border-box;
-}
-
-.auth-left-panel, .auth-right-panel {
-    flex: 1; /* Each panel takes up half the space */
-    padding: 30px;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
 }
 
-.auth-left-panel {
-    min-width: 320px;
-    padding-right: 40px; /* Creates space between text and form on desktop */
-}
-
-.auth-right-panel {
-    min-width: 320px;
+/* On smaller screens, add some space from the edges */
+@media (max-width: 500px) {
+    .auth-container {
+        margin: 20px 15px;
+        padding: 30px 20px;
+    }
 }
 
 
 /* --- 2. TYPOGRAPHY & TEXT STYLES --- */
 .auth-brand {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 300;
-    margin: 0 0 40px 0;
+    margin: 0 0 20px 0;
     color: var(--text-color);
 }
 
-.auth-left-panel h1 {
-    font-size: 2.8rem;
-    margin: 0 0 15px 0;
+#page-title {
+    font-size: 2.2rem;
+    margin: 0 0 10px 0;
     font-weight: 600;
     line-height: 1.2;
     color: var(--text-color);
+    text-align: center;
 }
 
-.auth-left-panel p {
-    font-size: 1.1rem;
+#page-description {
+    font-size: 0.95rem;
     color: var(--text-secondary);
     line-height: 1.6;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 .toggle-form {
@@ -84,7 +74,7 @@
     align-self: flex-end;
     font-size: 0.85rem;
     color: var(--text-secondary);
-    margin: -10px 5px 25px 0; /* Aligns better */
+    margin: -10px 5px 25px 0;
     text-decoration: none;
 }
 .forgot-password:hover {
@@ -94,18 +84,14 @@
 
 /* --- 3. FORM & INPUT STYLES --- */
 .auth-form {
-    display: none; /* Hidden by default, shown by JS */
+    display: none;
     flex-direction: column;
     width: 100%;
-    animation: none; /* No fade-in animation */
+    animation: none;
 }
 
 .auth-form.active {
     display: flex;
-}
-
-.auth-form h2 {
-    display: none; /* We use the main title in the left panel */
 }
 
 .input-group {
@@ -128,7 +114,7 @@
     padding: 14px 14px 14px 50px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid transparent;
-    border-radius: 12px; /* Slightly more rounded */
+    border-radius: 12px;
     color: var(--text-color);
     font-family: 'TT Hoves Pro Trial', sans-serif;
     font-size: 0.9rem;
@@ -140,7 +126,6 @@
     outline: none;
     border-color: var(--theme-color);
     background-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 0 15px rgba(255, 98, 0, 0.1); /* Subtle glow on focus */
 }
 
 .visibility-toggle {
@@ -163,12 +148,11 @@
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s;
 }
 
 .auth-btn:hover:not(:disabled) {
     background-color: #ff6a29;
-    transform: translateY(-2px); /* Add slight lift on hover */
 }
 
 .auth-btn:disabled {
@@ -193,57 +177,14 @@
 }
 
 
-/*******************************************************
- *  5. MOBILE RESPONSIVE FIXES
- *  This section ensures the layout looks professional
- *  on screens smaller than 800px.
- *******************************************************/
-@media (max-width: 799px) {
-    /*
-     * KEY FIX #1: Add horizontal margins to the container
-     * This stops it from touching the screen edges, just like the "About Us" page.
-    */
-    .auth-container {
-        margin: 20px 15px; /* 20px top/bottom, 15px left/right */
-        padding: 20px;
-        flex-direction: column;
-        min-height: auto;
-    }
-
-    /* Adjust padding for a more compact vertical layout */
-    .auth-left-panel {
-        text-align: center;
-        padding: 10px 10px 30px 10px;
-        padding-right: 10px; /* Override desktop padding */
-    }
-
-    .auth-right-panel {
-        padding: 10px;
-        width: 100%; /* Ensure form takes full width of the container */
-    }
-
-    /*
-     * KEY FIX #2: Reduce font sizes for better mobile readability
-    */
-    .auth-left-panel h1 {
-        font-size: 2.2rem; /* Was 2.8rem */
-    }
-    
-    .auth-left-panel p {
-        font-size: 0.95rem; /* Was 1.1rem */
-    }
-}
-
-
-/* --- 6. POPUP & ACCOUNT PAGE STYLES (Unchanged) --- */
-.auth-popup-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+/* --- 5. POPUP & ACCOUNT PAGE STYLES (Unchanged) --- */
+.auth-popup-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
 .auth-popup-overlay.active { opacity: 1; visibility: visible; }
-.auth-popup { background: var(--card-background); border-radius: 24px; padding: 30px; text-align: center; position: relative; transform: scale(0.95); transition: transform 0.3s ease; max-width: 340px; width: 90%; box-sizing: border-box; }
-.auth-popup-overlay.active .auth-popup { transform: scale(1); }
+.auth-popup { background: var(--card-background); border-radius: 24px; padding: 30px; text-align: center; max-width: 340px; width: 90%; box-sizing: border-box; }
 .otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.0rem; font-weight: 600; }
 .otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.8rem; }
 .otp-input-container { margin-bottom: 25px; width: 100%; }
-#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1.0rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
+#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-size: 1.0rem; text-align: center; letter-spacing: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
 #otp-input:focus { outline: none; border-color: var(--theme-color); }
 #resend-container { margin-top: 25px; text-align: center; font-size: 0.9rem; }
 .timer-display { color: var(--text-secondary); }
@@ -257,16 +198,18 @@
 .row-content { flex-grow: 1; }
 .row-content label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2px; }
 .row-content .row-value { color: var(--text-color); font-size: 0.85rem; font-weight: 500; }
-.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 2px 0; }
+.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; padding: 2px 0; }
 .row-input:focus { outline: none; }
 .account-row.editing .row-value { display: none; }
 .account-row.editing .row-input { display: block; }
-.account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
+.account-row .edit-icon { color: var(--text-secondary); cursor: pointer; }
 .account-row.editing .edit-icon { color: var(--theme-color); }
 .account-actions { margin-top: 30px; text-align: center; }
 #delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
-#delete-account-survey { display: none; margin-top: 20px; text-align: left; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
-#delete-survey-form { display: flex; flex-direction: column; gap: 15px; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
+#delete-account-survey { display: none; margin-top: 20px; text-align: left; }
+#delete-account-survey h3 { margin-top: 0; text-align: center; }
+#delete-survey-form { display: flex; flex-direction: column; gap: 15px; }
+#delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
 .other-reason-label { flex-wrap: wrap; }
 #other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
 .auth-btn.secondary { background-color: #FF4D00; }
