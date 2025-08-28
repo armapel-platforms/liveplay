@@ -1,130 +1,312 @@
-:root {
-    --theme-color-hover: #ff6a29;
-    --text-color: #ffffff;
-    --text-secondary: #a0a0a0;
-    --input-background: rgba(255, 255, 255, 0.05);
-    --input-border: rgba(255, 255, 255, 0.1);
-    --danger-color: #e53935;
-    --border-radius: 16px;
-    --font-family: 'TT Hoves Pro Trial', sans-serif;
-}
-body.auth-body {
-    background-color: var(--background-color);
-    font-family: var(--font-family);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+.auth-container, .account-container {
+    max-width: 800px;
+    margin: 20px auto;
     padding: 20px;
-    box-sizing: border-box;
 }
 
-.mobile-auth-header {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 10;
-}
-.mobile-auth-header .back-link {
-    display: flex;
+.auth-form, .account-section, #delete-account-survey {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    display: none;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 10px;
-    color: var(--text-color);
-    text-decoration: none;
+    text-align: center;
 }
 
-/* --- General Auth Page Wrapper --- */
-.auth-wrapper { width: 100%; max-width: 420px; margin: auto; }
-.auth-container { background: var(--card-background); padding: 30px; border-radius: var(--border-radius); text-align: center; }
-.auth-logo-text { font-size: 1.5rem; margin-bottom: 25px; color: var(--text-secondary); }
-.auth-logo-text strong { color: var(--text-color); font-weight: 700; }
-.auth-form { display: none; }
-.auth-form.active { display: block; }
-.auth-form h2 { margin: 0 0 15px 0; font-size: 1.8rem; font-weight: 700; }
-.auth-form .form-description { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 30px; line-height: 1.5; }
+.auth-form.active {
+    display: flex;
+}
 
-/* --- Input Groups & Forms --- */
-.input-group { position: relative; width: 100%; margin-bottom: 20px; }
-.input-group .material-symbols-outlined { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; }
-.input-group input { width: 100%; padding: 14px 14px 14px 50px; background: var(--input-background); border: 1px solid var(--input-border); border-radius: 10px; color: var(--text-color); font-family: var(--font-family); font-size: 0.9rem; box-sizing: border-box; transition: all 0.3s ease; }
-.input-group input:focus { outline: none; border-color: var(--theme-color); background-color: rgba(0, 0, 0, 0.2); box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2); }
-.input-group .visibility-toggle { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; pointer-events: all !important; }
+.auth-logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+    pointer-events: none;
+}
 
-/* --- Links and Toggles --- */
-.forgot-password { display: block; text-align: right; font-size: 0.85rem; color: var(--theme-color); margin: -10px 0 25px 0; text-decoration: none; }
-.forgot-password:hover { text-decoration: underline; }
-.toggle-form { margin-top: 30px; font-size: 0.9rem; color: var(--text-secondary); }
-.toggle-form a { color: var(--theme-color); font-weight: 600; text-decoration: none; }
-.toggle-form a:hover { text-decoration: underline; }
+.auth-form h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
 
-/* --- Buttons --- */
-.auth-btn { width: 100%; padding: 15px; background-color: var(--theme-color); border: none; border-radius: 10px; color: var(--text-color); font-family: var(--font-family); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-.auth-btn:hover:not(:disabled) { background-color: var(--theme-color-hover); transform: translateY(-2px); }
-.auth-btn:disabled { background-color: #555; cursor: not-allowed; opacity: 0.7; }
-.auth-btn.secondary { background-color: #333; }
-.auth-btn.secondary:hover:not(:disabled) { background-color: #444; }
-.auth-btn.danger { background-color: var(--danger-color); }
+.input-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
 
-/* --- Terms & Privacy Link --- */
-.terms-privacy { margin-top: 30px; text-align: center; font-size: 0.8rem; color: var(--text-secondary); }
-.terms-privacy a { color: var(--text-secondary); text-decoration: underline; }
-.terms-privacy a:hover { color: var(--text-color); }
+.input-group .material-symbols-outlined {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+}
 
-/* --- Account Page Specific Styles --- */
-.account-container { max-width: 800px; margin: 20px auto; padding: 0 20px; }
-.account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; margin-bottom: 20px; }
-.account-row { display: flex; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--input-border); transition: border-color 0.3s; }
+.input-group input {
+    width: 100%;
+    padding: 12px 12px 12px 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: var(--text-color);
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--theme-color);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.visibility-toggle {
+    right: 15px;
+    left: auto !important;
+    cursor: pointer;
+    pointer-events: all !important;
+}
+
+.forgot-password {
+    align-self: flex-end;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--theme-color);
+    border: none;
+    border-radius: 20px;
+    color: var(--text-color);
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-btn:hover:not(:disabled) {
+    background-color: #ff6a29;
+}
+
+.auth-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.auth-btn.secondary {
+    background-color: #FF4D00;
+}
+.auth-btn.secondary:hover {
+    background-color: #444;
+}
+.auth-btn.danger {
+    background-color: #FF0000;
+}
+
+.toggle-form {
+    margin-top: 30px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.toggle-form a {
+    color: var(--theme-color);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; }
+.account-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .account-row:last-child { border-bottom: none; }
+.row-icon { color: var(--text-secondary); margin-right: 20px; }
 .row-content { flex-grow: 1; }
 .row-content label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2px; }
-.row-content .row-value { color: var(--text-color); font-size: 0.95rem; font-weight: 500; }
-.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: var(--font-family); font-size: 0.95rem; font-weight: 500; padding: 2px 0; }
+.row-content .row-value { color: var(--text-color); font-size: 0.85rem; font-weight: 500; }
+.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 2px 0; }
 .row-input:focus { outline: none; }
 .account-row.editing .row-value { display: none; }
 .account-row.editing .row-input { display: block; }
-.row-actions { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); }
-.row-actions .edit-icon { cursor: pointer; transition: color 0.2s; }
+.account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
+.account-row .action-icons { display: flex; align-items: center; gap: 10px; }
+.account-row .action-icons .visibility-toggle { cursor: pointer; }
 .account-row.editing .edit-icon { color: var(--theme-color); }
-
-/* New Password Form Styles */
-.password-form-container { display: none; padding: 20px 0 10px; }
-.password-form-container .form-description { font-size: 0.85rem; color: var(--text-secondary); margin: -10px 0 20px 0; text-align: left; }
-.password-form-container .row-input { display: block !important; width: 100%; border-bottom: none; } /* Override default row-input */
-.password-change-row.editing { border-bottom-color: transparent; padding-bottom: 0; }
-
-/* --- Account Actions & Delete Survey --- */
 .account-actions { margin-top: 30px; text-align: center; }
-#delete-account-link { display: block; margin-top: 20px; font-size: 0.85rem; color: var(--danger-color); cursor: pointer; text-decoration: none; }
-#delete-account-link:hover { text-decoration: underline; }
-#delete-account-survey { display: none; margin-top: 30px; background: var(--card-background); border-radius: var(--border-radius); padding: 30px; text-align: center; }
-#delete-account-survey h3 { margin-top: 0; margin-bottom: 25px; }
-#delete-survey-form { display: flex; flex-direction: column; gap: 20px; text-align: left; }
-#delete-survey-form label { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; cursor: pointer; }
+#delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
+#delete-account-survey { display: none; margin-top: 20px; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
+#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
+#delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
+#delete-survey-form label .material-symbols-outlined::before { content: 'check_box_outline_blank'; }
+#delete-survey-form label input:checked + .material-symbols-outlined::before { content: 'check_box'; }
+#delete-survey-form input[type="checkbox"] { display: none; }
 .other-reason-label { flex-wrap: wrap; }
-#delete-survey-form input[type="checkbox"] { -webkit-appearance: none; appearance: none; background-color: transparent; margin: 0; font: inherit; color: var(--text-secondary); width: 1.25em; height: 1.25em; transform: translateY(-0.075em); display: grid; place-content: center; cursor: pointer; }
-#delete-survey-form input[type="checkbox"]::before { font-family: 'Material Symbols Outlined'; content: '\e835'; font-size: 1.5em; transition: 120ms transform ease-in-out; }
-#delete-survey-form input[type="checkbox"]:checked::before { content: '\e834'; color: var(--theme-color); }
-#other-reason-text { display: none; width: 100%; margin-top: 10px; background: var(--input-background); border: 1px solid var(--input-border); border-radius: 8px; color: var(--text-color); padding: 10px; font-family: var(--font-family); font-size: 0.9rem; resize: vertical; min-height: 80px; }
-#other-reason-text:focus { outline: none; border-color: var(--theme-color); }
+#other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 8px 12px; }
 
-/* --- Desktop Layout (Google-Inspired) --- */
-@media (min-width: 768px) {
-    .mobile-auth-header { display: none; /* Hide mobile back arrow on desktop */ }
-    .auth-container { border: 1px solid var(--input-border); padding: 50px 60px; }
+.auth-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* --- OTP Modal Styles --- */
-.auth-popup-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
-.auth-popup-overlay.active { opacity: 1; visibility: visible; }
-.auth-popup { background: var(--card-background); border-radius: var(--border-radius); padding: 30px 40px; text-align: center; position: relative; transform: scale(0.95); transition: transform 0.3s ease; width: 100%; max-width: 420px; margin: 20px; box-sizing: border-box; }
-.auth-popup-overlay.active .auth-popup { transform: scale(1); }
-.otp-title { margin: 0 0 10px 0; font-size: 1.5rem; font-weight: 600; }
-.otp-instruction { color: var(--text-secondary); margin: 0 0 25px 0; font-size: 0.9rem; line-height: 1.5; }
-#otp-input { width: 100%; box-sizing: border-box; padding: 14px; font-family: var(--font-family); font-size: 1.8rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: var(--input-background); border: 1px solid var(--input-border); border-radius: 10px; color: var(--text-color); margin-bottom: 25px; transition: all 0.3s ease; }
-#otp-input:focus { outline: none; border-color: var(--theme-color); box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2); }
-#resend-container { margin-top: 25px; text-align: center; font-size: 0.9rem; color: var(--text-secondary); }
-.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; text-decoration: none; }
+.auth-popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.auth-popup {
+    background: var(--card-background);
+    border-radius: 24px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+    max-width: 340px;
+    width: 90%;
+    box-sizing: border-box;
+}
+
+.auth-popup-overlay.active .auth-popup {
+    transform: scale(1);
+}
+
+.popup-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-logo {
+    width: 120px;
+    height: auto;
+    margin: 10px 0 15px 0;
+    pointer-events: none;
+}
+
+.popup-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0 0 25px 0;
+}
+
+.popup-action-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--theme-color);
+    border: none;
+    border-radius: 50px;
+    color: var(--text-color);
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.popup-action-btn:hover {
+    background-color: #ff6a29;
+}
+
+.auth-popup h3 {
+    margin: 0 0 25px 0;
+    font-size: 1.0rem;
+    font-weight: 400;
+}
+
+.menu-header {
+    padding: 10px 10px 8px;
+    font-weight: 900;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+}
+
+.menu-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5px 10px 10px;
+}
+
+
+.otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.0rem; font-weight: 600; }
+.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.8rem; }
+.otp-input-container { margin-bottom: 25px; width: 100%; }
+#otp-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    font-family: 'TT Hoves Pro Trail', sans-serif;
+    font-size: 1.0rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--text-secondary);
+    border-radius: 10px;
+    color: var(--text-color);
+}
+#otp-input:focus { outline: none; border-color: var(--theme-color); }
+#resend-container { margin-top: 25px; text-align: center; font-size: 0.9rem; }
+.timer-display { color: var(--text-secondary); }
+.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; }
 .resend-link.disabled { display: none; }
+
+.form-description { font-size: 0.8rem; color: var(--text-secondary); margin-top: -10px; margin-bottom: 25px; }
+.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
+.otp-input-container { margin-bottom: 25px; width: 100%; }
+#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1.5rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
+#otp-input:focus { outline: none; border-color: var(--theme-color); }
+#resend-container { margin-top: 25px; text-align: center; font-size: 0.8rem; }
+.timer-display { color: var(--text-secondary); }
+.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; text-decoration: none; }
+.resend-link.disabled { display: none; color: var(--text-secondary); cursor: not-allowed; pointer-events: none; }
+
+.auth-content-left { text-align: left; }
+.auth-title { font-size: 1.5rem; }
+.footer-links { text-align: right; margin-top: 20px; }
+.footer-links a { color: var(--text-secondary); margin-left: 15px; text-decoration: none; font-size: 0.8rem; }
+
+@media (min-width: 768px) {
+    .auth-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .auth-content-left {
+        flex: 1;
+        padding-right: 40px;
+    }
+    .auth-content-right {
+        flex: 1;
+    }
+}
