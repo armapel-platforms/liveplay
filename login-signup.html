@@ -13,9 +13,7 @@
 
     <div class="auth-wrapper">
         <div class="auth-container">
-            <a href="/home">
-                <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="auth-logo">
-            </a>
+            <div class="auth-logo-text"><strong>liveplay</strong> Account</div>
 
             <!-- Login Form -->
             <div id="login-form" class="auth-form">
@@ -32,11 +30,6 @@
                 </div>
                 <a href="/home/forgot-password" class="forgot-password">Forgot Password?</a>
                 <button id="login-button" class="auth-btn">Log In</button>
-                <div class="divider">or</div>
-                <div class="social-login">
-                    <button class="social-btn"><img src="https://www.google.com/favicon.ico" alt="Google"></button>
-                    <!-- Add other social logins like Apple, Facebook etc. -->
-                </div>
                 <p class="toggle-form">Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
             </div>
 
@@ -47,6 +40,10 @@
                 <div class="input-group">
                     <span class="material-symbols-outlined">badge</span>
                     <input type="text" id="signup-firstname" placeholder="First Name" required>
+                </div>
+                 <div class="input-group">
+                    <span class="material-symbols-outlined">badge</span>
+                    <input type="text" id="signup-middlename" placeholder="Middle Name (Optional)">
                 </div>
                 <div class="input-group">
                     <span class="material-symbols-outlined">badge</span>
@@ -80,7 +77,6 @@
         </div>
     </div>
     
-    <!-- OTP Modal -->
     <div id="otp-modal-overlay" class="auth-popup-overlay">
         <div class="auth-popup">
             <h3 class="otp-title">Enter Verification Code</h3>
@@ -94,40 +90,6 @@
         </div>
     </div>
     
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const loginForm = document.getElementById('login-form');
-        const signupForm = document.getElementById('signup-form');
-        const showSignupLink = document.getElementById('show-signup');
-        const showLoginLink = document.getElementById('show-login');
-
-        function showFormBasedOnUrl() {
-            if (window.location.pathname.includes('/signup')) {
-                loginForm.classList.remove('active');
-                signupForm.classList.add('active');
-            } else {
-                signupForm.classList.remove('active');
-                loginForm.classList.add('active');
-            }
-        }
-        
-        showSignupLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginForm.classList.remove('active');
-            signupForm.classList.add('active');
-            window.history.pushState({}, '', '/home/signup');
-        });
-
-        showLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupForm.classList.remove('active');
-            loginForm.classList.add('active');
-            window.history.pushState({}, '', '/home/login');
-        });
-
-        showFormBasedOnUrl();
-    });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/ui.js"></script>
