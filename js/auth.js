@@ -1,6 +1,6 @@
-// NOTE: Replace with your actual Supabase URL and Anon Key
-const SUPABASE_URL = 'https://REPLACE_WITH_YOUR_SUPABASE_URL.supabase.co';
-const SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY';
+// Replace with your actual Supabase URL and Anon Key
+const SUPABASE_URL = 'https://nfqkreiahnsiwrpbihqs.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mcWtyZWlhaG5zaXdycGJpaHFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzNjQ4NTYsImV4cCI6MjA3MTk0MDg1Nn0.p4b-jC6X9sPZYl3jRqrLjJfyOYEIkY_R1XD2g7ef4sk';
 
 const { createClient } = supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -65,33 +65,29 @@ const authHandler = {
   updateUserPassword: async (newPassword) => {
     return await _supabase.auth.updateUser({ password: newPassword });
   },
+
+  updateUserEmail: async (newEmail) => {
+    return await _supabase.auth.updateUser({ email: newEmail });
+  },
   
   updateUserProfile: async (profileData) => {
-    const user = await authHandler.getCurrentUser();
+    const { data: { user } } = await _supabase.auth.getUser();
     if (!user) return { error: { message: "User not logged in." } };
     return await _supabase.from('profiles').update(profileData).eq('id', user.id);
   },
   
-  deleteUserAccount: async (feedback) => {
-    const user = await authHandler.getCurrentUser();
-    if (!user) return { error: { message: "User not logged in." } };
-
-    // Insert feedback into the new table
-    const { error: feedbackError } = await _supabase
-      .from('deletion_feedback')
-      .insert([
-        { user_id: user.id, reasons: feedback.reasons, other_reason_text: feedback.otherReasonText }
-      ]);
-
-    if (feedbackError) {
-      console.error("Error saving deletion feedback:", feedbackError);
+  deleteUserAccount: async () => {
+    // UPDATED: Securely calls the 'delete-user' Edge Function
+    const { data, error } = await _supabase.functions.invoke('delete-user');
+    
+    if (error) {
+      console.error("Failed to delete user account via Edge Function:", error.message);
+      return { error };
     }
     
-    // Note: Supabase admin rights are required to delete a user.
-    // This should be handled in a secure server-side environment (e.g., an Edge Function).
-    // The following is a client-side logout for demonstration.
-    console.warn("User deletion should be handled by a secure Edge Function.");
-    return await authHandler.logOut();
+    // The Edge Function handles the deletion; here we just log out.
+    await _supabase.auth.signOut();
+    return { data };
   }
 };
 
