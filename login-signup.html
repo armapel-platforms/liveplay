@@ -19,80 +19,65 @@
         <a href="/home" class="back-link">
             <span class="material-symbols-outlined">arrow_back_ios_new</span>
         </a>
-        <!-- The h1 title is now hidden by CSS -->
-        <h1 id="page-title-hidden"></h1>
+        <h1 id="page-title">Log In</h1>
     </header>
 
-    <main class="auth-container">
-        <!-- Left Panel for text content -->
-        <div class="auth-left-panel">
-            <h3 class="auth-brand"><b>liveplay</b> Account.</h3>
-            <h1 id="page-title"></h1>
-            <p id="page-description"></p>
+    <main class="subpage-content auth-container">
+        <div id="login-form" class="auth-form">
+            <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="auth-logo">
+            <h2>Log In</h2>
+            <div class="input-group">
+                <span class="material-symbols-outlined">person</span>
+                <input type="email" id="login-email" placeholder="Username or Email Address" required autocomplete="email">
+            </div>
+            <div class="input-group">
+                <span class="material-symbols-outlined">lock</span>
+                <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
+                <span class="material-symbols-outlined visibility-toggle" data-target="login-password">visibility_off</span>
+            </div>
+            <a href="/home/forgot-password" class="forgot-password">Forgot Password?</a>
+            <button id="login-button" class="auth-btn">Log In</button>
+            <p class="toggle-form">Don't have an account? <a href="/home/signup" id="show-signup">Sign Up</a></p>
         </div>
 
-        <!-- Right Panel for forms -->
-        <div class="auth-right-panel">
-            <!-- Login Form -->
-            <div id="login-form" class="auth-form">
-                <div class="input-group">
-                    <span class="material-symbols-outlined">person</span>
-                    <input type="email" id="login-email" placeholder="Email Address" required autocomplete="email">
-                </div>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">lock</span>
-                    <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
-                    <span class="material-symbols-outlined visibility-toggle" data-target="login-password">visibility_off</span>
-                </div>
-                <a href="/home/forgot-password" class="forgot-password">Forgot Password?</a>
-                <button id="login-button" class="auth-btn">Log In</button>
-                <p class="toggle-form">Don't have an account? <a href="/home/signup" id="show-signup">Sign Up</a></p>
+        <div id="signup-form" class="auth-form">
+            <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="auth-logo">
+            <h2>Sign Up</h2>
+            <div class="input-group">
+                <span class="material-symbols-outlined">badge</span>
+                <input type="text" id="signup-firstname" placeholder="First Name" required>
             </div>
-
-            <!-- Signup Form -->
-            <div id="signup-form" class="auth-form">
-                <div class="input-group">
-                    <span class="material-symbols-outlined">badge</span>
-                    <input type="text" id="signup-firstname" placeholder="First Name" required>
-                </div>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">badge</span>
-                    <input type="text" id="signup-middlename" placeholder="Middle Name (Optional)">
-                </div>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">badge</span>
-                    <input type="text" id="signup-lastname" placeholder="Last Name" required>
-                </div>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">account_circle</span>
-                    <input type="text" id="signup-username" placeholder="Username" required autocomplete="username">
-                </div>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">email</span>
-                    <input type="email" id="signup-email" placeholder="Email Address" required autocomplete="email">
-                </div>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">lock</span>
-                    <input type="password" id="signup-password" placeholder="Create Password" required autocomplete="new-password">
-                    <span class="material-symbols-outlined visibility-toggle" data-target="signup-password">visibility_off</span>
-                </div>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">lock_reset</span>
-                    <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required autocomplete="new-password">
-                    <span class="material-symbols-outlined visibility-toggle" data-target="signup-confirm-password">visibility_off</span>
-                </div>
-                <button id="signup-button" class="auth-btn">Create Account</button>
-                <p class="toggle-form">Already have an account? <a href="/home/login" id="show-login">Log In</a></p>
+            <div class="input-group">
+                <span class="material-symbols-outlined">badge</span>
+                <input type="text" id="signup-middlename" placeholder="Middle Name (Optional)">
             </div>
-            
-            <div class="auth-footer">
-                <a href="/privacy">Privacy</a>
-                <a href="/terms">Terms</a>
+            <div class="input-group">
+                <span class="material-symbols-outlined">badge</span>
+                <input type="text" id="signup-lastname" placeholder="Last Name" required>
             </div>
+            <div class="input-group">
+                <span class="material-symbols-outlined">account_circle</span>
+                <input type="text" id="signup-username" placeholder="Username" required autocomplete="username">
+            </div>
+            <div class="input-group">
+                <span class="material-symbols-outlined">email</span>
+                <input type="email" id="signup-email" placeholder="Email Address" required autocomplete="email">
+            </div>
+            <div class="input-group">
+                <span class="material-symbols-outlined">lock</span>
+                <input type="password" id="signup-password" placeholder="Create Password" required autocomplete="new-password">
+                <span class="material-symbols-outlined visibility-toggle" data-target="signup-password">visibility_off</span>
+            </div>
+            <div class="input-group">
+                <span class="material-symbols-outlined">lock_reset</span>
+                <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required autocomplete="new-password">
+                <span class="material-symbols-outlined visibility-toggle" data-target="signup-confirm-password">visibility_off</span>
+            </div>
+            <button id="signup-button" class="auth-btn">Create Account</button>
+            <p class="toggle-form">Already have an account? <a href="/home/login" id="show-login">Log In</a></p>
         </div>
     </main>
     
-    <!-- OTP Modal (No changes) -->
     <div id="otp-modal-overlay" class="auth-popup-overlay">
         <div class="auth-popup">
             <h3 class="otp-title">Enter Verification Code</h3>
@@ -113,19 +98,16 @@
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
         const pageTitle = document.getElementById('page-title');
-        const pageDescription = document.getElementById('page-description');
 
         function showFormBasedOnUrl() {
             if (window.location.pathname.endsWith('/signup')) {
                 loginForm.classList.remove('active');
                 signupForm.classList.add('active');
-                pageTitle.textContent = 'Create Account';
-                pageDescription.textContent = 'Join the community and start streaming.';
+                pageTitle.textContent = 'Sign Up';
             } else {
                 signupForm.classList.remove('active');
                 loginForm.classList.add('active');
-                pageTitle.textContent = 'Welcome Back!';
-                pageDescription.textContent = 'Log in to continue your experience.';
+                pageTitle.textContent = 'Log In';
             }
         }
         
