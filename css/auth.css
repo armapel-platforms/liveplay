@@ -1,11 +1,10 @@
-
 .auth-container, .account-container {
     max-width: 650px;
     margin: 20px auto;
     padding: 20px;
 }
 
-.auth-form, .account-section, #delete-account-survey {
+.auth-form {
     background: var(--card-background);
     border-radius: var(--border-radius);
     padding: 30px;
@@ -38,6 +37,10 @@
     margin-bottom: 25px;
     font-weight: 600;
 }
+
+/* ==========================================================================
+   Input Groups & Forms
+   ========================================================================== */
 
 .input-group {
     position: relative;
@@ -87,6 +90,17 @@
     margin-bottom: 25px;
 }
 
+.form-description { 
+    font-size: 0.8rem; 
+    color: var(--text-secondary); 
+    margin-top: -10px; 
+    margin-bottom: 25px; 
+}
+
+/* ==========================================================================
+   Buttons & Links
+   ========================================================================== */
+
 .auth-btn {
     width: 100%;
     padding: 14px;
@@ -112,13 +126,16 @@
 }
 
 .auth-btn.secondary {
-    background-color: #FF4D00;
+    background-color: #444; /* Darker grey for secondary actions */
 }
-.auth-btn.secondary:hover {
-    background-color: #444;
+.auth-btn.secondary:hover:not(:disabled) {
+    background-color: #555;
 }
 .auth-btn.danger {
-    background-color: #FF0000;
+    background-color: #d9534f; /* Red for destructive actions */
+}
+.auth-btn.danger:hover:not(:disabled) {
+    background-color: #c9302c;
 }
 
 .toggle-form {
@@ -133,25 +150,162 @@
     cursor: pointer;
 }
 
-.account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; }
-.account-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.account-row:last-child { border-bottom: none; }
-.row-icon { color: var(--text-secondary); margin-right: 20px; }
-.row-content { flex-grow: 1; }
-.row-content label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2px; }
-.row-content .row-value { color: var(--text-color); font-size: 0.85rem; font-weight: 500; }
-.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 2px 0; }
-.row-input:focus { outline: none; }
-.account-row.editing .row-value { display: none; }
-.account-row.editing .row-input { display: block; }
-.account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
-.account-row.editing .edit-icon { color: var(--theme-color); }
-.account-actions { margin-top: 30px; text-align: center; }
-#delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
-#delete-account-survey { display: none; margin-top: 20px; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
-#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
-.other-reason-label { flex-wrap: wrap; }
-#other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
+/* ==========================================================================
+   My Account Page Styles
+   ========================================================================== */
+
+.account-card { 
+    background: var(--card-background); 
+    border-radius: var(--border-radius); 
+    padding: 10px 20px; 
+}
+
+.account-row { 
+    display: flex; 
+    align-items: center; 
+    padding: 15px 0; 
+    border-bottom: 1px solid rgba(255,255,255,0.1); 
+}
+.account-row:last-child { 
+    border-bottom: none; 
+}
+
+.row-icon { 
+    color: var(--text-secondary); 
+    margin-right: 20px; 
+}
+.row-content { 
+    flex-grow: 1; 
+}
+.row-content label { 
+    display: block; 
+    font-size: 0.8rem; 
+    color: var(--text-secondary); 
+    margin-bottom: 2px; 
+}
+.row-content .row-value { 
+    color: var(--text-color); 
+    font-size: 0.85rem; 
+    font-weight: 500; 
+}
+.row-content .row-input { 
+    display: none; 
+    width: 95%; 
+    background: transparent; 
+    border: none; 
+    border-bottom: 1px solid var(--theme-color); 
+    color: white; 
+    font-family: 'TT Hoves Pro Trial', sans-serif; 
+    font-size: 0.85rem; 
+    font-weight: 500; 
+    padding: 2px 0; 
+}
+.row-input:focus { 
+    outline: none; 
+}
+
+/* Editing State for Account Rows */
+.account-row.editing .row-value { 
+    display: none; 
+}
+.account-row.editing .row-input { 
+    display: block; 
+}
+.account-row .edit-icon,
+.account-row .visibility-toggle { 
+    color: var(--text-secondary); 
+    cursor: pointer; 
+    transition: color 0.2s;
+    margin-left: 10px;
+}
+.account-row.editing .edit-icon { 
+    color: var(--theme-color); 
+}
+
+/* Actions below the account card */
+.account-actions { 
+    margin-top: 30px; 
+    text-align: center; 
+}
+#delete-account-link { 
+    display: block; 
+    margin-top: 20px; 
+    font-size: 0.8rem; 
+    color: #d9534f; 
+    cursor: pointer; 
+}
+
+/* ==========================================================================
+   Delete Account Survey Styles
+   ========================================================================== */
+
+#delete-account-survey {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+}
+#delete-account-survey h3 { 
+    margin-top: 0; 
+    text-align: center; 
+    margin-bottom: 20px;
+}
+#delete-survey-form { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px;
+}
+
+.survey-option {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.survey-option:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.survey-option.selected {
+    border-color: var(--theme-color);
+    color: var(--theme-color);
+}
+.survey-option p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+.survey-option .material-symbols-outlined {
+    font-size: 24px;
+}
+
+.other-reason-container {
+    margin-top: 5px;
+    padding-left: 39px; /* Aligns input with the text of the options */
+}
+#other-reason-text {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--text-secondary);
+    border-radius: 8px;
+    color: white;
+    padding: 10px;
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    font-size: 0.9rem;
+}
+#other-reason-text:focus {
+    outline: none;
+    border-color: var(--theme-color);
+}
+
+/* ==========================================================================
+   Popup & Modal Styles (for OTP and other popups)
+   ========================================================================== */
 
 .auth-popup-overlay {
     position: fixed;
@@ -199,16 +353,11 @@
     color: var(--text-secondary);
     cursor: pointer;
     padding: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .popup-logo {
     width: 120px;
-    height: auto;
     margin: 10px 0 15px 0;
-    pointer-events: none;
 }
 
 .popup-subtitle {
@@ -217,77 +366,58 @@
     margin: 0 0 25px 0;
 }
 
-.popup-action-btn {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    background-color: var(--theme-color);
-    border: none;
-    border-radius: 50px;
-    color: var(--text-color);
-    font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
-    box-sizing: border-box;
+/* ==========================================================================
+   OTP (One-Time Password) Specific Styles
+   ========================================================================== */
+
+.otp-title { 
+    margin-top: 0; 
+    margin-bottom: 10px; 
+    font-size: 1.0rem; 
+    font-weight: 600; 
 }
-
-.popup-action-btn:hover {
-    background-color: #ff6a29;
+.otp-instruction { 
+    color: var(--text-secondary); 
+    margin-top: 0; 
+    margin-bottom: 25px; 
+    font-size: 0.9rem; 
 }
-
-.auth-popup h3 {
-    margin: 0 0 25px 0;
-    font-size: 1.0rem;
-    font-weight: 400;
+.otp-input-container { 
+    margin-bottom: 25px; 
+    width: 100%; 
 }
-
-.menu-header {
-    padding: 10px 10px 8px;
-    font-weight: 900;
-    color: var(--text-secondary);
-    font-size: 1.2rem;
-}
-
-.menu-divider {
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
-    margin: 5px 10px 10px;
-}
-
-
-.otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.0rem; font-weight: 600; }
-.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.8rem; }
-.otp-input-container { margin-bottom: 25px; width: 100%; }
 #otp-input {
     width: 100%;
     box-sizing: border-box;
     padding: 12px;
-    font-family: 'TT Hoves Pro Trail', sans-serif;
-    font-size: 1.0rem;
+    font-size: 1.5rem;
     font-weight: 600;
     text-align: center;
     letter-spacing: 0.5em;
-    text-indent: 0.5em;
+    text-indent: 0.5em; /* Aligns digits with letter-spacing */
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--text-secondary);
     border-radius: 10px;
     color: var(--text-color);
 }
-#otp-input:focus { outline: none; border-color: var(--theme-color); }
-#resend-container { margin-top: 25px; text-align: center; font-size: 0.9rem; }
-.timer-display { color: var(--text-secondary); }
-.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; }
-.resend-link.disabled { display: none; }
-
-.form-description { font-size: 0.8rem; color: var(--text-secondary); margin-top: -10px; margin-bottom: 25px; }
-.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
-.otp-input-container { margin-bottom: 25px; width: 100%; }
-#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1.5rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
-#otp-input:focus { outline: none; border-color: var(--theme-color); }
-#resend-container { margin-top: 25px; text-align: center; font-size: 0.8rem; }
-.timer-display { color: var(--text-secondary); }
-.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; text-decoration: none; }
-.resend-link.disabled { display: none; color: var(--text-secondary); cursor: not-allowed; pointer-events: none; }
+#otp-input:focus { 
+    outline: none; 
+    border-color: var(--theme-color); 
+}
+#resend-container { 
+    margin-top: 25px; 
+    text-align: center; 
+    font-size: 0.8rem; 
+}
+.timer-display { 
+    color: var(--text-secondary); 
+}
+.resend-link { 
+    color: var(--theme-color); 
+    font-weight: 600; 
+    cursor: pointer; 
+    text-decoration: none; 
+}
+.resend-link.disabled { 
+    display: none; 
+}
