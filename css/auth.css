@@ -69,11 +69,11 @@
 }
 
 /* MOBILE RESPONSIVE LAYOUT */
-@media (max-width: 799px) {
+@media (max-width: 650px) {
     .auth-container {
         flex-direction: column;
         margin-top: 20px;
-        padding: 10px;
+        padding: 20px;
     }
 
     .auth-left-panel {
