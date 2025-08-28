@@ -64,28 +64,16 @@ const authHandler = {
   updateUserPassword: async (newPassword) => {
     return await _supabase.auth.updateUser({ password: newPassword });
   },
-
-  updateUserEmail: async (newEmail) => {
-    return await _supabase.auth.updateUser({ email: newEmail });
-  },
   
   updateUserProfile: async (profileData) => {
-    const { data: { user } } = await _supabase.auth.getUser();
+    const user = await authHandler.getCurrentUser();
     if (!user) return { error: { message: "User not logged in." } };
     return await _supabase.from('profiles').update(profileData).eq('id', user.id);
   },
   
   deleteUserAccount: async () => {
-    // Securely calls the 'delete-user' Edge Function
-    const { data, error } = await _supabase.functions.invoke('delete-user');
-    
-    if (error) {
-      console.error("Failed to delete user account via Edge Function:", error.message);
-      return { error };
-    }
-    
-    await _supabase.auth.signOut();
-    return { data };
+    console.warn("User deletion should be handled by a secure Edge Function.");
+    return await authHandler.logOut();
   }
 };
 
