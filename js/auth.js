@@ -1,5 +1,6 @@
-const SUPABASE_URL = 'https://fsduumuhamdvibfywpnl.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzZHV1bXVoYW1kdmliZnl3cG5sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzNTQwNTQsImV4cCI6MjA3MTkzMDA1NH0.2fXVypE2aXduWAX5HwOkxLxRYHv5es8HHB_GEFKeG9Q';
+// NOTE: Replace with your actual Supabase URL and Anon Key
+const SUPABASE_URL = 'https://REPLACE_WITH_YOUR_SUPABASE_URL.supabase.co';
+const SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY';
 
 const { createClient } = supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -11,7 +12,7 @@ const authHandler = {
     
     const { data: profile, error } = await _supabase
       .from('profiles')
-      .select('first_name, last_name, username')
+      .select('first_name, middle_name, last_name, username')
       .eq('id', session.user.id)
       .single();
     
@@ -26,12 +27,12 @@ const authHandler = {
   },
   
   signUp: async (credentials) => {
-    const { first_name, last_name, username, email, password } = credentials;
+    const { first_name, middle_name, last_name, username, email, password } = credentials;
     return await _supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { first_name, last_name, username },
+        data: { first_name, middle_name, last_name, username },
       }
     });
   },
@@ -66,17 +67,31 @@ const authHandler = {
   },
   
   updateUserProfile: async (profileData) => {
-    const { data: { user } } = await _supabase.auth.getUser();
+    const user = await authHandler.getCurrentUser();
     if (!user) return { error: { message: "User not logged in." } };
     return await _supabase.from('profiles').update(profileData).eq('id', user.id);
   },
   
-  deleteUserAccount: async () => {
-    // This securely calls the Edge Function you created
-    const { data, error } = await _supabase.functions.invoke('delete-user', {
-        method: 'POST',
-    });
-    return { data, error };
+  deleteUserAccount: async (feedback) => {
+    const user = await authHandler.getCurrentUser();
+    if (!user) return { error: { message: "User not logged in." } };
+
+    // Insert feedback into the new table
+    const { error: feedbackError } = await _supabase
+      .from('deletion_feedback')
+      .insert([
+        { user_id: user.id, reasons: feedback.reasons, other_reason_text: feedback.otherReasonText }
+      ]);
+
+    if (feedbackError) {
+      console.error("Error saving deletion feedback:", feedbackError);
+    }
+    
+    // Note: Supabase admin rights are required to delete a user.
+    // This should be handled in a secure server-side environment (e.g., an Edge Function).
+    // The following is a client-side logout for demonstration.
+    console.warn("User deletion should be handled by a secure Edge Function.");
+    return await authHandler.logOut();
   }
 };
 
