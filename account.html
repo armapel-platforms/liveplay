@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>My Account - Liveplay</title>
+    <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
+    <link rel="shortcut" href="/logo/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
+    <link rel="manifest" href="/logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0,0" />
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/auth.css">
 </head>
@@ -19,46 +24,37 @@
 
     <main class="subpage-content account-container">
         <div class="account-card">
-            <!-- User Profile Rows -->
             <div class="account-row" data-field="first_name">
+                <span class="material-symbols-outlined row-icon">badge</span>
                 <div class="row-content"><label>First Name</label><span class="row-value"></span><input type="text" class="row-input"></div>
-                <div class="row-actions"><span class="material-symbols-outlined edit-icon">edit</span></div>
+                <span class="material-symbols-outlined edit-icon">edit</span>
+            </div>
+            <div class="account-row" data-field="middle_name">
+                <span class="material-symbols-outlined row-icon">badge</span>
+                <div class="row-content"><label>Middle Name</label><span class="row-value"></span><input type="text" class="row-input"></div>
+                <span class="material-symbols-outlined edit-icon">edit</span>
             </div>
             <div class="account-row" data-field="last_name">
+                <span class="material-symbols-outlined row-icon">badge</span>
                 <div class="row-content"><label>Last Name</label><span class="row-value"></span><input type="text" class="row-input"></div>
-                <div class="row-actions"><span class="material-symbols-outlined edit-icon">edit</span></div>
+                <span class="material-symbols-outlined edit-icon">edit</span>
             </div>
             <div class="account-row" data-field="username">
+                <span class="material-symbols-outlined row-icon">account_circle</span>
                 <div class="row-content"><label>Username</label><span class="row-value"></span><input type="text" class="row-input"></div>
-                <div class="row-actions"><span class="material-symbols-outlined edit-icon">edit</span></div>
+                <span class="material-symbols-outlined edit-icon">edit</span>
             </div>
             <div class="account-row" data-field="email">
-                <div class="row-content"><label>Email Address</label><span class="row-value"></span></div>
-                <div class="row-actions" title="Contact support to change email"><span class="material-symbols-outlined">lock</span></div>
+                <span class="material-symbols-outlined row-icon">email</span>
+                <div class="row-content"><label>Email Address</label><span class="row-value"></span><input type="email" class="row-input"></div>
+                <span class="material-symbols-outlined edit-icon">edit</span>
             </div>
-
-            <!-- Password Change Row -->
-            <div class="account-row password-change-row" data-field="password">
-                <div class="row-content">
-                    <label>Password</label>
-                    <span class="row-value">••••••••••</span>
-                </div>
-                <div class="row-actions">
+            <div class="account-row" data-field="password">
+                <span class="material-symbols-outlined row-icon">lock</span>
+                <div class="row-content"><label>Password</label><span class="row-value">••••••••</span><input type="password" class="row-input" placeholder="New Password"></div>
+                <div class="action-icons">
+                    <span class="material-symbols-outlined visibility-toggle" data-target-row="password">visibility_off</span>
                     <span class="material-symbols-outlined edit-icon">edit</span>
-                </div>
-            </div>
-            <!-- Collapsible Password Form -->
-            <div class="password-form-container">
-                <p class="form-description">Create a new, strong password.</p>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">lock</span>
-                    <input type="password" id="account-new-password" class="row-input" placeholder="New Password" autocomplete="new-password">
-                    <span class="material-symbols-outlined visibility-toggle" data-target="account-new-password">visibility_off</span>
-                </div>
-                <div class="input-group">
-                    <span class="material-symbols-outlined">lock_reset</span>
-                    <input type="password" id="account-confirm-password" class="row-input" placeholder="Confirm New Password" autocomplete="new-password">
-                    <span class="material-symbols-outlined visibility-toggle" data-target="account-confirm-password">visibility_off</span>
                 </div>
             </div>
         </div>
@@ -73,12 +69,11 @@
         <div id="delete-account-survey" style="display: none;">
             <h3>Why are you leaving?</h3>
             <form id="delete-survey-form">
-                <label><input type="checkbox" name="reason" value="missing_channels"> Missing my favorite channels</label>
-                <label><input type="checkbox" name="reason" value="poor_experience"> Poor user experience</label>
-                <label><input type="checkbox" name="reason" value="technical_issues"> Technical issues</label>
-                <label class="other-reason-label"><input type="checkbox" name="reason" value="other"> Other
-                    <textarea id="other-reason-text" placeholder="Please specify"></textarea>
-                </label>
+                <label><span class="material-symbols-outlined"></span><input type="checkbox" name="reason" value="missing_channels"> Missing my favorite channels</label>
+                <label><span class="material-symbols-outlined"></span><input type="checkbox" name="reason" value="poor_experience"> Poor user experience</label>
+                <label><span class="material-symbols-outlined"></span><input type="checkbox" name="reason" value="technical_issues"> Technical issues with the service</label>
+                <label class="other-reason-label"><span class="material-symbols-outlined"></span><input type="checkbox" name="reason" value="other"> Other</label>
+                <input type="text" id="other-reason-text" placeholder="Please specify">
                 <button type="submit" id="final-delete-button" class="auth-btn danger" disabled>Delete My Account</button>
             </form>
         </div>
