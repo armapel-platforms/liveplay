@@ -19,19 +19,25 @@
         <a href="/home" class="back-link">
             <span class="material-symbols-outlined">arrow_back_ios_new</span>
         </a>
+        <!-- The h1 title is now hidden by CSS -->
+        <h1 id="page-title-hidden"></h1>
     </header>
 
-    <main class="subpage-content auth-container">
-        <div class="auth-content-left">
-            <h1 class="auth-title"><b>liveplay</b> Account</h1>
-            <h2 id="page-title"></h2>
-            <p class="form-description">Log in to continue to your Liveplay account.</p>
+    <main class="auth-container">
+        <!-- Left Panel for text content -->
+        <div class="auth-left-panel">
+            <h3 class="auth-brand"><b>liveplay</b> Account.</h3>
+            <h1 id="page-title"></h1>
+            <p id="page-description"></p>
         </div>
-        <div class="auth-content-right">
+
+        <!-- Right Panel for forms -->
+        <div class="auth-right-panel">
+            <!-- Login Form -->
             <div id="login-form" class="auth-form">
                 <div class="input-group">
                     <span class="material-symbols-outlined">person</span>
-                    <input type="email" id="login-email" placeholder="Username or Email Address" required autocomplete="email">
+                    <input type="email" id="login-email" placeholder="Email Address" required autocomplete="email">
                 </div>
                 <div class="input-group">
                     <span class="material-symbols-outlined">lock</span>
@@ -43,6 +49,7 @@
                 <p class="toggle-form">Don't have an account? <a href="/home/signup" id="show-signup">Sign Up</a></p>
             </div>
 
+            <!-- Signup Form -->
             <div id="signup-form" class="auth-form">
                 <div class="input-group">
                     <span class="material-symbols-outlined">badge</span>
@@ -77,14 +84,15 @@
                 <button id="signup-button" class="auth-btn">Create Account</button>
                 <p class="toggle-form">Already have an account? <a href="/home/login" id="show-login">Log In</a></p>
             </div>
+            
+            <div class="auth-footer">
+                <a href="/privacy">Privacy</a>
+                <a href="/terms">Terms</a>
+            </div>
         </div>
     </main>
     
-    <div class="footer-links">
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
-    </div>
-
+    <!-- OTP Modal (No changes) -->
     <div id="otp-modal-overlay" class="auth-popup-overlay">
         <div class="auth-popup">
             <h3 class="otp-title">Enter Verification Code</h3>
@@ -105,16 +113,19 @@
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
         const pageTitle = document.getElementById('page-title');
+        const pageDescription = document.getElementById('page-description');
 
         function showFormBasedOnUrl() {
             if (window.location.pathname.endsWith('/signup')) {
                 loginForm.classList.remove('active');
                 signupForm.classList.add('active');
-                pageTitle.textContent = 'Sign Up';
+                pageTitle.textContent = 'Create Account';
+                pageDescription.textContent = 'Join the community and start streaming.';
             } else {
                 signupForm.classList.remove('active');
                 loginForm.classList.add('active');
-                pageTitle.textContent = 'Log In';
+                pageTitle.textContent = 'Welcome Back!';
+                pageDescription.textContent = 'Log in to continue your experience.';
             }
         }
         
