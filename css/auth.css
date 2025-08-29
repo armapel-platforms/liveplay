@@ -22,8 +22,8 @@ body.auth-page {
 
 .back-link {
     position: absolute;
-    top: 25px;
-    left: 25px;
+    top: 20px;
+    left: 20px;
     color: var(--text-color);
     z-index: 10;
 }
@@ -31,7 +31,7 @@ body.auth-page {
 main.auth-container {
     width: 100%;
     max-width: 420px;
-    margin-top: 50px;
+    margin-top: 65px;
     flex-shrink: 0;
 }
 
@@ -40,7 +40,7 @@ main.auth-container {
     max-width: 420px;
     margin-top: auto;
     padding: 20px 0;
-    flex-shrink: 0; /* Prevents the footer from shrinking */
+    flex-shrink: 0;
     font-size: 0.75rem;
     color: var(--text-secondary);
     text-align: center;
@@ -151,7 +151,14 @@ main.auth-container {
 .account-row.editing .row-value { display: none; }
 .account-row.editing .row-input { display: block; }
 .account-row .edit-icon { color: var(--text-secondary); cursor: pointer; }
-#delete-account-link { display: flex; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
+#delete-account-link { 
+    display: block; 
+    margin-top: 20px; 
+    font-size: 0.8rem; 
+    color: #d9534f; 
+    cursor: pointer; 
+    text-align: center;
+}
 #delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
 #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
 #other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
@@ -170,16 +177,15 @@ main.auth-container {
 .resend-link.disabled { display: none; }
 
 
-/* === DESKTOP STYLES === */
 @media (min-width: 900px) {
     body.auth-page {
-        justify-content: center; /* Center the whole block vertically on large screens */
-        padding: 20px; /* Reset padding */
+        justify-content: center;
+        padding: 20px;
     }
     
     main.auth-container {
         max-width: 900px;
-        margin-top: 0; /* Reset margin */
+        margin-top: 0;
     }
 
     .auth-form {
