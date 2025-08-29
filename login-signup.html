@@ -15,66 +15,65 @@
     <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body class="subpage">
-    <header class="subpage-header">
+    <header class="auth-header">
         <a href="/home" class="back-link">
             <span class="material-symbols-outlined">arrow_back_ios_new</span>
         </a>
-        <h1 id="page-title">Log In</h1>
     </header>
 
-    <main class="subpage-content auth-container">
-        <div id="login-form" class="auth-form">
-            <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="auth-logo">
-            <h2>Log In</h2>
-            <div class="input-group">
-                <span class="material-symbols-outlined">person</span>
-                <input type="email" id="login-email" placeholder="Username or Email Address" required autocomplete="email">
+    <main class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header-content">
+                <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="auth-logo-text">
+                <span class="account-text">Account</span>
             </div>
-            <div class="input-group">
-                <span class="material-symbols-outlined">lock</span>
-                <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
-                <span class="material-symbols-outlined visibility-toggle" data-target="login-password">visibility_off</span>
-            </div>
-            <a href="/home/forgot-password" class="forgot-password">Forgot Password?</a>
-            <button id="login-button" class="auth-btn">Log In</button>
-            <p class="toggle-form">Don't have an account? <a href="/home/signup" id="show-signup">Sign Up</a></p>
-        </div>
 
-        <div id="signup-form" class="auth-form">
-            <img src="/logo/liveplay-logo-white.png" alt="Liveplay Logo" class="auth-logo">
-            <h2>Sign Up</h2>
-            <div class="input-group">
-                <span class="material-symbols-outlined">badge</span>
-                <input type="text" id="signup-firstname" placeholder="First Name" required>
+            <div id="login-form" class="auth-form active">
+                <h2>Welcome Back!</h2>
+                <p class="form-description">It's great to see you again. Log in to continue your streaming experience.</p>
+                <div class="input-group">
+                    <input type="email" id="login-email" placeholder="Username or Email Address" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
+                    <span class="material-symbols-outlined visibility-toggle" data-target="login-password">visibility_off</span>
+                </div>
+                <a href="/home/forgot-password" class="forgot-password">Forgot Password?</a>
+                <button id="login-button" class="auth-btn">Log In</button>
+                <p class="toggle-form">Don't have an account? <a href="/home/signup" id="show-signup">Sign Up</a></p>
             </div>
-            <div class="input-group">
-                <span class="material-symbols-outlined">badge</span>
-                <input type="text" id="signup-middlename" placeholder="Middle Name (Optional)">
+
+            <div id="signup-form" class="auth-form">
+                <h2>Create Account</h2>
+                <p class="form-description">Join Liveplay now to start streaming.</p>
+                <div class="input-group">
+                    <input type="text" id="signup-firstname" placeholder="First Name" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="signup-middlename" placeholder="Middle Name (Optional)">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="signup-lastname" placeholder="Last Name" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="signup-username" placeholder="Username" required autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <input type="email" id="signup-email" placeholder="Email Address" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signup-password" placeholder="Create Password" required autocomplete="new-password">
+                    <span class="material-symbols-outlined visibility-toggle" data-target="signup-password">visibility_off</span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required autocomplete="new-password">
+                    <span class="material-symbols-outlined visibility-toggle" data-target="signup-confirm-password">visibility_off</span>
+                </div>
+                <button id="signup-button" class="auth-btn">Create Account</button>
+                <p class="toggle-form">Already have an account? <a href="/home/login" id="show-login">Log In</a></p>
             </div>
-            <div class="input-group">
-                <span class="material-symbols-outlined">badge</span>
-                <input type="text" id="signup-lastname" placeholder="Last Name" required>
-            </div>
-            <div class="input-group">
-                <span class="material-symbols-outlined">account_circle</span>
-                <input type="text" id="signup-username" placeholder="Username" required autocomplete="username">
-            </div>
-            <div class="input-group">
-                <span class="material-symbols-outlined">email</span>
-                <input type="email" id="signup-email" placeholder="Email Address" required autocomplete="email">
-            </div>
-            <div class="input-group">
-                <span class="material-symbols-outlined">lock</span>
-                <input type="password" id="signup-password" placeholder="Create Password" required autocomplete="new-password">
-                <span class="material-symbols-outlined visibility-toggle" data-target="signup-password">visibility_off</span>
-            </div>
-            <div class="input-group">
-                <span class="material-symbols-outlined">lock_reset</span>
-                <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required autocomplete="new-password">
-                <span class="material-symbols-outlined visibility-toggle" data-target="signup-confirm-password">visibility_off</span>
-            </div>
-            <button id="signup-button" class="auth-btn">Create Account</button>
-            <p class="toggle-form">Already have an account? <a href="/home/login" id="show-login">Log In</a></p>
+            
+            <p class="terms-policy">By continuing to use Liveplay, you agree to our <a href="#">Terms</a> and <a href="#">Policy</a>.</p>
         </div>
     </main>
     
@@ -97,17 +96,20 @@
     document.addEventListener('DOMContentLoaded', () => {
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
-        const pageTitle = document.getElementById('page-title');
+        // The pageTitle element is removed as per the new layout
+        // const pageTitle = document.getElementById('page-title');
 
         function showFormBasedOnUrl() {
             if (window.location.pathname.endsWith('/signup')) {
                 loginForm.classList.remove('active');
                 signupForm.classList.add('active');
-                pageTitle.textContent = 'Sign Up';
+                // No page title update needed for the new layout
+                // pageTitle.textContent = 'Sign Up';
             } else {
                 signupForm.classList.remove('active');
                 loginForm.classList.add('active');
-                pageTitle.textContent = 'Log In';
+                // No page title update needed for the new layout
+                // pageTitle.textContent = 'Log In';
             }
         }
         
