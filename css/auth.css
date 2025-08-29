@@ -1,8 +1,12 @@
+/* ============================================= */
+/* =========== BASE & MOBILE STYLES ============ */
+/* ============================================= */
+
 body.subpage {
-    background-color: var(--background-color); /* Ensure dark background */
+    background-color: var(--background-color);
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Make sure body takes full viewport height */
+    min-height: 100vh;
 }
 
 .auth-header {
@@ -12,6 +16,10 @@ body.subpage {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    position: absolute; /* Allows it to sit on top without pushing content */
+    top: 0;
+    left: 0;
+    z-index: 10;
 }
 
 .auth-header .back-link {
@@ -25,49 +33,52 @@ body.subpage {
 }
 
 .auth-header .back-link .material-symbols-outlined {
-    font-size: 1.5rem; /* Adjust size as needed */
+    font-size: 1.5rem;
 }
 
 .auth-wrapper {
-    flex-grow: 1; /* Allows the wrapper to take available space */
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px; /* Add padding around the card */
+    padding: 20px;
     box-sizing: border-box;
+    width: 100%;
 }
 
 .auth-card {
-    background: var(--card-background);
-    border-radius: 24px; /* Rounded corners as per new design */
-    padding: 40px; /* Increased padding */
-    max-width: 500px; /* Max width for the card */
+    background: #1C1C1E; /* Specific dark color from images */
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 500px;
     width: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    position: relative; /* For terms-policy positioning */
+    align-items: flex-start; /* Align content to the left */
+    text-align: left; /* Align text to the left */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
 .auth-header-content {
     display: flex;
     align-items: center;
-    margin-bottom: 30px; /* Space between logo/text and form */
+    margin-bottom: 30px;
+    width: 100%;
 }
 
 .auth-logo-text {
-    height: 30px; /* Adjust logo size */
+    height: 30px;
     width: auto;
     margin-right: 10px;
+    pointer-events: none;
 }
 
 .account-text {
-    font-size: 1.8rem; /* Larger text for "Account" */
+    font-size: 1rem;
     font-weight: 500;
-    color: var(--text-secondary); /* Lighter color */
+    color: var(--text-secondary);
 }
 
 .auth-form {
@@ -88,20 +99,18 @@ body.subpage {
 
 .auth-form h2 {
     margin-top: 0;
-    font-size: 2.2rem; /* Larger and bolder welcome/create text */
+    font-size: 1.5rem;
     margin-bottom: 10px;
     font-weight: 700;
     color: var(--text-color);
-    text-align: left;
     width: 100%;
 }
 
 .form-description {
-    font-size: 0.95rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     margin-top: 0;
-    margin-bottom: 30px; /* Space below description */
-    text-align: left;
+    margin-bottom: 30px;
     width: 100%;
     line-height: 1.4;
 }
@@ -109,47 +118,48 @@ body.subpage {
 .input-group {
     position: relative;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Slightly reduced margin */
 }
 
 .input-group input {
     width: 100%;
-    padding: 18px 20px; /* Larger padding for inputs */
-    background: #2A2A2A; /* Darker input background */
+    padding: 18px 20px;
+    background: #2C2C2E; /* Darker input color from images */
     border: 1px solid transparent;
-    border-radius: 12px; /* Slightly more rounded inputs */
+    border-radius: 15px;
     color: var(--text-color);
     font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 1rem; /* Larger font size */
+    font-size: 1rem;
     box-sizing: border-box;
     transition: border-color 0.3s, background-color 0.3s;
 }
 
 .input-group input::placeholder {
-    color: var(--text-secondary); /* Lighter placeholder text */
+    color: #8E8E93; /* Placeholder color from images */
 }
 
 .input-group input:focus {
     outline: none;
     border-color: var(--theme-color);
-    background-color: #333; /* Even darker on focus */
+    background-color: #3A3A3C;
 }
 
 .visibility-toggle {
     position: absolute;
-    right: 20px; /* Adjusted position */
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-secondary);
     cursor: pointer;
-    font-size: 1.3rem; /* Larger icon */
+    font-size: 1.3rem;
 }
 
 .forgot-password {
     align-self: flex-end;
-    font-size: 0.9rem; /* Slightly larger */
+    font-size: 0.9rem;
     color: var(--text-secondary);
-    margin-bottom: 30px; /* Increased margin */
+    margin-top: 5px; /* Adjusted margin */
+    margin-bottom: 30px;
     text-decoration: none;
     transition: color 0.2s ease;
 }
@@ -160,21 +170,22 @@ body.subpage {
 
 .auth-btn {
     width: 100%;
-    padding: 18px; /* Larger button padding */
+    padding: 18px;
     background-color: var(--theme-color);
     border: none;
-    border-radius: 12px; /* Consistent with input radius */
-    color: #FFFFFF; /* White text for buttons */
+    border-radius: 20px;
+    color: #FFFFFF;
     font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 1.1rem; /* Larger button text */
+    font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
-    text-decoration: none; /* In case it's used as a link */
+    text-decoration: none;
+    margin-top: 15px; /* Added margin on top */
 }
 
 .auth-btn:hover:not(:disabled) {
-    background-color: #ff6a29; /* Slightly brighter on hover */
+    background-color: #ff6a29;
 }
 
 .auth-btn:disabled {
@@ -184,9 +195,11 @@ body.subpage {
 }
 
 .toggle-form {
-    margin-top: 40px; /* More space above toggle */
-    font-size: 1rem; /* Larger text */
+    margin-top: 30px; /* Space between button and toggle link */
+    font-size: 0.9rem;
     color: var(--text-secondary);
+    width: 100%;
+    text-align: center; /* Center align this text */
 }
 
 .toggle-form a {
@@ -202,11 +215,15 @@ body.subpage {
 }
 
 .terms-policy {
-    margin-top: 40px; /* Space from the form */
+    position: absolute;
+    bottom: -50px; /* Position below the card */
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 0.8rem;
     color: var(--text-secondary);
     width: 100%;
     text-align: center;
+    white-space: nowrap; /* Prevent line break on small screens */
 }
 
 .terms-policy a {
@@ -215,7 +232,10 @@ body.subpage {
     text-decoration: none;
 }
 
-/* Existing OTP Modal and Account Section styles (ensure these are still compatible or adjust as needed) */
+/* ============================================= */
+/* =========== OTP POPUP STYLES ================ */
+/* ============================================= */
+
 .auth-popup-overlay {
     position: fixed;
     inset: 0;
@@ -253,76 +273,26 @@ body.subpage {
     transform: scale(1);
 }
 
-.popup-close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.popup-logo {
-    width: 120px;
-    height: auto;
-    margin: 10px 0 15px 0;
-    pointer-events: none;
-}
-
-.popup-subtitle {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin: 0 0 25px 0;
-}
-
-.popup-action-btn {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    background-color: var(--theme-color);
-    border: none;
-    border-radius: 50px;
-    color: var(--text-color);
-    font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
-    box-sizing: border-box;
-}
-
-.popup-action-btn:hover {
-    background-color: #ff6a29;
-}
-
-.auth-popup h3 {
-    margin: 0 0 25px 0;
-    font-size: 1.0rem;
-    font-weight: 400;
-}
-
-.menu-header {
-    padding: 10px 10px 8px;
-    font-weight: 900;
-    color: var(--text-secondary);
+.otp-title {
+    margin-top: 0;
+    margin-bottom: 10px;
     font-size: 1.2rem;
+    font-weight: 600;
 }
 
-.menu-divider {
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
-    margin: 5px 10px 10px;
+.otp-instruction {
+    color: var(--text-secondary);
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
-.otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.0rem; font-weight: 600; }
-.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
-.otp-input-container { margin-bottom: 25px; width: 100%; }
+.otp-input-container {
+    margin-bottom: 25px;
+    width: 100%;
+}
+
 #otp-input {
     width: 100%;
     box-sizing: border-box;
@@ -338,28 +308,32 @@ body.subpage {
     border-radius: 10px;
     color: var(--text-color);
 }
-#otp-input:focus { outline: none; border-color: var(--theme-color); }
-#resend-container { margin-top: 25px; text-align: center; font-size: 0.8rem; }
-.timer-display { color: var(--text-secondary); }
-.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; text-decoration: none; }
-.resend-link.disabled { display: none; color: var(--text-secondary); cursor: not-allowed; pointer-events: none; }
 
-/* Account section styles (if they were in auth.css) */
-.account-container {
-    max-width: 650px;
-    margin: 20px auto;
-    padding: 20px;
+#otp-input:focus {
+    outline: none;
+    border-color: var(--theme-color);
 }
 
-.account-section, #delete-account-survey {
-    background: var(--card-background);
-    border-radius: var(--border-radius);
-    padding: 30px;
-    display: none;
-    flex-direction: column;
-    align-items: center;
+#resend-container {
+    margin-top: 25px;
     text-align: center;
-    animation: fadeIn 0.5s ease-in-out;
+    font-size: 0.9rem;
+}
+
+.timer-display {
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.resend-link {
+    color: var(--theme-color);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.resend-link.disabled {
+    display: none;
 }
 .account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; }
 .account-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -380,3 +354,54 @@ body.subpage {
 #delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
 .other-reason-label { flex-wrap: wrap; }
 #other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
+/* ============================================= */
+/* =========== DESKTOP VERSION STYLES ========== */
+/* ============================================= */
+
+/* Apply these styles for screens 768px and wider */
+@media (min-width: 768px) {
+    .auth-header {
+        position: static; /* Remove absolute positioning on desktop */
+        padding: 40px 40px 0; /* Adjust padding */
+        max-width: 670px; /* Match the max-width of the card + padding */
+        margin: 0 auto;
+    }
+    
+    .auth-wrapper {
+        padding-top: 0; /* Remove top padding to align with header */
+        align-items: flex-start; /* Align card to the top */
+    }
+
+    .auth-card {
+        padding: 60px;
+        max-width: 670px;
+    }
+
+    .auth-header-content {
+        margin-bottom: 40px;
+    }
+
+    .auth-logo-text {
+        height: 35px;
+    }
+
+    .account-text {
+        font-size: 2rem;
+    }
+    
+    .auth-form h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .form-description {
+        font-size: 0.8rem;
+        margin-bottom: 35px;
+    }
+
+    .terms-policy {
+        position: static; /* Put it back in the document flow */
+        transform: none; /* Reset transform */
+        margin-top: 40px;
+    }
+}
