@@ -270,8 +270,6 @@ header.subpage-header h1 {
     position: absolute; 
     inset: 0;
     background: radial-gradient(circle at top right, transparent 35%, black 100%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
 }
 
 .slide-content { 
