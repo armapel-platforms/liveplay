@@ -71,16 +71,9 @@ const authHandler = {
     return await _supabase.from('profiles').update(profileData).eq('id', user.id);
   },
   
-  /**
-   * Securely calls the 'delete-user' Edge Function on the server.
-   * This function handles the permanent deletion of the user account.
-   * @param {object} surveyData - The reasons the user is leaving.
-   * @returns {Promise} The result of the function invocation.
-   */
-  deleteUserAccount: async (surveyData) => {
-    return await _supabase.functions.invoke('delete-user', {
-      body: surveyData,
-    });
+  deleteUserAccount: async () => {
+    console.warn("User deletion should be handled by a secure Edge Function.");
+    return await authHandler.logOut();
   }
 };
 
