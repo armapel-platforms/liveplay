@@ -1,17 +1,79 @@
-.auth-container, .account-container {
-    max-width: 650px;
-    margin: 20px auto;
-    padding: 20px;
+body.subpage {
+    background-color: var(--background-color); /* Ensure dark background */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Make sure body takes full viewport height */
 }
 
-.auth-form, .account-section, #delete-account-survey {
+.auth-header {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.auth-header .back-link {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 5px;
+}
+
+.auth-header .back-link .material-symbols-outlined {
+    font-size: 1.5rem; /* Adjust size as needed */
+}
+
+.auth-wrapper {
+    flex-grow: 1; /* Allows the wrapper to take available space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Add padding around the card */
+    box-sizing: border-box;
+}
+
+.auth-card {
     background: var(--card-background);
-    border-radius: var(--border-radius);
-    padding: 30px;
-    display: none;
+    border-radius: 24px; /* Rounded corners as per new design */
+    padding: 40px; /* Increased padding */
+    max-width: 500px; /* Max width for the card */
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    position: relative; /* For terms-policy positioning */
+}
+
+.auth-header-content {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px; /* Space between logo/text and form */
+}
+
+.auth-logo-text {
+    height: 30px; /* Adjust logo size */
+    width: auto;
+    margin-right: 10px;
+}
+
+.account-text {
+    font-size: 1.8rem; /* Larger text for "Account" */
+    font-weight: 500;
+    color: var(--text-secondary); /* Lighter color */
+}
+
+.auth-form {
+    display: none;
+    flex-direction: column;
+    width: 100%;
     animation: fadeIn 0.5s ease-in-out;
 }
 
@@ -24,18 +86,24 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.auth-logo {
-    width: 100px;
-    height: auto;
-    margin-bottom: 20px;
-    pointer-events: none;
-}
-
 .auth-form h2 {
     margin-top: 0;
-    font-size: 1.5rem;
-    margin-bottom: 25px;
-    font-weight: 600;
+    font-size: 2.2rem; /* Larger and bolder welcome/create text */
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: var(--text-color);
+    text-align: left;
+    width: 100%;
+}
+
+.form-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-top: 0;
+    margin-bottom: 30px; /* Space below description */
+    text-align: left;
+    width: 100%;
+    line-height: 1.4;
 }
 
 .input-group {
@@ -44,64 +112,69 @@
     margin-bottom: 20px;
 }
 
-.input-group .material-symbols-outlined {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-secondary);
-    pointer-events: none;
-}
-
 .input-group input {
     width: 100%;
-    padding: 12px 12px 12px 50px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 18px 20px; /* Larger padding for inputs */
+    background: #2A2A2A; /* Darker input background */
     border: 1px solid transparent;
-    border-radius: 10px;
+    border-radius: 12px; /* Slightly more rounded inputs */
     color: var(--text-color);
     font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 0.8rem;
+    font-size: 1rem; /* Larger font size */
     box-sizing: border-box;
     transition: border-color 0.3s, background-color 0.3s;
+}
+
+.input-group input::placeholder {
+    color: var(--text-secondary); /* Lighter placeholder text */
 }
 
 .input-group input:focus {
     outline: none;
     border-color: var(--theme-color);
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: #333; /* Even darker on focus */
 }
 
 .visibility-toggle {
-    right: 15px;
-    left: auto !important;
+    position: absolute;
+    right: 20px; /* Adjusted position */
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
     cursor: pointer;
-    pointer-events: all !important;
+    font-size: 1.3rem; /* Larger icon */
 }
 
 .forgot-password {
     align-self: flex-end;
-    font-size: 0.8rem;
+    font-size: 0.9rem; /* Slightly larger */
     color: var(--text-secondary);
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* Increased margin */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+    color: var(--theme-color);
 }
 
 .auth-btn {
     width: 100%;
-    padding: 14px;
+    padding: 18px; /* Larger button padding */
     background-color: var(--theme-color);
     border: none;
-    border-radius: 20px;
-    color: var(--text-color);
+    border-radius: 12px; /* Consistent with input radius */
+    color: #FFFFFF; /* White text for buttons */
     font-family: 'TT Hoves Pro Trial', sans-serif;
-    font-size: 0.8rem;
+    font-size: 1.1rem; /* Larger button text */
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
+    text-decoration: none; /* In case it's used as a link */
 }
 
 .auth-btn:hover:not(:disabled) {
-    background-color: #ff6a29;
+    background-color: #ff6a29; /* Slightly brighter on hover */
 }
 
 .auth-btn:disabled {
@@ -110,19 +183,9 @@
     opacity: 0.7;
 }
 
-.auth-btn.secondary {
-    background-color: #FF4D00;
-}
-.auth-btn.secondary:hover {
-    background-color: #444;
-}
-.auth-btn.danger {
-    background-color: #FF0000;
-}
-
 .toggle-form {
-    margin-top: 30px;
-    font-size: 0.8rem;
+    margin-top: 40px; /* More space above toggle */
+    font-size: 1rem; /* Larger text */
     color: var(--text-secondary);
 }
 
@@ -130,28 +193,29 @@
     color: var(--theme-color);
     font-weight: 600;
     cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
-.account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; }
-.account-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.account-row:last-child { border-bottom: none; }
-.row-icon { color: var(--text-secondary); margin-right: 20px; }
-.row-content { flex-grow: 1; }
-.row-content label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2px; }
-.row-content .row-value { color: var(--text-color); font-size: 0.85rem; font-weight: 500; }
-.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 2px 0; }
-.row-input:focus { outline: none; }
-.account-row.editing .row-value { display: none; }
-.account-row.editing .row-input { display: block; }
-.account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
-.account-row.editing .edit-icon { color: var(--theme-color); }
-.account-actions { margin-top: 30px; text-align: center; }
-#delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
-#delete-account-survey { display: none; margin-top: 20px; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
-#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
-.other-reason-label { flex-wrap: wrap; }
-#other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
+.toggle-form a:hover {
+    color: #ff6a29;
+}
 
+.terms-policy {
+    margin-top: 40px; /* Space from the form */
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    width: 100%;
+    text-align: center;
+}
+
+.terms-policy a {
+    color: var(--theme-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Existing OTP Modal and Account Section styles (ensure these are still compatible or adjust as needed) */
 .auth-popup-overlay {
     position: fixed;
     inset: 0;
@@ -256,16 +320,15 @@
     margin: 5px 10px 10px;
 }
 
-
 .otp-title { margin-top: 0; margin-bottom: 10px; font-size: 1.0rem; font-weight: 600; }
-.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.8rem; }
+.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
 .otp-input-container { margin-bottom: 25px; width: 100%; }
 #otp-input {
     width: 100%;
     box-sizing: border-box;
     padding: 12px;
-    font-family: 'TT Hoves Pro Trail', sans-serif;
-    font-size: 1.0rem;
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    font-size: 1.5rem;
     font-weight: 600;
     text-align: center;
     letter-spacing: 0.5em;
@@ -276,17 +339,44 @@
     color: var(--text-color);
 }
 #otp-input:focus { outline: none; border-color: var(--theme-color); }
-#resend-container { margin-top: 25px; text-align: center; font-size: 0.9rem; }
-.timer-display { color: var(--text-secondary); }
-.resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; }
-.resend-link.disabled { display: none; }
-
-.form-description { font-size: 0.8rem; color: var(--text-secondary); margin-top: -10px; margin-bottom: 25px; }
-.otp-instruction { color: var(--text-secondary); margin-top: 0; margin-bottom: 25px; font-size: 0.9rem; }
-.otp-input-container { margin-bottom: 25px; width: 100%; }
-#otp-input { width: 100%; box-sizing: border-box; padding: 12px; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 1.5rem; font-weight: 600; text-align: center; letter-spacing: 0.5em; text-indent: 0.5em; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--text-secondary); border-radius: 10px; color: var(--text-color); }
-#otp-input:focus { outline: none; border-color: var(--theme-color); }
 #resend-container { margin-top: 25px; text-align: center; font-size: 0.8rem; }
 .timer-display { color: var(--text-secondary); }
 .resend-link { color: var(--theme-color); font-weight: 600; cursor: pointer; text-decoration: none; }
 .resend-link.disabled { display: none; color: var(--text-secondary); cursor: not-allowed; pointer-events: none; }
+
+/* Account section styles (if they were in auth.css) */
+.account-container {
+    max-width: 650px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.account-section, #delete-account-survey {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+.account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; }
+.account-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.account-row:last-child { border-bottom: none; }
+.row-icon { color: var(--text-secondary); margin-right: 20px; }
+.row-content { flex-grow: 1; }
+.row-content label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2px; }
+.row-content .row-value { color: var(--text-color); font-size: 0.85rem; font-weight: 500; }
+.row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: 'TT Hoves Pro Trial', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 2px 0; }
+.row-input:focus { outline: none; }
+.account-row.editing .row-value { display: none; }
+.account-row.editing .row-input { display: block; }
+.account-row .edit-icon { color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
+.account-row.editing .edit-icon { color: var(--theme-color); }
+.account-actions { margin-top: 30px; text-align: center; }
+#delete-account-link { display: block; margin-top: 20px; font-size: 0.8rem; color: #d9534f; cursor: pointer; }
+#delete-account-survey { display: none; margin-top: 20px; } #delete-account-survey h3 { margin-top: 0; text-align: center; }
+#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; } #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
+.other-reason-label { flex-wrap: wrap; }
+#other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
