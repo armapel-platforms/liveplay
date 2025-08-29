@@ -2,7 +2,7 @@
     --theme-color: #FF4D00;
     --text-color: #ffffff;
     --text-secondary: #8e8e93;
-    --card-background: #1c1c1e;
+    --card-background: #1a1a1a;
     --input-background: #2c2c2e;
     --input-focus-background: #3a3a3c;
     --border-radius: 20px;
@@ -24,7 +24,7 @@ body.auth-page {
     position: absolute;
     top: 25px;
     left: 25px;
-    color: var(--text-secondary);
+    color: var(--text-color);
     z-index: 10;
 }
 
