@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
     <link rel="manifest" href="/logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0,0" />
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/auth.css">
 </head>
@@ -51,8 +51,7 @@
             </div>
             <div class="account-row" data-field="password">
                 <span class="material-symbols-outlined row-icon">lock</span>
-                <div class="row-content"><label>Password</label><span class="row-value">••••••••</span><input type="password" id="password-input" class="row-input" placeholder="New Password"></div>
-                <span class="material-symbols-outlined visibility-toggle" data-target="password-input" style="display: none;">visibility_off</span>
+                <div class="row-content"><label>Password</label><span class="row-value">••••••••</span><input type="password" class="row-input" placeholder="New Password"></div>
                 <span class="material-symbols-outlined edit-icon">edit</span>
             </div>
         </div>
@@ -67,26 +66,10 @@
         <div id="delete-account-survey" style="display: none;">
             <h3>Why are you leaving?</h3>
             <form id="delete-survey-form">
-                <!-- Using div for layout instead of label to have more control -->
-                <div class="survey-option" data-value="missing_channels">
-                    <span class="material-symbols-outlined">check_box_outline_blank</span>
-                    <p>Missing my favorite channels</p>
-                </div>
-                <div class="survey-option" data-value="poor_experience">
-                    <span class="material-symbols-outlined">check_box_outline_blank</span>
-                    <p>Poor user experience</p>
-                </div>
-                <div class="survey-option" data-value="technical_issues">
-                    <span class="material-symbols-outlined">check_box_outline_blank</span>
-                    <p>Technical issues with the service</p>
-                </div>
-                <div class="survey-option" data-value="other">
-                    <span class="material-symbols-outlined">check_box_outline_blank</span>
-                    <p>Other</p>
-                </div>
-                <div class="other-reason-container" style="display: none;">
-                    <input type="text" id="other-reason-text" placeholder="Please specify your reason">
-                </div>
+                <label><input type="checkbox" name="reason" value="missing_channels"> Missing my favorite channels</label>
+                <label><input type="checkbox" name="reason" value="poor_experience"> Poor user experience</label>
+                <label><input type="checkbox" name="reason" value="technical_issues"> Technical issues with the service</label>
+                <label class="other-reason-label"><input type="checkbox" name="reason" value="other"> Other<input type="text" id="other-reason-text" placeholder="Please specify"></label>
                 <button type="submit" id="final-delete-button" class="auth-btn danger" disabled>Delete My Account</button>
             </form>
         </div>
