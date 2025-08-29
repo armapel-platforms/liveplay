@@ -162,7 +162,96 @@ main.auth-container {
 #delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
 #delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
 #other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
+.auth-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
 
+.auth-popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.auth-popup {
+    background: var(--card-background);
+    border-radius: 24px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+    max-width: 340px;
+    width: 90%;
+    box-sizing: border-box;
+}
+
+.auth-popup-overlay.active .auth-popup {
+    transform: scale(1);
+}
+
+.popup-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-logo {
+    width: 120px;
+    height: auto;
+    margin: 10px 0 15px 0;
+    pointer-events: none;
+}
+
+.popup-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0 0 25px 0;
+}
+
+.popup-action-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--theme-color);
+    border: none;
+    border-radius: 50px;
+    color: var(--text-color);
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.popup-action-btn:hover {
+    background-color: #ff6a29;
+}
+
+.auth-popup h3 {
+    margin: 0 0 25px 0;
+    font-size: 1.0rem;
+    font-weight: 400;
+}
 .auth-popup-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); z-index: 3000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
 .auth-popup-overlay.active { opacity: 1; visibility: visible; }
 .auth-popup { background: var(--card-background); border-radius: 24px; padding: 30px; text-align: center; max-width: 340px; width: 90%; box-sizing: border-box; }
