@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     document.body.addEventListener('click', function(e) {
-        if (e.target.classList.contains('visibility-toggle')) {
-            const targetId = e.target.dataset.target;
-            const targetInput = document.getElementById(targetId);
-            if (!targetInput) return;
-            targetInput.type = (targetInput.type === 'password') ? 'text' : 'password';
-            e.target.textContent = (targetInput.type === 'password') ? 'visibility_off' : 'visibility';
-        }
+    if (e.target.classList.contains('visibility-toggle')) {
+        e.preventDefault();
+        const targetId = e.target.dataset.target;
+        const targetInput = document.getElementById(targetId);
+        if (!targetInput) return;
+        targetInput.type = (targetInput.type === 'password') ? 'text' : 'password';
+        e.target.textContent = (targetInput.type === 'password') ? 'visibility_off' : 'visibility';
+    }
     });
 
     const loginForm = document.getElementById('login-form');
