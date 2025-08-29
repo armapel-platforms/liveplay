@@ -1,39 +1,8 @@
-:root {
-    --theme-color: #FF4D00;
-    --text-color: #ffffff;
-    --text-secondary: #8e8e93;
-    --card-background: #1c1c1e;
-    --input-background: #2c2c2e;
-    --input-focus-background: #3a3a3c;
-}
-
-body.auth-page {
-    background-color: #000;
-    color: var(--text-color);
-    font-family: 'TT Hoves Pro Trial', sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+.auth-container, .account-container {
+    max-width: 650px;
+    margin: 20px auto;
     padding: 20px;
-    box-sizing: border-box;
 }
-
-.back-link {
-    position: fixed;
-    top: 25px;
-    left: 25px;
-    color: var(--text-secondary);
-    z-index: 10;
-}
-
-.auth-container {
-    width: 100%;
-    margin-top: 20px;
-    max-width: 420px;
-}
-
 .auth-form {
     background: var(--card-background);
     border-radius: 24px;
@@ -42,6 +11,15 @@ body.auth-page {
     flex-direction: column;
     width: 100%;
     box-sizing: border-box;
+}
+.account-section, #delete-account-survey {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .auth-form.active {
