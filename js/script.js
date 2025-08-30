@@ -101,13 +101,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentUser = await window.auth.getCurrentUser();
     renderMenu(currentUser);
 
-    window.auth.onAuthStateChange((_event, session) => {
-    const user = session?.user; 
-
-    currentUser = user;
-    renderMenu(currentUser);
+    window.auth.onAuthStateChange(async (_event, session) => {
+        if (session) {
+            currentUser = await window.auth.getCurrentUser();
+        } else {
+            currentUser = null;
+        }
+        renderMenu(currentUser);
     });
-
     if (authPopup) authPopup.addEventListener('click', (e) => { if (e.target === authPopup) hideAuthPopup(); });
     if (closePopupBtn) closePopupBtn.addEventListener('click', hideAuthPopup);
     
@@ -219,7 +220,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (channelToPlay) {
              if (currentUser) {
                 const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
-                if (streamToPlay) { // FIX: Removed isDesktop() check to allow playing on mobile from URL
+                if (streamToPlay) {
                     openPlayer(streamToPlay);
                 }
             } else {
