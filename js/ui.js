@@ -157,8 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 label.addEventListener('click', (e) => {
                     e.preventDefault();
                     label.classList.toggle('checked');
+                    
                     const icon = label.querySelector('.material-symbols-outlined');
                     icon.textContent = label.classList.contains('checked') ? 'check_box' : 'check_box_outline_blank';
+            
+                    if (label.dataset.value === 'other') {
+                        const otherReasonContainer = document.querySelector('.other-reason-container');
+                        otherReasonContainer.style.display = label.classList.contains('checked') ? 'block' : 'none';
+                    }
+                    
                     finalDeleteBtn.disabled = !document.querySelector('.material-checkbox-label.checked');
                 });
             });
