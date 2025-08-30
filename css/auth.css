@@ -41,7 +41,7 @@ main.auth-container {
     margin-top: auto;
     padding: 20px 0;
     flex-shrink: 0;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
     text-align: center;
     line-height: 1.5;
@@ -55,7 +55,7 @@ main.auth-container {
 .auth-form {
     background: var(--card-background);
     border-radius: 24px;
-    padding: 30px 25px;
+    padding: 25px 25px;
     display: none;
     flex-direction: column;
     width: 100%;
@@ -63,7 +63,7 @@ main.auth-container {
 }
 
 .auth-form.active { display: flex; }
-.logo-text { font-size: 1.75rem; color: var(--text-secondary); margin: 0 0 35px 0; }
+.logo-text { font-size: 1.7rem; color: var(--text-secondary); margin: 0 0 35px 0; }
 .logo-text b { color: var(--text-color); font-weight: 800; }
 .auth-form h2 { font-size: 1.95rem; font-weight: 700; margin: 0 0 10px 0; }
 .form-description { font-size: 0.8rem; color: var(--text-secondary); margin: 0 0 30px 0; line-height: 1.5; }
@@ -92,10 +92,10 @@ main.auth-container {
 
 .input-group input {
     width: 100%;
-    padding: 16px 50px;
+    padding: 15px 50px;
     background: var(--input-background);
     border: 1px solid transparent;
-    border-radius: 12px;
+    border-radius: 10px;
     color: var(--text-color);
     font-family: inherit;
     font-size: 0.8rem;
@@ -276,11 +276,12 @@ main.auth-container {
         max-width: 900px;
         margin-top: 0;
     }
-
+    .logo-text { font-size: 1.75rem; color: var(--text-secondary); margin: 0 0 35px 0; }
+    .logo-text b { color: var(--text-color); font-weight: 800; }
     .auth-form {
         flex-direction: row;
         align-items: center;
-        padding: 50px 60px;
+        padding: 40px 40px;
         gap: 60px;
     }
 
