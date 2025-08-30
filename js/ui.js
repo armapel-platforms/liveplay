@@ -5,26 +5,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const diameter = Math.max(button.clientWidth, button.clientHeight);
         const radius = diameter / 2;
         const rect = button.getBoundingClientRect();
-
         circle.style.width = circle.style.height = `${diameter}px`;
         circle.style.left = `${event.clientX - rect.left - radius}px`;
         circle.style.top = `${event.clientY - rect.top - radius}px`;
         circle.classList.add("ripple");
-
         const existingRipple = button.querySelector(".ripple");
         if (existingRipple) {
             existingRipple.remove();
         }
-
         button.appendChild(circle);
-
         circle.addEventListener('animationend', () => {
             if (circle.parentNode) {
                 circle.remove();
             }
         });
     }
-
     document.querySelectorAll('.auth-btn').forEach(button => {
         button.addEventListener('click', createRipple);
     });
@@ -128,9 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sendOtpButton.addEventListener('click', async () => {
             const email = document.getElementById('reset-email').value.trim();
             if (!email) return alert("Please enter your email address.");
-            
             sendOtpButton.disabled = true;
-            sendOtpButton.textContent = "Sending..."; 
+            sendOtpButton.textContent = "Sending...";
             try {
                 const { error } = await window.auth.sendPasswordResetOtp(email);
                 if (error) {
@@ -150,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('otp-email-display').textContent;
             const token = otpInput.value.trim();
             if (token.length !== 6) return;
-
             verifyOtpButton.disabled = true;
             verifyOtpButton.textContent = "Verifying...";
             try {
@@ -181,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         doneButton.addEventListener('click', async () => {
             const newPassword = newPasswordInput.value;
-            
             doneButton.disabled = true;
             doneButton.textContent = "Saving...";
             try {
@@ -201,101 +193,132 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const accountCard = document.querySelector('.account-card');
     if (accountCard) {
-        (async () => {
-            const user = await window.auth.getCurrentUser();
+        const saveChangesButton = document.getElementById('save-changes-button');
+
+        const setUserData = async () => {
+            const { data: { user } } = await window.auth.getCurrentUser();
             if (!user) return window.location.href = '/home/login-signup';
-            document.querySelector('[data-field="first_name"] .row-value').textContent = user.first_name || 'Not set';
-            document.querySelector('[data-field="last_name"] .row-value').textContent = user.last_name || 'Not set';
+            
+            document.querySelector('[data-field="first_name"] .row-value').textContent = user.user_metadata.first_name || 'Not set';
+            document.querySelector('[data-field="last_name"] .row-value').textContent = user.user_metadata.last_name || 'Not set';
             document.querySelector('[data-field="email"] .row-value').textContent = user.email || '';
-            document.querySelectorAll('.edit-icon').forEach(icon => {
-                icon.addEventListener('click', (e) => {
-                    const row = e.target.closest('.account-row');
-                    const isEditing = row.classList.toggle('editing');
-                    document.getElementById('save-changes-button').style.display = 'block';
-                    if (isEditing) {
-                        const input = row.querySelector('.row-input');
-                        const valueSpan = row.querySelector('.row-value');
-                        input.value = row.dataset.field === 'password' ? '' : valueSpan.textContent;
-                        input.focus();
-                    }
+        };
+
+        accountCard.addEventListener('click', (e) => {
+            const target = e.target;
+            const isEditOrVisibilityIcon = target.classList.contains('edit-icon') || target.classList.contains('visibility-icon');
+            
+            if (isEditOrVisibilityIcon) {
+                const clickedRow = target.closest('.account-row');
+                if (!clickedRow) return;
+
+                const isAlreadyEditing = clickedRow.classList.contains('editing');
+
+                document.querySelectorAll('.account-row.editing').forEach(row => {
+                    row.classList.remove('editing');
                 });
-            });
 
-            document.getElementById('save-changes-button').addEventListener('click', async () => {
-                const saveButton = document.getElementById('save-changes-button');
-                const editingRow = document.querySelector('.account-row.editing');
-                if (!editingRow) return;
-
-                const field = editingRow.dataset.field;
-                const newValue = editingRow.querySelector('.row-input').value.trim();
-                if (!newValue) {
-                    alert("Input cannot be empty.");
-                    return;
-                }
-                
-                saveButton.disabled = true;
-                saveButton.textContent = "Saving changes...";
-                try {
-                    const { error } = (field === 'password') ?
-                        await window.auth.updateUserPassword(newValue) :
-                        await window.auth.updateUserProfile({ [field]: newValue });
-                    if (error) {
-                        alert(`Update failed: ${error.message}`);
+                if (!isAlreadyEditing) {
+                    clickedRow.classList.add('editing');
+                    const input = clickedRow.querySelector('.row-input');
+                    const valueSpan = clickedRow.querySelector('.row-value');
+                    
+                    if (clickedRow.dataset.field !== 'password') {
+                        input.value = valueSpan.textContent;
                     } else {
-                        window.location.reload();
+                        input.value = '';
+                    }
+                    input.focus();
+                }
+
+                if (document.querySelector('.account-row.editing')) {
+                    saveChangesButton.style.display = 'block';
+                } else {
+                    saveChangesButton.style.display = 'none';
+                }
+            }
+        });
+
+        saveChangesButton.addEventListener('click', async () => {
+            const editingRow = document.querySelector('.account-row.editing');
+            if (!editingRow) return;
+
+            const field = editingRow.dataset.field;
+            const newValue = editingRow.querySelector('.row-input').value.trim();
+
+            if (!newValue) {
+                alert("Input cannot be empty.");
+                return;
+            }
+
+            saveChangesButton.disabled = true;
+            saveChangesButton.textContent = "Saving changes...";
+
+            try {
+                const { error } = (field === 'password') ?
+                    await window.auth.updateUserPassword(newValue) :
+                    await window.auth.updateUserProfile({ data: { [field]: newValue } });
+
+                if (error) {
+                    alert(`Update failed: ${error.message}`);
+                } else {
+                    window.location.reload();
+                }
+            } finally {
+                saveChangesButton.disabled = false;
+                saveChangesButton.textContent = "Save Changes";
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            const logoutButton = document.getElementById('logout-button');
+            logoutButton.disabled = true;
+            logoutButton.textContent = "Logging out...";
+            await window.auth.logOut();
+            window.location.href = '/home';
+        });
+
+        const deleteSurvey = document.getElementById('delete-account-survey');
+        document.getElementById('delete-account-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            deleteSurvey.style.display = (deleteSurvey.style.display === 'block') ? 'none' : 'block';
+        });
+
+        const finalDeleteBtn = document.getElementById('final-delete-button');
+        document.querySelectorAll('.material-checkbox-label').forEach(label => {
+            label.addEventListener('click', (e) => {
+                e.preventDefault();
+                label.classList.toggle('checked');
+                const icon = label.querySelector('.material-symbols-outlined');
+                icon.textContent = label.classList.contains('checked') ? 'check_box' : 'check_box_outline_blank';
+                if (label.dataset.value === 'other') {
+                    document.querySelector('.other-reason-container').style.display = label.classList.contains('checked') ? 'block' : 'none';
+                }
+                finalDeleteBtn.disabled = !document.querySelector('.material-checkbox-label.checked');
+            });
+        });
+
+        document.getElementById('delete-survey-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (confirm("Are you sure? This action is permanent and cannot be undone.")) {
+                finalDeleteBtn.disabled = true;
+                finalDeleteBtn.textContent = "Deleting...";
+                try {
+                    const { error } = await window.auth.deleteUserAccount();
+                    if (error) {
+                        alert(`Deletion failed: ${error.message}`);
+                    } else {
+                        alert("Your account has been permanently deleted.");
+                        window.location.href = '/home';
                     }
                 } finally {
-                    saveButton.disabled = false;
-                    saveButton.textContent = "Save Changes";
+                    finalDeleteBtn.disabled = false;
+                    finalDeleteBtn.textContent = "Permanently Delete My Account";
                 }
-            });
-
-            document.getElementById('logout-button').addEventListener('click', async () => {
-                const logoutButton = document.getElementById('logout-button');
-                logoutButton.disabled = true;
-                logoutButton.textContent = "Logging out...";
-                await window.auth.logOut();
-                window.location.href = '/home';
-            });
-
-            const deleteSurvey = document.getElementById('delete-account-survey');
-            document.getElementById('delete-account-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                deleteSurvey.style.display = (deleteSurvey.style.display === 'block') ? 'none' : 'block';
-            });
-            const finalDeleteBtn = document.getElementById('final-delete-button');
-            document.querySelectorAll('.material-checkbox-label').forEach(label => {
-                label.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    label.classList.toggle('checked');
-                    const icon = label.querySelector('.material-symbols-outlined');
-                    icon.textContent = label.classList.contains('checked') ? 'check_box' : 'check_box_outline_blank';
-                    if (label.dataset.value === 'other') {
-                        document.querySelector('.other-reason-container').style.display = label.classList.contains('checked') ? 'block' : 'none';
-                    }
-                    finalDeleteBtn.disabled = !document.querySelector('.material-checkbox-label.checked');
-                });
-            });
-            document.getElementById('delete-survey-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                if (confirm("Are you sure? This action is permanent and cannot be undone.")) {
-                    finalDeleteBtn.disabled = true;
-                    finalDeleteBtn.textContent = "Deleting...";
-                    try {
-                        const { error } = await window.auth.deleteUserAccount();
-                        if (error) {
-                            alert(`Deletion failed: ${error.message}`);
-                        } else {
-                            alert("Your account has been permanently deleted.");
-                            window.location.href = '/home';
-                        }
-                    } finally {
-                        finalDeleteBtn.disabled = false;
-                        finalDeleteBtn.textContent = "Permanently Delete My Account";
-                    }
-                }
-            });
-        })();
+            }
+        });
+        
+        setUserData();
     }
 
     const startOtpTimer = (email, type) => {
