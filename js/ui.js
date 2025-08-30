@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Global Logic for Password Visibility Toggles ---
     document.body.addEventListener('click', function(e) {
         if (e.target.classList.contains('visibility-toggle')) {
             const targetId = e.target.dataset.target;
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Login/Signup Page ---
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         const signupForm = document.getElementById('signup-form');
@@ -33,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     password: document.getElementById('login-password').value
                 });
                 if (error) alert(`Login Failed: ${error.message}`);
-                else window.location.href = '/account.html';
+                else window.location.href = '/home';
             } finally {
                 loginButton.disabled = false;
                 loginButton.textContent = "Log In";
@@ -55,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (error) {
                     alert(`Sign Up Failed: ${error.message}`);
                 } else if (data.user) {
-                    // Check if email confirmation is required
                     if (data.user.identities && data.user.identities.length > 0) {
                          document.getElementById('otp-email-display').textContent = credentials.email;
                          otpModal.classList.add('active');
@@ -74,45 +71,109 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('verify-otp-button').addEventListener('click', async () => {
             const email = document.getElementById('otp-email-display').textContent;
             const token = document.getElementById('otp-input').value;
-            const { data, error } = await window.auth.verifyOtp(email, token);
+            const { data, error } = await window.auth.verifyOtp(email, token, 'signup');
             if (error) alert(`Verification Failed: ${error.message}`);
             else if (data.session) {
                 alert("Account verified successfully! Welcome.");
-                window.location.href = '/account.html';
+                window.location.href = '/home';
             }
         });
     }
 
-    // --- Forgot Password Page ---
-    const resetPasswordButton = document.getElementById('send-reset-button');
-    if(resetPasswordButton) {
-        resetPasswordButton.addEventListener('click', async () => {
-            const email = document.getElementById('reset-email').value;
+    const emailRequestForm = document.getElementById('email-request-form');
+    if (emailRequestForm) {
+        const newPasswordForm = document.getElementById('new-password-form');
+        const otpModal = document.getElementById('otp-modal-overlay');
+        const sendOtpButton = document.getElementById('send-otp-button');
+        const verifyOtpButton = document.getElementById('verify-otp-button');
+        const doneButton = document.getElementById('done-button');
+        const newPasswordInput = document.getElementById('new-password');
+        const confirmPasswordInput = document.getElementById('confirm-new-password');
+        const otpInput = document.getElementById('otp-input');
+
+        otpInput.addEventListener('input', () => {
+            verifyOtpButton.disabled = otpInput.value.length !== 6;
+        });
+
+        sendOtpButton.addEventListener('click', async () => {
+            const email = document.getElementById('reset-email').value.trim();
             if (!email) return alert("Please enter your email address.");
-            resetPasswordButton.disabled = true;
-            resetPasswordButton.textContent = "Sending...";
+            sendOtpButton.disabled = true;
+            sendOtpButton.textContent = "Sending...";
             try {
                 const { error } = await window.auth.sendPasswordResetOtp(email);
-                if(error) alert(`Error: ${error.message}`);
-                else alert("Password reset link sent! Please check your email.");
+                if (error) {
+                    alert(`Error: ${error.message}`);
+                } else {
+                    document.getElementById('otp-email-display').textContent = email;
+                    otpModal.classList.add('active');
+                    startOtpTimer(email, 'recovery');
+                }
             } finally {
-                resetPasswordButton.disabled = false;
-                resetPasswordButton.textContent = "Send Reset Link";
+                sendOtpButton.disabled = false;
+                sendOtpButton.textContent = "Send Verification Code";
+            }
+        });
+
+        verifyOtpButton.addEventListener('click', async () => {
+            const email = document.getElementById('otp-email-display').textContent;
+            const token = otpInput.value.trim();
+            if (token.length !== 6) return;
+            verifyOtpButton.disabled = true;
+            verifyOtpButton.textContent = "Verifying...";
+            try {
+                const { data, error } = await window.auth.verifyOtp(email, token, 'recovery');
+                if (error) {
+                    alert(`Verification Failed: ${error.message}`);
+                } else if (data && data.user) {
+                    alert("Verification successful! Please create your new password.");
+                    otpModal.classList.remove('active');
+                    emailRequestForm.classList.remove('active');
+                    newPasswordForm.classList.add('active');
+                } else {
+                    alert("Verification failed. The code may be incorrect or expired.");
+                }
+            } finally {
+                verifyOtpButton.disabled = false;
+                verifyOtpButton.textContent = "Reset Password";
+            }
+        });
+
+        const validateNewPasswords = () => {
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            doneButton.disabled = !(newPassword && newPassword === confirmPassword);
+        };
+        newPasswordInput.addEventListener('input', validateNewPasswords);
+        confirmPasswordInput.addEventListener('input', validateNewPasswords);
+        
+        doneButton.addEventListener('click', async () => {
+            const newPassword = newPasswordInput.value;
+            doneButton.disabled = true;
+            doneButton.textContent = "Saving...";
+            try {
+                const { error } = await window.auth.updateUserPassword(newPassword);
+                if (error) {
+                    alert(`Update failed: ${error.message}`);
+                } else {
+                    alert("Password updated successfully! You can now log in.");
+                    window.location.href = '/home';
+                }
+            } finally {
+                doneButton.disabled = false;
+                doneButton.textContent = "Done";
             }
         });
     }
 
-    // --- Account Page ---
     const accountCard = document.querySelector('.account-card');
     if (accountCard) {
         (async () => {
             const user = await window.auth.getCurrentUser();
-            if (!user) return window.location.href = '/login-signup.html';
-
+            if (!user) return window.location.href = '/home/login-signup';
             document.querySelector('[data-field="first_name"] .row-value').textContent = user.first_name || 'Not set';
             document.querySelector('[data-field="last_name"] .row-value').textContent = user.last_name || 'Not set';
             document.querySelector('[data-field="email"] .row-value').textContent = user.email || '';
-
             document.querySelectorAll('.edit-icon').forEach(icon => {
                 icon.addEventListener('click', (e) => {
                     const row = e.target.closest('.account-row');
@@ -126,50 +187,42 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             });
-
             document.getElementById('save-changes-button').addEventListener('click', async () => {
                 const editingRow = document.querySelector('.account-row.editing');
                 if (!editingRow) return;
                 const field = editingRow.dataset.field;
                 const newValue = editingRow.querySelector('.row-input').value.trim();
                 if (!newValue) return alert("Input cannot be empty.");
-
-                const { error } = (field === 'password')
-                    ? await window.auth.updateUserPassword(newValue)
-                    : await window.auth.updateUserProfile({ [field]: newValue });
+                const { error } = (field === 'password') ?
+                await window.auth.updateUserPassword(newValue) :
+                    await window.auth.updateUserProfile({
+                        [field]: newValue
+                    });
                 if (error) alert(`Update failed: ${error.message}`);
                 else window.location.reload();
             });
-
             document.getElementById('logout-button').addEventListener('click', async () => {
                 await window.auth.logOut();
-                window.location.href = '/login-signup.html';
+                window.location.href = '/home';
             });
-
             const deleteSurvey = document.getElementById('delete-account-survey');
             document.getElementById('delete-account-link').addEventListener('click', (e) => {
                 e.preventDefault();
                 deleteSurvey.style.display = (deleteSurvey.style.display === 'block') ? 'none' : 'block';
             });
-
             const finalDeleteBtn = document.getElementById('final-delete-button');
             document.querySelectorAll('.material-checkbox-label').forEach(label => {
                 label.addEventListener('click', (e) => {
                     e.preventDefault();
                     label.classList.toggle('checked');
-                    
                     const icon = label.querySelector('.material-symbols-outlined');
                     icon.textContent = label.classList.contains('checked') ? 'check_box' : 'check_box_outline_blank';
-            
                     if (label.dataset.value === 'other') {
-                        const otherReasonContainer = document.querySelector('.other-reason-container');
-                        otherReasonContainer.style.display = label.classList.contains('checked') ? 'block' : 'none';
+                        document.querySelector('.other-reason-container').style.display = label.classList.contains('checked') ? 'block' : 'none';
                     }
-                    
                     finalDeleteBtn.disabled = !document.querySelector('.material-checkbox-label.checked');
                 });
             });
-            
             document.getElementById('delete-survey-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 if (confirm("Are you sure? This action is permanent and cannot be undone.")) {
@@ -181,27 +234,25 @@ document.addEventListener('DOMContentLoaded', () => {
                             alert(`Deletion failed: ${error.message}`);
                         } else {
                             alert("Your account has been permanently deleted.");
-                            window.location.href = '/login-signup.html';
+                            window.location.href = '/home';
                         }
                     } finally {
-                         finalDeleteBtn.disabled = false;
-                         finalDeleteBtn.textContent = "Permanently Delete My Account";
+                        finalDeleteBtn.disabled = false;
+                        finalDeleteBtn.textContent = "Permanently Delete My Account";
                     }
                 }
             });
         })();
     }
 
-    // --- Reusable OTP Timer Function ---
     const startOtpTimer = (email, type) => {
         const timerEl = document.getElementById('timer');
         const resendLink = document.getElementById('resend-otp-link');
         const timerDisplay = document.getElementById('timer-display');
         let countdown = 60;
-        
         timerDisplay.style.display = 'block';
         resendLink.style.display = 'none';
-
+        resendLink.classList.add('disabled');
         const interval = setInterval(() => {
             countdown--;
             timerEl.textContent = countdown;
@@ -209,16 +260,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(interval);
                 timerDisplay.style.display = 'none';
                 resendLink.style.display = 'block';
+                resendLink.classList.remove('disabled');
             }
         }, 1000);
-
-        if (!resendLink.dataset.listener) {
-            resendLink.dataset.listener = 'true';
+        if (!resendLink.dataset.listenerAttached) {
+            resendLink.dataset.listenerAttached = 'true';
             resendLink.addEventListener('click', async (e) => {
                 e.preventDefault();
-                const { error } = await window.auth.resendOtp(email);
-                if (error) alert(`Failed to resend code: ${error.message}`);
-                else alert(`A new code has been sent to ${email}.`);
+                if (resendLink.classList.contains('disabled')) return;
+                const { error } = await window.auth.resendOtp(email, type);
+                if (error) {
+                    alert(`Failed to resend code: ${error.message}`);
+                } else {
+                    alert(`A new code has been sent to ${email}.`);
+                    startOtpTimer(email, type);
+                }
             });
         }
     };
