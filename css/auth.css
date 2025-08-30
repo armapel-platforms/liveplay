@@ -180,6 +180,16 @@ main.auth-container {
 .account-row.editing .row-input { display: block; }
 .account-row .edit-icon { color: var(--text-secondary); cursor: pointer; }
 
+.row-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.account-row .edit-icon, .account-row .visibility-icon {
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
 #delete-account-link { 
     display: block; 
     margin-top: 20px; 
