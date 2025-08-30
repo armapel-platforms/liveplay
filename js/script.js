@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentUser = await window.auth.getCurrentUser();
     renderMenu(currentUser);
 
-    window.auth.onAuthStateChange(user => {
+    window.auth.onAuthStateChange((_event, session) => {
         currentUser = user;
         renderMenu(currentUser);
     });
