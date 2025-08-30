@@ -65,7 +65,7 @@ const authHandler = {
       return { error };
     }
   },
-  onAuthStateChange: (callback) => supabase.auth.onAuthStateChange(callback),
+  onAuthStateChange: (callback) => _supabase.auth.onAuthStateChange(callback)
 };
 
 window.auth = authHandler;
