@@ -71,8 +71,12 @@
             const closePopupBtn = document.getElementById('close-popup');
             let currentUser = await window.auth.getCurrentUser();
 
-            window.auth.onAuthStateChange(user => {
-                currentUser = user;
+            window.auth.onAuthStateChange(async (_event, session) => {
+                if (session) {
+                    currentUser = await window.auth.getCurrentUser();
+                } else {
+                    currentUser = null;
+                }
             });
 
             const showAuthPopup = () => {
