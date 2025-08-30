@@ -185,9 +185,20 @@ main.auth-container {
     align-items: center;
     gap: 12px;
 }
-.account-row .edit-icon, .account-row .visibility-icon {
+
+.account-row .edit-icon {
     color: var(--text-secondary);
     cursor: pointer;
+}
+
+.account-row .visibility-icon {
+    display: none; 
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.account-row.editing .visibility-icon {
+    display: inline-block; 
 }
 
 #delete-account-link { 
