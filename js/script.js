@@ -1,340 +1,344 @@
-document.addEventListener('DOMContentLoaded', async () => {
-
-    const createRipple = (event) => {
-        const target = event.currentTarget;
+document.addEventListener('DOMContentLoaded', () => {
+    // START: Ripple Effect for auth-btn
+    function createRipple(event) {
+        const button = event.currentTarget;
+        // Create the ripple element
         const circle = document.createElement("span");
-        const diameter = Math.max(target.clientWidth, target.clientHeight);
+        const diameter = Math.max(button.clientWidth, button.clientHeight);
         const radius = diameter / 2;
-        const rect = target.getBoundingClientRect();
+        const rect = button.getBoundingClientRect();
+
         circle.style.width = circle.style.height = `${diameter}px`;
         circle.style.left = `${event.clientX - rect.left - radius}px`;
         circle.style.top = `${event.clientY - rect.top - radius}px`;
         circle.classList.add("ripple");
-        const ripple = target.getElementsByClassName("ripple")[0];
-        if (ripple) { ripple.remove(); }
-        target.appendChild(circle);
-    };
 
-    const staticRippleElements = document.querySelectorAll('.icon-link, #minimized-player, .back-link, .video-player-container');
-    staticRippleElements.forEach(elem => elem.addEventListener("click", createRipple));
-
-    const header = document.querySelector('header');
-    const menuBtn = document.getElementById('menu-btn');
-    const floatingMenu = document.getElementById('floating-menu');
-    let streamsData = [];
-    const videoElement = document.getElementById('video-player');
-    const playerWrapper = document.getElementById('video-player-wrapper');
-    const authPopup = document.getElementById('auth-popup-overlay');
-    const closePopupBtn = document.getElementById('close-popup');
-    let player = null;
-    let ui = null;
-    let currentUser = null;
-    const isDesktop = () => window.innerWidth >= 1024;
-
-    const setVideoPoster = () => {
-        if (!videoElement) return;
-
-        if (isDesktop()) {
-            videoElement.poster = '/logo/desktop-poster.png';
-        } else {
-            videoElement.poster = '/logo/attention.png';
+        // Ensure only one ripple is active at a time
+        const existingRipple = button.querySelector(".ripple");
+        if (existingRipple) {
+            existingRipple.remove();
         }
-    };
 
-    setVideoPoster();
-    window.addEventListener('resize', setVideoPoster);
+        button.appendChild(circle);
 
-    if (document.getElementById('featured-slider')) {
-        window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 10);
+        // Clean up the ripple element after the animation ends to prevent DOM clutter
+        circle.addEventListener('animationend', () => {
+            if (circle.parentNode) {
+                circle.remove();
+            }
         });
     }
 
-    const renderMenu = (user) => {
-        let menuContent = '';
-        if (user) {
-            menuContent = `
-                <div class="menu-header">Hi, ${user.first_name || 'User'}</div>
-                <div class="menu-divider"></div>
-                <ul>
-                    <li><a href="/home/my-account"><span class="material-symbols-outlined">manage_accounts</span> My Account</a></li>
-                </ul>`;
-        } else {
-            menuContent = `
-                <div class="menu-header">Hi, Guest</div>
-                <div class="menu-divider"></div>
-                <ul>
-                    <li><a href="/home/login"><span class="material-symbols-outlined">login</span> Log In / Sign Up</a></li>
-                </ul>`;
-        }
-                menuContent += `
-            <ul>
-                <li><a href="/home/about-us"><span class="material-symbols-outlined">info</span> About Us</a></li>
-                <li><a href="/home/faq"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
-                <li><a href="/home/privacy-policy"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
-                <li><a href="/home/terms-of-service"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
-            </ul>`;
-        if (floatingMenu) floatingMenu.innerHTML = menuContent;
-        
-        if (floatingMenu) {
-            floatingMenu.querySelectorAll('li').forEach(li => {
-                const link = li.querySelector('a');
-                li.addEventListener('mousedown', () => li.classList.add('active-press'));
-                li.addEventListener('touchstart', () => li.classList.add('active-press'));
-                const releaseAction = (e) => {
-                    li.classList.remove('active-press');
-                    createRipple(e);
-                    if (link && link.href) {
-                        setTimeout(() => { window.location.href = link.href; }, 150);
-                    }
-                };
-                li.addEventListener('mouseup', releaseAction);
-                li.addEventListener('touchend', releaseAction);
-                li.addEventListener('mouseleave', () => li.classList.remove('active-press'));
-            });
-        }
-    };
-    
-    const showAuthPopup = () => { if (!currentUser && authPopup) authPopup.classList.add('active'); };
-    const hideAuthPopup = () => { if (authPopup) authPopup.classList.remove('active'); };
-
-    currentUser = await window.auth.getCurrentUser();
-    renderMenu(currentUser);
-
-    window.auth.onAuthStateChange(async (_event, session) => {
-        if (session) {
-            currentUser = await window.auth.getCurrentUser();
-        } else {
-            currentUser = null;
-        }
-        renderMenu(currentUser);
+    // Attach the ripple effect to all buttons with the .auth-btn class
+    document.querySelectorAll('.auth-btn').forEach(button => {
+        button.addEventListener('click', createRipple);
     });
-    if (authPopup) authPopup.addEventListener('click', (e) => { if (e.target === authPopup) hideAuthPopup(); });
-    if (closePopupBtn) closePopupBtn.addEventListener('click', hideAuthPopup);
-    
-    if (menuBtn) menuBtn.addEventListener('click', (e) => { e.stopPropagation(); if (floatingMenu) floatingMenu.classList.toggle('active'); });
-    document.addEventListener('click', (e) => { if (floatingMenu && floatingMenu.classList.contains('active') && !floatingMenu.contains(e.target) && e.target !== menuBtn) floatingMenu.classList.remove('active'); });
+    // END: Ripple Effect for auth-btn
 
-    const slider = document.querySelector('.slider');
-    if (slider) {
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.slider-nav .dot');
-        let currentSlide = 0;
-        const slideInterval = 5000;
-        const showSlide = (index) => {
-            slides.forEach((slide) => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            if (slides[index]) slides[index].classList.add('active');
-            if (dots[index]) dots[index].classList.add('active');
-        };
-        const nextSlide = () => { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); };
-        dots.forEach((dot, index) => dot.addEventListener('click', () => { currentSlide = index; showSlide(currentSlide); }));
-        setInterval(nextSlide, slideInterval);
-    }
-    
-    const categoryPillsContainer = document.querySelector('.category-pills');
-    const channelListingsContainer = document.getElementById('channel-listings');
-    
-    const renderChannels = (filter) => {
-        if (!channelListingsContainer) return;
-        channelListingsContainer.innerHTML = '';
-        const filteredStreams = (filter === 'ALL') ? streamsData : streamsData.filter(s => s.category === filter);
-        const groupedByCategory = filteredStreams.reduce((acc, stream) => {
-            (acc[stream.category] = acc[stream.category] || []).push(stream);
-            return acc;
-        }, {});
+    // --- Original Code Starts Here ---
 
-        const categories = ['ALL', 'LOCAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'INFOTAINMENT', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'OVERSEAS', 'RELIGIOUS', 'NATURE + ANIMAL', 'YOUTUBE LIVE'];
-        const categoryIcons = { ALL: 'apps', LOCAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', OVERSEAS: 'globe', RELIGIOUS: 'church', 'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display' };
-        
-        const orderedCategories = categories.filter(c => c !== 'ALL' && groupedByCategory[c]);
-        orderedCategories.forEach(category => {
-            const section = document.createElement('div');
-            section.className = 'category-section';
-            const title = document.createElement('div');
-            title.className = 'category-title';
-            title.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span><h3>${category}</h3>`;
-            section.appendChild(title);
-            const row = document.createElement('div');
-            row.className = 'channel-row';
-            groupedByCategory[category].forEach(stream => {
-                const card = document.createElement('div');
-                card.className = 'channel-card';
-                const logoBg = document.createElement('div');
-                logoBg.className = 'channel-logo-bg';
-                logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
-                logoBg.addEventListener("click", createRipple);
-                logoBg.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (currentUser) {
-                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
-                        history.pushState({ channel: stream.name }, ``, `/home?play=${channelName}`);
-                        openPlayer(stream);
+    document.body.addEventListener('click', function(e) {
+        if (e.target.classList.contains('visibility-toggle')) {
+            const targetId = e.target.dataset.target;
+            const targetInput = document.getElementById(targetId);
+            if (!targetInput) return;
+            const isPassword = targetInput.type === 'password';
+            targetInput.type = isPassword ? 'text' : 'password';
+            e.target.textContent = isPassword ? 'visibility' : 'visibility_off';
+        }
+    });
+
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        const signupForm = document.getElementById('signup-form');
+        const showSignupLink = document.getElementById('show-signup');
+        const showLoginLink = document.getElementById('show-login');
+        const loginButton = document.getElementById('login-button');
+        const signupButton = document.getElementById('signup-button');
+        const otpModal = document.getElementById('otp-modal-overlay');
+
+        showSignupLink.addEventListener('click', (e) => { e.preventDefault(); signupForm.classList.add('active'); loginForm.classList.remove('active'); });
+        showLoginLink.addEventListener('click', (e) => { e.preventDefault(); loginForm.classList.add('active'); signupForm.classList.remove('active'); });
+    
+        loginButton.addEventListener('click', async () => {
+            loginButton.disabled = true;
+            loginButton.textContent = "Logging In...";
+            try {
+                const { error } = await window.auth.logIn({
+                    email: document.getElementById('login-email').value,
+                    password: document.getElementById('login-password').value
+                });
+                if (error) alert(`Login Failed: ${error.message}`);
+                else window.location.href = '/home';
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = "Log In";
+            }
+        });
+
+        signupButton.addEventListener('click', async () => {
+            if (document.getElementById('signup-password').value !== document.getElementById('signup-confirm-password').value) return alert("Passwords do not match.");
+            signupButton.disabled = true;
+            signupButton.textContent = "Creating Account...";
+            try {
+                const credentials = {
+                    first_name: document.getElementById('signup-firstname').value,
+                    last_name: document.getElementById('signup-lastname').value,
+                    email: document.getElementById('signup-email').value,
+                    password: document.getElementById('signup-password').value,
+                };
+                const { data, error } = await window.auth.signUp(credentials);
+                if (error) {
+                    alert(`Sign Up Failed: ${error.message}`);
+                } else if (data.user) {
+                    if (data.user.identities && data.user.identities.length > 0) {
+                         document.getElementById('otp-email-display').textContent = credentials.email;
+                         otpModal.classList.add('active');
+                         startOtpTimer(credentials.email, 'signup');
                     } else {
-                        showAuthPopup();
+                        alert('Sign up successful! Please log in.');
+                        showLoginLink.click();
+                    }
+                }
+            } finally {
+                signupButton.disabled = false;
+                signupButton.textContent = "Create Account";
+            }
+        });
+
+        document.getElementById('verify-otp-button').addEventListener('click', async () => {
+            const email = document.getElementById('otp-email-display').textContent;
+            const token = document.getElementById('otp-input').value;
+            const { data, error } = await window.auth.verifyOtp(email, token, 'signup');
+            if (error) alert(`Verification Failed: ${error.message}`);
+            else if (data.session) {
+                alert("Account verified successfully! Welcome.");
+                window.location.href = '/home';
+            }
+        });
+    }
+
+    const emailRequestForm = document.getElementById('email-request-form');
+    if (emailRequestForm) {
+        const newPasswordForm = document.getElementById('new-password-form');
+        const otpModal = document.getElementById('otp-modal-overlay');
+        const sendOtpButton = document.getElementById('send-otp-button');
+        const verifyOtpButton = document.getElementById('verify-otp-button');
+        const doneButton = document.getElementById('done-button');
+        const newPasswordInput = document.getElementById('new-password');
+        const confirmPasswordInput = document.getElementById('confirm-new-password');
+        const otpInput = document.getElementById('otp-input');
+
+        otpInput.addEventListener('input', () => {
+            verifyOtpButton.disabled = otpInput.value.length !== 6;
+        });
+
+        sendOtpButton.addEventListener('click', async () => {
+            const email = document.getElementById('reset-email').value.trim();
+            if (!email) return alert("Please enter your email address.");
+            sendOtpButton.disabled = true;
+            sendOtpButton.textContent = "Sending...";
+            try {
+                const { error } = await window.auth.sendPasswordResetOtp(email);
+                if (error) {
+                    alert(`Error: ${error.message}`);
+                } else {
+                    document.getElementById('otp-email-display').textContent = email;
+                    otpModal.classList.add('active');
+                    startOtpTimer(email, 'recovery');
+                }
+            } finally {
+                sendOtpButton.disabled = false;
+                sendOtpButton.textContent = "Send Verification Code";
+            }
+        });
+
+        verifyOtpButton.addEventListener('click', async () => {
+            const email = document.getElementById('otp-email-display').textContent;
+            const token = otpInput.value.trim();
+            if (token.length !== 6) return;
+            verifyOtpButton.disabled = true;
+            verifyOtpButton.textContent = "Verifying...";
+            try {
+                const { data, error } = await window.auth.verifyOtp(email, token, 'recovery');
+                if (error) {
+                    alert(`Verification Failed: ${error.message}`);
+                } else if (data && data.user) {
+                    alert("Verification successful! Please create your new password.");
+                    otpModal.classList.remove('active');
+                    emailRequestForm.classList.remove('active');
+                    newPasswordForm.classList.add('active');
+                } else {
+                    alert("Verification failed. The code may be incorrect or expired.");
+                }
+            } finally {
+                verifyOtpButton.disabled = false;
+                verifyOtpButton.textContent = "Reset Password";
+            }
+        });
+
+        const validateNewPasswords = () => {
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            doneButton.disabled = !(newPassword && newPassword === confirmPassword);
+        };
+        newPasswordInput.addEventListener('input', validateNewPasswords);
+        confirmPasswordInput.addEventListener('input', validateNewPasswords);
+        
+        doneButton.addEventListener('click', async () => {
+            const newPassword = newPasswordInput.value;
+            doneButton.disabled = true;
+            doneButton.textContent = "Saving...";
+            try {
+                const { error } = await window.auth.updateUserPassword(newPassword);
+                if (error) {
+                    alert(`Update failed: ${error.message}`);
+                } else {
+                    alert("Password updated successfully! You can now log in.");
+                    window.location.href = '/home';
+                }
+            } finally {
+                doneButton.disabled = false;
+                doneButton.textContent = "Done";
+            }
+        });
+    }
+
+    const accountCard = document.querySelector('.account-card');
+    if (accountCard) {
+        (async () => {
+            const user = await window.auth.getCurrentUser();
+            if (!user) return window.location.href = '/home/login-signup';
+            document.querySelector('[data-field="first_name"] .row-value').textContent = user.first_name || 'Not set';
+            document.querySelector('[data-field="last_name"] .row-value').textContent = user.last_name || 'Not set';
+            document.querySelector('[data-field="email"] .row-value').textContent = user.email || '';
+            document.querySelectorAll('.edit-icon').forEach(icon => {
+                icon.addEventListener('click', (e) => {
+                    const row = e.target.closest('.account-row');
+                    const isEditing = row.classList.toggle('editing');
+                    document.getElementById('save-changes-button').style.display = 'block';
+                    if (isEditing) {
+                        const input = row.querySelector('.row-input');
+                        const valueSpan = row.querySelector('.row-value');
+                        input.value = row.dataset.field === 'password' ? '' : valueSpan.textContent;
+                        input.focus();
                     }
                 });
-                card.appendChild(logoBg);
-                row.appendChild(card);
             });
-            section.appendChild(row);
-            channelListingsContainer.appendChild(section);
-        });
-    };
 
-    async function initializePage() {
-        try {
-            const response = await fetch('/api/getChannels');
-            if (!response.ok) throw new Error('Network response was not ok');
-            const publicStreams = await response.json();
-            streamsData = [...publicStreams, ...yt_live];
-        } catch (error) {
-            console.error("Failed to fetch channel list:", error);
-            streamsData = [...yt_live];
-        }
+            // MODIFIED: Save Changes button functionality
+            document.getElementById('save-changes-button').addEventListener('click', async () => {
+                const saveButton = document.getElementById('save-changes-button');
+                const editingRow = document.querySelector('.account-row.editing');
+                if (!editingRow) return;
 
-        if (categoryPillsContainer && channelListingsContainer) {
-            const categories = ['ALL', ...new Set(streamsData.map(s => s.category))];
-            const categoryIcons = { ALL: 'apps', LOCAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', OVERSEAS: 'globe', RELIGIOUS: 'church', 'NATURE + ANIMAL': 'pets', 'YOUTUBE LIVE': 'smart_display' };
-            
-            categoryPillsContainer.innerHTML = '';
-            categories.forEach(category => {
-                const pill = document.createElement('button');
-                pill.className = 'pill';
-                if (category === 'ALL') pill.classList.add('active');
-                pill.dataset.category = category;
-                pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
-                pill.addEventListener('click', createRipple);
-                pill.addEventListener('click', () => {
-                    document.querySelector('.pill.active')?.classList.remove('active');
-                    pill.classList.add('active');
-                    renderChannels(category);
-                });
-                categoryPillsContainer.appendChild(pill);
-            });
-            renderChannels('ALL');
-        }
+                saveButton.disabled = true;
+                saveButton.textContent = "Saving changes...";
 
-        const params = new URLSearchParams(window.location.search);
-        const channelToPlay = params.get('play');
-        if (channelToPlay) {
-             if (currentUser) {
-                const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
-                if (streamToPlay) {
-                    openPlayer(streamToPlay);
+                try {
+                    const field = editingRow.dataset.field;
+                    const newValue = editingRow.querySelector('.row-input').value.trim();
+
+                    if (!newValue) {
+                         alert("Input cannot be empty.");
+                         return; // Return here to prevent the finally block from running prematurely
+                    }
+
+                    const { error } = (field === 'password') ?
+                        await window.auth.updateUserPassword(newValue) :
+                        await window.auth.updateUserProfile({ [field]: newValue });
+
+                    if (error) {
+                        alert(`Update failed: ${error.message}`);
+                    } else {
+                        window.location.reload();
+                    }
+                } finally {
+                    saveButton.disabled = false;
+                    saveButton.textContent = "Save Changes";
                 }
-            } else {
-                history.replaceState({}, '', '/home'); 
-                showAuthPopup();
-            }
-        }
+            });
+
+            // MODIFIED: Log Out button functionality
+            document.getElementById('logout-button').addEventListener('click', async () => {
+                const logoutButton = document.getElementById('logout-button');
+                logoutButton.disabled = true;
+                logoutButton.textContent = "Logging out...";
+                await window.auth.logOut();
+                window.location.href = '/home';
+            });
+
+            const deleteSurvey = document.getElementById('delete-account-survey');
+            document.getElementById('delete-account-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                deleteSurvey.style.display = (deleteSurvey.style.display === 'block') ? 'none' : 'block';
+            });
+            const finalDeleteBtn = document.getElementById('final-delete-button');
+            document.querySelectorAll('.material-checkbox-label').forEach(label => {
+                label.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    label.classList.toggle('checked');
+                    const icon = label.querySelector('.material-symbols-outlined');
+                    icon.textContent = label.classList.contains('checked') ? 'check_box' : 'check_box_outline_blank';
+                    if (label.dataset.value === 'other') {
+                        document.querySelector('.other-reason-container').style.display = label.classList.contains('checked') ? 'block' : 'none';
+                    }
+                    finalDeleteBtn.disabled = !document.querySelector('.material-checkbox-label.checked');
+                });
+            });
+            document.getElementById('delete-survey-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (confirm("Are you sure? This action is permanent and cannot be undone.")) {
+                    finalDeleteBtn.disabled = true;
+                    finalDeleteBtn.textContent = "Deleting...";
+                    try {
+                        const { error } = await window.auth.deleteUserAccount();
+                        if (error) {
+                            alert(`Deletion failed: ${error.message}`);
+                        } else {
+                            alert("Your account has been permanently deleted.");
+                            window.location.href = '/home';
+                        }
+                    } finally {
+                        finalDeleteBtn.disabled = false;
+                        finalDeleteBtn.textContent = "Permanently Delete My Account";
+                    }
+                }
+            });
+        })();
     }
 
-    const playerView = document.getElementById('player-view');
-    const minimizedPlayer = document.getElementById('minimized-player');
-    const minimizeBtn = document.getElementById('minimize-player-btn');
-    const exitBtn = document.getElementById('exit-player-btn');
-    let activeStream = null;
-
-    const initPlayer = async () => {
-        shaka.polyfill.installAll();
-        if (shaka.Player.isBrowserSupported()) {
-            player = new shaka.Player(videoElement);
-            ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
-            ui.getControls();
-            player.addEventListener('error', onError);
-        } else { console.error('Browser not supported!'); }
-    };
-
-    const onError = (event) => console.error('Player Error', event.detail);
-
-    const openPlayer = async (stream) => {
-        const youtubePlayer = document.getElementById('youtube-player');
-        activeStream = stream;
-
-        if (stream.type === 'youtube') {
-            if (player) await player.unload();
-            if (ui) ui.setEnabled(false);
-            if (videoElement) videoElement.style.display = 'none';
-            if (youtubePlayer) {
-                youtubePlayer.src = stream.embedUrl;
-                youtubePlayer.style.display = 'block';
+    const startOtpTimer = (email, type) => {
+        const timerEl = document.getElementById('timer');
+        const resendLink = document.getElementById('resend-otp-link');
+        const timerDisplay = document.getElementById('timer-display');
+        let countdown = 60;
+        timerDisplay.style.display = 'block';
+        resendLink.style.display = 'none';
+        resendLink.classList.add('disabled');
+        const interval = setInterval(() => {
+            countdown--;
+            timerEl.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(interval);
+                timerDisplay.style.display = 'none';
+                resendLink.style.display = 'block';
+                resendLink.classList.remove('disabled');
             }
-        } else {
-            if (youtubePlayer) {
-                youtubePlayer.style.display = 'none';
-                youtubePlayer.src = '';
-            }
-            if (videoElement) videoElement.style.display = 'block';
-            
-            if (!player) await initPlayer();
-            if (ui) ui.setEnabled(true);
-
-            try {
-                const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
-                if (!response.ok) throw new Error(`Stream data not found for ${stream.name}.`);
-                const secureData = await response.json();
-
-                player.configure({ drm: { clearKeys: secureData.clearKey || {} } });
-                await player.load(secureData.manifestUri);
-                videoElement.play();
-            } catch (e) {
-                console.error('Player Error', e);
-                onError(e);
-            }
-        }
-        document.getElementById('player-channel-name').textContent = stream.name;
-        document.getElementById('player-channel-category').textContent = stream.category;
-        
-        if (!isDesktop()) {
-            document.getElementById('minimized-player-logo').src = stream.logo;
-            document.getElementById('minimized-player-name').textContent = stream.name;
-            document.getElementById('minimized-player-category').textContent = stream.category;
-            if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-            if (playerView) playerView.classList.add('active');
+        }, 1000);
+        if (!resendLink.dataset.listenerAttached) {
+            resendLink.dataset.listenerAttached = 'true';
+            resendLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                if (resendLink.classList.contains('disabled')) return;
+                const { error } = await window.auth.resendOtp(email, type);
+                if (error) {
+                    alert(`Failed to resend code: ${error.message}`);
+                } else {
+                    alert(`A new code has been sent to ${email}.`);
+                    startOtpTimer(email, type);
+                }
+            });
         }
     };
-
-    const minimizePlayer = () => {
-        if (isDesktop()) return;
-        if (playerView && playerView.classList.contains('active')) {
-            playerView.classList.remove('active');
-            if (minimizedPlayer) minimizedPlayer.classList.add('active');
-        }
-    };
-
-    const restorePlayer = (e) => {
-        if (isDesktop() || e.target.closest('#exit-player-btn')) return;
-        if (minimizedPlayer && minimizedPlayer.classList.contains('active')) {
-            minimizedPlayer.classList.remove('active');
-            if (playerView) playerView.classList.add('active');
-            if (activeStream && activeStream.type !== 'youtube') {
-                 if (videoElement) videoElement.play();
-            }
-        }
-    };
-
-    const closePlayer = async (e) => {
-        e.stopPropagation();
-        if (!isDesktop()) {
-            if (playerView) playerView.classList.remove('active');
-            if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-        }
-        const youtubePlayer = document.getElementById('youtube-player');
-        if (youtubePlayer) {
-            youtubePlayer.src = '';
-            youtubePlayer.style.display = 'none';
-        }
-        if (videoElement) videoElement.style.display = 'block';
-        if (ui) ui.setEnabled(false);
-        if (player) await player.unload();
-        activeStream = null;
-        history.pushState({}, '', '/home');
-    };
-    
-    if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
-    if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
-    if(exitBtn) exitBtn.addEventListener('click', closePlayer);
-    
-    await initializePage();
 });
