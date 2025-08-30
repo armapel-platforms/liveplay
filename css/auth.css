@@ -147,7 +147,7 @@ main.auth-container {
 .row-content label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2px; }
 .row-content .row-value { color: var(--text-color); font-size: 0.85rem; font-weight: 500; }
 .row-content .row-input { display: none; width: 95%; background: transparent; border: none; border-bottom: 1px solid var(--theme-color); color: white; font-family: inherit; font-size: 0.85rem; padding: 2px 0; }
-.row-input:focus { outline: none; }
+.row-input:focus { outline: none; border-bottom: 2px solid var(--theme-color); }
 .account-row.editing .row-value { display: none; }
 .account-row.editing .row-input { display: block; }
 .account-row .edit-icon { color: var(--text-secondary); cursor: pointer; }
