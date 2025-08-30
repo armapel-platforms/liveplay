@@ -9,9 +9,10 @@ const authHandler = {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) return null;
     
+    // Updated to select only the fields that now exist
     const { data: profile, error } = await _supabase
       .from('profiles')
-      .select('first_name, middle_name, last_name, username')
+      .select('first_name, last_name')
       .eq('id', session.user.id)
       .single();
     
@@ -26,12 +27,13 @@ const authHandler = {
   },
   
   signUp: async (credentials) => {
-    const { first_name, middle_name, last_name, username, email, password } = credentials;
+    // Updated to handle the simplified registration form
+    const { first_name, last_name, email, password } = credentials;
     return await _supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { first_name, middle_name, last_name, username },
+        data: { first_name, last_name },
       }
     });
   },
@@ -72,8 +74,45 @@ const authHandler = {
   },
   
   deleteUserAccount: async () => {
-    console.warn("User deletion should be handled by a secure Edge Function.");
-    return await authHandler.logOut();
+    // 1. Get the current user's session to retrieve their JWT (access token).
+    const { data: { session }, error: sessionError } = await _supabase.auth.getSession();
+    if (sessionError) {
+      console.error("Error getting session:", sessionError);
+      return { error: sessionError };
+    }
+    if (!session) {
+      const err = { message: "User is not logged in." };
+      return { error: err };
+    }
+
+    try {
+      // 2. Call the 'delete-user' Edge Function securely.
+      const response = await fetch(
+        `${SUPABASE_URL}/functions/v1/delete-user`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // Pass the user's JWT to prove their identity to the Edge Function.
+            'Authorization': `Bearer ${session.access_token}`
+          }
+        }
+      );
+
+      // 3. Check if the Edge Function returned an error.
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Request failed with status ${response.status}`);
+      }
+      
+      // 4. After a successful server-side deletion, sign the user out on the client.
+      await _supabase.auth.signOut();
+      return { data: { message: "Account deletion initiated successfully." } };
+
+    } catch (error) {
+      console.error("Failed to call delete user function:", error);
+      return { error };
+    }
   }
 };
 
