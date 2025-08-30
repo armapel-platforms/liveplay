@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const isPassword = input.type === 'password';
                 input.type = isPassword ? 'text' : 'password';
-                target.textContent = isPassword ? 'visibility_off' : 'visibility';
+                target.textContent = isPassword ? 'visibility' : 'visibility_off';
                 return; 
             }
 
