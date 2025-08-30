@@ -139,7 +139,7 @@ main.auth-container {
 .account-container { max-width: 650px; margin: 20px auto; padding: 20px; }
 .account-section, #delete-account-survey { background: var(--card-background); border-radius: var(--border-radius); padding: 30px; text-align: center; }
 #delete-account-survey { display: none; flex-direction: column; align-items: center; margin-top: 20px; }
-.auth-btn.danger { background-color: #FF0000; }
+.auth-btn.danger { background-color: #d9534f; }
 .account-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .account-row:last-child { border-bottom: none; }
 .row-icon { color: var(--text-secondary); margin-right: 20px; }
@@ -159,9 +159,14 @@ main.auth-container {
     cursor: pointer; 
     text-align: center;
 }
-#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
-#delete-survey-form label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem;}
-#other-reason-text { display: none; width: 100%; margin-top: 5px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-secondary); border-radius: 5px; color: white; padding: 5px 8px; }
+#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; width: 100%; }
+.material-checkbox-label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; cursor: pointer; }
+.material-checkbox-label .material-symbols-outlined { color: var(--text-secondary); font-variation-settings: 'FILL' 0; transition: color 0.2s ease, font-variation-settings 0.2s ease; }
+.material-checkbox-label.checked .material-symbols-outlined { color: var(--theme-color); font-variation-settings: 'FILL' 1; }
+.other-reason-container { display: none; padding-left: 34px; }
+#other-reason-text { width: 100%; background: var(--input-background); border: 1px solid var(--text-secondary); border-radius: 8px; color: white; padding: 8px 12px; font-family: inherit; font-size: 0.8rem; }
+#other-reason-text:focus { outline: none; border-color: var(--theme-color); }
+
 .auth-popup-overlay {
     position: fixed;
     inset: 0;
