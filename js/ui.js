@@ -1,4 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
+    function createRipple(event) {
+        const button = event.currentTarget;
+        const circle = document.createElement("span");
+        const diameter = Math.max(button.clientWidth, button.clientHeight);
+        const radius = diameter / 2;
+        const rect = button.getBoundingClientRect();
+
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${event.clientX - rect.left - radius}px`;
+        circle.style.top = `${event.clientY - rect.top - radius}px`;
+        circle.classList.add("ripple");
+
+        const existingRipple = button.querySelector(".ripple");
+        if (existingRipple) {
+            existingRipple.remove();
+        }
+
+        button.appendChild(circle);
+
+        circle.addEventListener('animationend', () => {
+            if (circle.parentNode) {
+                circle.remove();
+            }
+        });
+    }
+
+    document.querySelectorAll('.auth-btn').forEach(button => {
+        button.addEventListener('click', createRipple);
+    });
+
     document.body.addEventListener('click', function(e) {
         if (e.target.classList.contains('visibility-toggle')) {
             const targetId = e.target.dataset.target;
@@ -187,24 +217,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             });
+
             document.getElementById('save-changes-button').addEventListener('click', async () => {
+                const saveButton = document.getElementById('save-changes-button');
                 const editingRow = document.querySelector('.account-row.editing');
                 if (!editingRow) return;
+
                 const field = editingRow.dataset.field;
                 const newValue = editingRow.querySelector('.row-input').value.trim();
-                if (!newValue) return alert("Input cannot be empty.");
-                const { error } = (field === 'password') ?
-                await window.auth.updateUserPassword(newValue) :
-                    await window.auth.updateUserProfile({
-                        [field]: newValue
-                    });
-                if (error) alert(`Update failed: ${error.message}`);
-                else window.location.reload();
+                if (!newValue) {
+                    alert("Input cannot be empty.");
+                    return;
+                }
+                
+                saveButton.disabled = true;
+                saveButton.textContent = "Saving changes...";
+                try {
+                    const { error } = (field === 'password') ?
+                        await window.auth.updateUserPassword(newValue) :
+                        await window.auth.updateUserProfile({ [field]: newValue });
+                    if (error) {
+                        alert(`Update failed: ${error.message}`);
+                    } else {
+                        window.location.reload();
+                    }
+                } finally {
+                    saveButton.disabled = false;
+                    saveButton.textContent = "Save Changes";
+                }
             });
+
             document.getElementById('logout-button').addEventListener('click', async () => {
+                const logoutButton = document.getElementById('logout-button');
+                logoutButton.disabled = true;
+                logoutButton.textContent = "Logging out..."; // Changed text
                 await window.auth.logOut();
                 window.location.href = '/home';
             });
+
             const deleteSurvey = document.getElementById('delete-account-survey');
             document.getElementById('delete-account-link').addEventListener('click', (e) => {
                 e.preventDefault();
