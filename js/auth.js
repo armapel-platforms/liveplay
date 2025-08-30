@@ -64,7 +64,8 @@ const authHandler = {
       console.error("Failed to delete user account:", error);
       return { error };
     }
-  }
+  },
+  onAuthStateChange: (callback) => supabase.auth.onAuthStateChange(callback),
 };
 
 window.auth = authHandler;
