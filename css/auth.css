@@ -163,7 +163,12 @@ main.auth-container {
 .material-checkbox-label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; cursor: pointer; }
 .material-checkbox-label .material-symbols-outlined { color: var(--text-secondary); font-variation-settings: 'FILL' 0; transition: color 0.2s ease, font-variation-settings 0.2s ease; }
 .material-checkbox-label.checked .material-symbols-outlined { color: var(--theme-color); font-variation-settings: 'FILL' 1; }
-.other-reason-container { display: none; padding-left: 34px; }
+.other-reason-container {
+    padding-left: 0; 
+    margin-top: 5px;
+    margin-bottom: 15px;
+    width: 100%;
+}
 #other-reason-text { width: 100%; background: var(--input-background); border: 1px solid var(--text-secondary); border-radius: 8px; color: white; padding: 8px 12px; font-family: inherit; font-size: 0.8rem; }
 #other-reason-text:focus { outline: none; border-color: var(--theme-color); }
 
