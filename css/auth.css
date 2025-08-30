@@ -55,7 +55,7 @@ main.auth-container {
 .auth-form {
     background: var(--card-background);
     border-radius: 24px;
-    padding: 40px 30px;
+    padding: 30px 25px;
     display: none;
     flex-direction: column;
     width: 100%;
@@ -64,19 +64,19 @@ main.auth-container {
 
 .auth-form.active { display: flex; }
 .logo-text { font-size: 1.75rem; color: var(--text-secondary); margin: 0 0 35px 0; }
-.logo-text b { color: var(--text-color); font-weight: 900; }
+.logo-text b { color: var(--text-color); font-weight: 800; }
 .auth-form h2 { font-size: 1.95rem; font-weight: 700; margin: 0 0 10px 0; }
 .form-description { font-size: 0.8rem; color: var(--text-secondary); margin: 0 0 30px 0; line-height: 1.5; }
 
 .input-group {
     position: relative;
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .input-group .material-symbols-outlined {
     position: absolute;
-    left: 18px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-secondary);
@@ -85,7 +85,7 @@ main.auth-container {
 
 .input-group .visibility-toggle {
     left: auto;
-    right: 18px;
+    right: 15px;
     cursor: pointer;
     pointer-events: all;
 }
@@ -98,7 +98,7 @@ main.auth-container {
     border-radius: 12px;
     color: var(--text-color);
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     box-sizing: border-box;
 }
 
@@ -111,7 +111,7 @@ main.auth-container {
 .forgot-password {
     display: block;
     text-align: right;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--theme-color);
     margin-top: -5px;
     margin-bottom: 25px;
@@ -126,13 +126,13 @@ main.auth-container {
     border-radius: 50px;
     color: var(--text-color);
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
 }
 
-.toggle-form { margin-top: 30px; font-size: 0.85rem; color: var(--text-secondary); text-align: center; }
+.toggle-form { margin-top: 30px; font-size: 0.8rem; color: var(--text-secondary); text-align: center; }
 .toggle-form a { color: var(--theme-color); font-weight: 500; text-decoration: none; }
 
 .account-card { background: var(--card-background); border-radius: var(--border-radius); padding: 10px 20px; }
