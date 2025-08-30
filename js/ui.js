@@ -128,8 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
         sendOtpButton.addEventListener('click', async () => {
             const email = document.getElementById('reset-email').value.trim();
             if (!email) return alert("Please enter your email address.");
+            
             sendOtpButton.disabled = true;
-            sendOtpButton.textContent = "Sending...";
+            sendOtpButton.textContent = "Sending..."; 
             try {
                 const { error } = await window.auth.sendPasswordResetOtp(email);
                 if (error) {
@@ -149,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('otp-email-display').textContent;
             const token = otpInput.value.trim();
             if (token.length !== 6) return;
+
             verifyOtpButton.disabled = true;
             verifyOtpButton.textContent = "Verifying...";
             try {
@@ -179,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         doneButton.addEventListener('click', async () => {
             const newPassword = newPasswordInput.value;
+            
             doneButton.disabled = true;
             doneButton.textContent = "Saving...";
             try {
@@ -250,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('logout-button').addEventListener('click', async () => {
                 const logoutButton = document.getElementById('logout-button');
                 logoutButton.disabled = true;
-                logoutButton.textContent = "Logging out..."; // Changed text
+                logoutButton.textContent = "Logging out...";
                 await window.auth.logOut();
                 window.location.href = '/home';
             });
