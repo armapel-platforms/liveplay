@@ -69,14 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
             signupButton.textContent = "Creating Account...";
             try {
                 const credentials = {
+                    first_name: document.getElementById('signup-firstname').value,
+                    last_name: document.getElementById('signup-lastname').value,
                     email: document.getElementById('signup-email').value,
                     password: document.getElementById('signup-password').value,
-                    options: {
-                        data: {
-                            first_name: document.getElementById('signup-firstname').value,
-                            last_name: document.getElementById('signup-lastname').value,
-                        }
-                    }
                 };
                 const { data, error } = await window.auth.signUp(credentials);
                 if (error) {
@@ -200,11 +196,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const saveChangesButton = document.getElementById('save-changes-button');
 
         const setUserData = async () => {
-            const { data: { user } } = await window.auth.getCurrentUser();
+            const user = await window.auth.getCurrentUser();
             if (!user) return window.location.href = '/home/login-signup';
             
-            document.querySelector('[data-field="first_name"] .row-value').textContent = user.user_metadata.first_name || 'Not set';
-            document.querySelector('[data-field="last_name"] .row-value').textContent = user.user_metadata.last_name || 'Not set';
+            document.querySelector('[data-field="first_name"] .row-value').textContent = user.first_name || 'Not set';
+            document.querySelector('[data-field="last_name"] .row-value').textContent = user.last_name || 'Not set';
             document.querySelector('[data-field="email"] .row-value').textContent = user.email || '';
         };
 
@@ -219,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isPassword = input.type === 'password';
                 input.type = isPassword ? 'text' : 'password';
                 target.textContent = isPassword ? 'visibility_off' : 'visibility';
-                return;
+                return; 
             }
 
             if (target.classList.contains('edit-icon')) {
@@ -271,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const { error } = (field === 'password') ?
                     await window.auth.updateUserPassword(newValue) :
-                    await window.auth.updateUserProfile({ data: { [field]: newValue } });
+                    await window.auth.updateUserProfile({ [field]: newValue });
 
                 if (error) {
                     alert(`Update failed: ${error.message}`);
