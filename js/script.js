@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // START: Ripple Effect for auth-btn
+    // START: Ripple Effect for auth-btn (NEW ADDITION)
     function createRipple(event) {
         const button = event.currentTarget;
-        // Create the ripple element
         const circle = document.createElement("span");
         const diameter = Math.max(button.clientWidth, button.clientHeight);
         const radius = diameter / 2;
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         circle.style.top = `${event.clientY - rect.top - radius}px`;
         circle.classList.add("ripple");
 
-        // Ensure only one ripple is active at a time
         const existingRipple = button.querySelector(".ripple");
         if (existingRipple) {
             existingRipple.remove();
@@ -21,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         button.appendChild(circle);
 
-        // Clean up the ripple element after the animation ends to prevent DOM clutter
         circle.addEventListener('animationend', () => {
             if (circle.parentNode) {
                 circle.remove();
@@ -29,14 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Attach the ripple effect to all buttons with the .auth-btn class
     document.querySelectorAll('.auth-btn').forEach(button => {
         button.addEventListener('click', createRipple);
     });
     // END: Ripple Effect for auth-btn
 
-    // --- Original Code Starts Here ---
-
+    // Password visibility toggle function (Original)
     document.body.addEventListener('click', function(e) {
         if (e.target.classList.contains('visibility-toggle')) {
             const targetId = e.target.dataset.target;
@@ -48,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Login/Signup form logic (Original)
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         const signupForm = document.getElementById('signup-form');
@@ -118,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Forgot password form logic (Original)
     const emailRequestForm = document.getElementById('email-request-form');
     if (emailRequestForm) {
         const newPasswordForm = document.getElementById('new-password-form');
@@ -204,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Account page logic (Original + MODIFIED)
     const accountCard = document.querySelector('.account-card');
     if (accountCard) {
         (async () => {
@@ -226,28 +224,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // MODIFIED: Save Changes button functionality
+            // "Save Changes" button logic (MODIFIED)
             document.getElementById('save-changes-button').addEventListener('click', async () => {
                 const saveButton = document.getElementById('save-changes-button');
                 const editingRow = document.querySelector('.account-row.editing');
                 if (!editingRow) return;
 
+                const field = editingRow.dataset.field;
+                const newValue = editingRow.querySelector('.row-input').value.trim();
+                if (!newValue) {
+                    alert("Input cannot be empty.");
+                    return;
+                }
+                
                 saveButton.disabled = true;
-                saveButton.textContent = "Saving changes...";
-
+                saveButton.textContent = "Saving changes..."; // Changed text
                 try {
-                    const field = editingRow.dataset.field;
-                    const newValue = editingRow.querySelector('.row-input').value.trim();
-
-                    if (!newValue) {
-                         alert("Input cannot be empty.");
-                         return; // Return here to prevent the finally block from running prematurely
-                    }
-
                     const { error } = (field === 'password') ?
                         await window.auth.updateUserPassword(newValue) :
                         await window.auth.updateUserProfile({ [field]: newValue });
-
                     if (error) {
                         alert(`Update failed: ${error.message}`);
                     } else {
@@ -255,19 +250,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } finally {
                     saveButton.disabled = false;
-                    saveButton.textContent = "Save Changes";
+                    saveButton.textContent = "Save Changes"; // Revert text
                 }
             });
 
-            // MODIFIED: Log Out button functionality
+            // "Log Out" button logic (MODIFIED)
             document.getElementById('logout-button').addEventListener('click', async () => {
                 const logoutButton = document.getElementById('logout-button');
                 logoutButton.disabled = true;
-                logoutButton.textContent = "Logging out...";
+                logoutButton.textContent = "Logging out..."; // Changed text
                 await window.auth.logOut();
                 window.location.href = '/home';
             });
 
+            // Delete account survey logic (Original)
             const deleteSurvey = document.getElementById('delete-account-survey');
             document.getElementById('delete-account-link').addEventListener('click', (e) => {
                 e.preventDefault();
@@ -308,6 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })();
     }
 
+    // OTP Timer function (Original)
     const startOtpTimer = (email, type) => {
         const timerEl = document.getElementById('timer');
         const resendLink = document.getElementById('resend-otp-link');
