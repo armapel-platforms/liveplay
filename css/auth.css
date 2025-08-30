@@ -151,6 +151,7 @@ main.auth-container {
 .account-row.editing .row-value { display: none; }
 .account-row.editing .row-input { display: block; }
 .account-row .edit-icon { color: var(--text-secondary); cursor: pointer; }
+
 #delete-account-link { 
     display: block; 
     margin-top: 20px; 
@@ -159,18 +160,60 @@ main.auth-container {
     cursor: pointer; 
     text-align: center;
 }
-#delete-survey-form { display: flex; flex-direction: column; gap: 15px; text-align: left; width: 100%; }
-.material-checkbox-label { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; cursor: pointer; }
-.material-checkbox-label .material-symbols-outlined { color: var(--text-secondary); font-variation-settings: 'FILL' 0; transition: color 0.2s ease, font-variation-settings 0.2s ease; }
-.material-checkbox-label.checked .material-symbols-outlined { color: var(--theme-color); font-variation-settings: 'FILL' 1; }
+
+#delete-survey-form { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    width: 100%;
+}
+
+.material-checkbox-label { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 0.8rem; 
+    cursor: pointer; 
+    text-align: left;
+}
+
+.material-checkbox-label .material-symbols-outlined { 
+    color: var(--text-secondary); 
+    font-variation-settings: 'FILL' 0; 
+    transition: color 0.2s ease, font-variation-settings 0.2s ease; 
+}
+
+.material-checkbox-label.checked .material-symbols-outlined { 
+    color: var(--theme-color); 
+    font-variation-settings: 'FILL' 1; 
+}
+
 .other-reason-container {
     padding-left: 0; 
     margin-top: 5px;
     margin-bottom: 15px;
     width: 100%;
 }
-#other-reason-text { width: 100%; background: var(--input-background); border: 1px solid var(--text-secondary); border-radius: 8px; color: white; padding: 8px 12px; font-family: inherit; font-size: 0.8rem; }
-#other-reason-text:focus { outline: none; border-color: var(--theme-color); }
+
+#other-reason-text { 
+    width: 100%; 
+    box-sizing: border-box;
+    background: var(--input-background); 
+    border: 1px solid var(--text-secondary); 
+    border-radius: 8px; 
+    color: white; 
+    padding: 8px 12px; 
+    font-family: inherit; 
+    font-size: 0.8rem;
+    resize: vertical;
+    min-height: 50px;
+    overflow: auto;
+}
+
+#other-reason-text:focus { 
+    outline: none; 
+    border-color: var(--theme-color); 
+}
 
 .auth-popup-overlay {
     position: fixed;
