@@ -102,8 +102,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderMenu(currentUser);
 
     window.auth.onAuthStateChange((_event, session) => {
-        currentUser = user;
-        renderMenu(currentUser);
+    const user = session?.user; 
+
+    currentUser = user;
+    renderMenu(currentUser);
     });
 
     if (authPopup) authPopup.addEventListener('click', (e) => { if (e.target === authPopup) hideAuthPopup(); });
