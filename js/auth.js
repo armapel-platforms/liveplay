@@ -11,15 +11,38 @@ const authHandler = {
     const { data: profile, error } = await _supabase.from('profiles').select('first_name, last_name').eq('id', session.user.id).single();
     return error ? { ...session.user } : { ...session.user, ...profile };
   },
+  onAuthStateChange: (callback) => {
+    _supabase.auth.onAuthStateChange(async (event, session) => {
+      const user = session ? await authHandler.getCurrentUser() : null;
+      callback(user);
+    });
+  },
   signUp: async (credentials) => {
     const { first_name, last_name, email, password } = credentials;
     return await _supabase.auth.signUp({ email, password, options: { data: { first_name, last_name } } });
+  },
+  verifyOtp: async (email, token) => {
+    return await _supabase.auth.verifyOtp({ email, token, type: 'signup' });
+  },
+  resendOtp: async (email) => {
+    return await _supabase.auth.resend({ type: 'signup', email });
   },
   logIn: async (credentials) => {
     const { email, password } = credentials;
     return await _supabase.auth.signInWithPassword({ email, password });
   },
-  logOut: async () => await _supabase.auth.signOut(),
+  logOut: async () => {
+    return await _supabase.auth.signOut();
+  },
+  sendPasswordResetOtp: async (email) => {
+    return await _supabase.auth.resetPasswordForEmail(email);
+  },
+  verifyPasswordResetOtp: async (email, token) => {
+    return await _supabase.auth.verifyOtp({ email, token, type: 'recovery' });
+  },
+  updateUserPassword: async (newPassword) => {
+    return await _supabase.auth.updateUser({ password: newPassword });
+  },
   updateUserProfile: async (profileData) => {
     const { data: { user } } = await _supabase.auth.getUser();
     if (!user) return { error: { message: "User not logged in." } };
