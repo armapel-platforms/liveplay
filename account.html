@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
     <link rel="manifest" href="/logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,1,0" />
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/auth.css">
 </head>
@@ -29,19 +29,9 @@
                 <div class="row-content"><label>First Name</label><span class="row-value"></span><input type="text" class="row-input"></div>
                 <span class="material-symbols-outlined edit-icon">edit</span>
             </div>
-            <div class="account-row" data-field="middle_name">
-                <span class="material-symbols-outlined row-icon">badge</span>
-                <div class="row-content"><label>Middle Name</label><span class="row-value"></span><input type="text" class="row-input"></div>
-                <span class="material-symbols-outlined edit-icon">edit</span>
-            </div>
             <div class="account-row" data-field="last_name">
                 <span class="material-symbols-outlined row-icon">badge</span>
                 <div class="row-content"><label>Last Name</label><span class="row-value"></span><input type="text" class="row-input"></div>
-                <span class="material-symbols-outlined edit-icon">edit</span>
-            </div>
-            <div class="account-row" data-field="username">
-                <span class="material-symbols-outlined row-icon">account_circle</span>
-                <div class="row-content"><label>Username</label><span class="row-value"></span><input type="text" class="row-input"></div>
                 <span class="material-symbols-outlined edit-icon">edit</span>
             </div>
             <div class="account-row" data-field="email">
@@ -66,11 +56,26 @@
         <div id="delete-account-survey" style="display: none;">
             <h3>Why are you leaving?</h3>
             <form id="delete-survey-form">
-                <label><input type="checkbox" name="reason" value="missing_channels"> Missing my favorite channels</label>
-                <label><input type="checkbox" name="reason" value="poor_experience"> Poor user experience</label>
-                <label><input type="checkbox" name="reason" value="technical_issues"> Technical issues with the service</label>
-                <label class="other-reason-label"><input type="checkbox" name="reason" value="other"> Other<input type="text" id="other-reason-text" placeholder="Please specify"></label>
-                <button type="submit" id="final-delete-button" class="auth-btn danger" disabled>Delete My Account</button>
+                <label class="material-checkbox-label" data-value="missing_channels">
+                    <span class="material-symbols-outlined">check_box_outline_blank</span>
+                    <span>Missing my favorite channels</span>
+                </label>
+                <label class="material-checkbox-label" data-value="poor_experience">
+                    <span class="material-symbols-outlined">check_box_outline_blank</span>
+                    <span>Poor user experience</span>
+                </label>
+                <label class="material-checkbox-label" data-value="technical_issues">
+                    <span class="material-symbols-outlined">check_box_outline_blank</span>
+                    <span>Technical issues with the service</span>
+                </label>
+                <label class="material-checkbox-label" data-value="other">
+                    <span class="material-symbols-outlined">check_box_outline_blank</span>
+                    <span>Other</span>
+                </label>
+                <div class="other-reason-container">
+                    <input type="text" id="other-reason-text" placeholder="Please specify">
+                </div>
+                <button type="submit" id="final-delete-button" class="auth-btn danger" disabled>Permanently Delete My Account</button>
             </form>
         </div>
     </main>
