@@ -69,10 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
             signupButton.textContent = "Creating Account...";
             try {
                 const credentials = {
-                    first_name: document.getElementById('signup-firstname').value,
-                    last_name: document.getElementById('signup-lastname').value,
                     email: document.getElementById('signup-email').value,
                     password: document.getElementById('signup-password').value,
+                    options: {
+                        data: {
+                            first_name: document.getElementById('signup-firstname').value,
+                            last_name: document.getElementById('signup-lastname').value,
+                        }
+                    }
                 };
                 const { data, error } = await window.auth.signUp(credentials);
                 if (error) {
@@ -206,9 +210,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         accountCard.addEventListener('click', (e) => {
             const target = e.target;
-            const isEditOrVisibilityIcon = target.classList.contains('edit-icon') || target.classList.contains('visibility-icon');
-            
-            if (isEditOrVisibilityIcon) {
+
+            if (target.classList.contains('visibility-icon')) {
+                const row = target.closest('.account-row');
+                const input = row?.querySelector('.row-input');
+                if (!input) return;
+
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                target.textContent = isPassword ? 'visibility_off' : 'visibility';
+                return;
+            }
+
+            if (target.classList.contains('edit-icon')) {
                 const clickedRow = target.closest('.account-row');
                 if (!clickedRow) return;
 
