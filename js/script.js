@@ -296,12 +296,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const minimizePlayer = () => {
-        if (isDesktop()) return;
-        if (allSelectors.playerView.classList.contains("active")) {
-            allSelectors.playerView.classList.remove("active");
-            allSelectors.minimizedPlayer.classList.add("active");
-        }
-    };
+    if (isDesktop()) return;
+    if (playerView && playerView.classList.contains('active')) {
+        // First, start the animation to hide the full player view.
+        playerView.classList.remove('active');
+
+        // THEN, after a short delay, show the minimized player.
+        // This gives the full player time to move out of the way first.
+        setTimeout(() => {
+            if (minimizedPlayer) minimizedPlayer.classList.add('active');
+        }, 250); // Delay of 250 milliseconds (0.25 seconds)
+    }
+   };
 
     const restorePlayer = (e) => {
         if (isDesktop() || e.target.closest('#exit-player-btn')) return;
