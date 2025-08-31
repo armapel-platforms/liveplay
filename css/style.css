@@ -547,7 +547,7 @@ header.subpage-header h1 {
     font-size: 24px; 
 }
 
-.minimized-player { 
+#minimized-player { 
     position: fixed; 
     bottom: 20px; 
     left: 20px; 
@@ -570,38 +570,38 @@ header.subpage-header h1 {
     overflow: hidden; 
 }
 
-.minimized-player.active { 
+#minimized-player.active { 
     opacity: 1; 
     transform: translateY(0); 
     visibility: visible; 
 }
 
-.minimized-player-left { 
+#minimized-player-left { 
     display: flex; 
     align-items: center; 
     gap: 12px; 
 }
 
-.minimized-player-right { 
+#minimized-player-right { 
     display: flex; 
     align-items: center; 
     gap: 10px; 
 }
 
-.minimized-logo { 
+#minimized-logo { 
     width: 60px; 
     height: 50px; 
     object-fit: contain; 
     pointer-events: none;
 }
 
-.minimized-info h4 { 
+#minimized-info h4 { 
     margin: 0; 
     font-size: 0.9rem; 
     font-weight: 700; 
 }
 
-.minimized-info p { 
+#minimized-info p { 
     margin: 0; 
     font-size: 0.55rem; 
     color: var(--text-secondary); 
