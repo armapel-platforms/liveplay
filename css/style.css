@@ -465,6 +465,7 @@ header.subpage-header h1 {
     pointer-events: none;
 }
 
+/* --- REPLACE THE OLD .player-view RULE WITH THIS --- */
 .player-view { 
     position: fixed; 
     top: 0; 
@@ -481,11 +482,14 @@ header.subpage-header h1 {
     padding: 20px; 
     box-sizing: border-box; 
     transform: translateY(100%); 
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    visibility: hidden;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.5s; 
 }
 
 .player-view.active { 
-    transform: translateY(0); 
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
 }
 
 .player-header { 
