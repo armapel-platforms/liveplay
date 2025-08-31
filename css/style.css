@@ -465,7 +465,6 @@ header.subpage-header h1 {
     pointer-events: none;
 }
 
-/* --- REPLACE THE OLD .player-view RULE WITH THIS --- */
 .player-view { 
     position: fixed; 
     top: 0; 
@@ -551,7 +550,7 @@ header.subpage-header h1 {
     font-size: 24px; 
 }
 
-#minimized-player { 
+.minimized-player { 
     position: fixed; 
     bottom: 20px; 
     left: 20px; 
@@ -574,7 +573,7 @@ header.subpage-header h1 {
     overflow: hidden; 
 }
 
-#minimized-player.active { 
+.minimized-player.active { 
     opacity: 1; 
     transform: translateY(0); 
     visibility: visible; 
