@@ -297,9 +297,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const minimizePlayer = () => {
         if (isDesktop()) return;
-        if (playerView && playerView.classList.contains('active')) {
-            playerView.classList.remove('active');
-            if (minimizedPlayer) minimizedPlayer.classList.add('active');
+        if (allSelectors.playerView.classList.contains("active")) {
+            allSelectors.playerView.classList.remove("active");
+            allSelectors.minimizedPlayer.classList.add("active");
         }
     };
 
