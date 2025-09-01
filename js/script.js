@@ -29,16 +29,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let player = null;
     let ui = null;
     let currentUser = null;
-    let activeCategory = 'ALL';
     const isDesktop = () => window.innerWidth >= 1024;
-    
-    const toCategorySlug = (category) => {
-        if (category === 'ALL') return null;
-        return category.toLowerCase().replace(/\s\+\s/g, '-').replace(/\s/g, '-');
-    };
 
     const setVideoPoster = () => {
         if (!videoElement) return;
+
         if (isDesktop()) {
             videoElement.poster = '/logo/desktop-poster.png';
         } else {
@@ -172,12 +167,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 logoBg.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (currentUser) {
-                        const channelSlug = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
-                        const categorySlug = toCategorySlug(activeCategory);
-                        const basePath = categorySlug ? `/home/${categorySlug}` : '/home';
-                        const newUrl = `${basePath}?play=${channelSlug}`;
-                        
-                        history.pushState({ channel: stream.name }, ``, newUrl);
+                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
+                        history.pushState({ channel: stream.name }, ``, `/home?play=${channelName}`);
                         openPlayer(stream);
                     } else {
                         showAuthPopup();
@@ -210,46 +201,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             categories.forEach(category => {
                 const pill = document.createElement('button');
                 pill.className = 'pill';
+                if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
                 pill.addEventListener('click', createRipple);
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active')?.classList.remove('active');
                     pill.classList.add('active');
-                    
-                    activeCategory = category;
-                    const categorySlug = toCategorySlug(category);
-                    const newUrl = categorySlug ? `/home/${categorySlug}` : '/home';
-                    history.pushState({ category: category }, '', newUrl);
-
                     renderChannels(category);
                 });
                 categoryPillsContainer.appendChild(pill);
             });
+            renderChannels('ALL');
         }
-        
-        const path = window.location.pathname;
+
         const params = new URLSearchParams(window.location.search);
         const channelToPlay = params.get('play');
-        let categoryFromUrl = 'ALL';
-
-        if (path !== '/home' && path !== '/home/') {
-            const pathSegment = path.substring('/home/'.length).split('?')[0];
-            if (pathSegment) {
-                const allCategories = [...new Set(streamsData.map(s => s.category))];
-                const matchedCategory = allCategories.find(c => toCategorySlug(c) === pathSegment);
-                if (matchedCategory) {
-                    categoryFromUrl = matchedCategory;
-                }
-            }
-        }
-        
-        activeCategory = categoryFromUrl;
-        document.querySelector('.pill.active')?.classList.remove('active');
-        const pillToActivate = document.querySelector(`.pill[data-category="${activeCategory}"]`);
-        if (pillToActivate) pillToActivate.classList.add('active');
-        renderChannels(activeCategory);
-
         if (channelToPlay) {
              if (currentUser) {
                 const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
@@ -257,15 +224,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     openPlayer(streamToPlay);
                 }
             } else {
-                const categorySlug = toCategorySlug(activeCategory);
-                const newUrl = categorySlug ? `/home/${categorySlug}` : '/home';
-                history.replaceState({}, '', newUrl); 
+                history.replaceState({}, '', '/home'); 
                 showAuthPopup();
             }
-        } else {
-             const categorySlug = toCategorySlug(activeCategory);
-             const newUrl = categorySlug ? `/home/${categorySlug}` : '/home';
-             history.replaceState({}, '', newUrl);
         }
     }
 
@@ -325,13 +286,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         
-        if (playerView) playerView.classList.add('active');
-
         if (!isDesktop()) {
             document.getElementById('minimized-player-logo').src = stream.logo;
             document.getElementById('minimized-player-name').textContent = stream.name;
             document.getElementById('minimized-player-category').textContent = stream.category;
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+            if (playerView) playerView.classList.add('active');
         }
     };
 
@@ -359,10 +319,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const closePlayer = async (e) => {
         e.stopPropagation();
-
-        if (playerView) playerView.classList.remove('active');
-        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-        
+        if (!isDesktop()) {
+            if (playerView) playerView.classList.remove('active');
+            if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+        }
         const youtubePlayer = document.getElementById('youtube-player');
         if (youtubePlayer) {
             youtubePlayer.src = '';
@@ -372,10 +332,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (ui) ui.setEnabled(false);
         if (player) await player.unload();
         activeStream = null;
-        
-        const categorySlug = toCategorySlug(activeCategory);
-        const newUrl = categorySlug ? `/home/${categorySlug}` : '/home';
-        history.pushState({}, '', newUrl);
+        history.pushState({}, '', '/home');
     };
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
