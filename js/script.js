@@ -29,11 +29,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     let player = null;
     let ui = null;
     let currentUser = null;
+    let activeCategory = 'ALL'; // NEW: Variable to track the current category
     const isDesktop = () => window.innerWidth >= 1024;
+    
+    // NEW: Helper function to create URL-friendly slugs from category names
+    const toCategorySlug = (category) => {
+        if (category === 'ALL') return 'all-channels';
+        return category.toLowerCase().replace(/\s\+\s/g, '-').replace(/\s/g, '-');
+    };
 
     const setVideoPoster = () => {
         if (!videoElement) return;
-
         if (isDesktop()) {
             videoElement.poster = '/logo/desktop-poster.png';
         } else {
@@ -167,8 +173,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 logoBg.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (currentUser) {
-                        const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
-                        history.pushState({ channel: stream.name }, ``, `/home?play=${channelName}`);
+                        const channelSlug = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
+                        // MODIFIED: Use the new URL structure
+                        const categorySlug = toCategorySlug(activeCategory);
+                        history.pushState({ channel: stream.name }, ``, `/home/${categorySlug}?play=${channelSlug}`);
                         openPlayer(stream);
                     } else {
                         showAuthPopup();
@@ -201,22 +209,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             categories.forEach(category => {
                 const pill = document.createElement('button');
                 pill.className = 'pill';
-                if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
                 pill.addEventListener('click', createRipple);
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active')?.classList.remove('active');
                     pill.classList.add('active');
+                    
+                    // MODIFIED: Update URL when category changes
+                    activeCategory = category;
+                    history.pushState({ category: category }, '', `/home/${toCategorySlug(category)}`);
                     renderChannels(category);
                 });
                 categoryPillsContainer.appendChild(pill);
             });
-            renderChannels('ALL');
         }
-
+        
+        // --- NEW URL HANDLING LOGIC ON PAGE LOAD ---
+        const path = window.location.pathname;
         const params = new URLSearchParams(window.location.search);
         const channelToPlay = params.get('play');
+        let categoryFromUrl = 'ALL';
+
+        if (path.startsWith('/home/')) {
+            const pathSegment = path.substring('/home/'.length);
+            if (pathSegment) {
+                const allCategories = ['ALL', ...new Set(streamsData.map(s => s.category))];
+                const matchedCategory = allCategories.find(c => toCategorySlug(c) === pathSegment);
+                if (matchedCategory) {
+                    categoryFromUrl = matchedCategory;
+                }
+            }
+        }
+        
+        activeCategory = categoryFromUrl;
+        document.querySelector('.pill.active')?.classList.remove('active');
+        const pillToActivate = document.querySelector(`.pill[data-category="${activeCategory}"]`);
+        if (pillToActivate) pillToActivate.classList.add('active');
+        renderChannels(activeCategory);
+
         if (channelToPlay) {
              if (currentUser) {
                 const streamToPlay = streamsData.find(s => s.name.replace(/\s+/g, '-') === channelToPlay);
@@ -224,9 +255,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     openPlayer(streamToPlay);
                 }
             } else {
-                history.replaceState({}, '', '/home'); 
+                history.replaceState({}, '', `/home/${toCategorySlug(activeCategory)}`); 
                 showAuthPopup();
             }
+        } else {
+             history.replaceState({}, '', `/home/${toCategorySlug(activeCategory)}`);
         }
     }
 
@@ -248,6 +281,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const onError = (event) => console.error('Player Error', event.detail);
 
+    // MODIFIED: openPlayer function with desktop player fix
     const openPlayer = async (stream) => {
         const youtubePlayer = document.getElementById('youtube-player');
         activeStream = stream;
@@ -286,11 +320,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         
-        // Show the player view on ALL devices and prevent background scrolling
-        if (playerView) playerView.classList.add('active');
-        document.body.classList.add('player-active');
+        if (playerView) playerView.classList.add('active'); // Shows player on all devices
 
-        // Handle minimized player setup for mobile only
         if (!isDesktop()) {
             document.getElementById('minimized-player-logo').src = stream.logo;
             document.getElementById('minimized-player-name').textContent = stream.name;
@@ -300,20 +331,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const minimizePlayer = () => {
-        // On desktop, this button will act as a close button
-        if (isDesktop()) {
-            closePlayer({ stopPropagation: () => {} }); // Pass a dummy event object
-            return;
-        }
+    if (isDesktop()) return;
+    if (playerView && playerView.classList.contains('active')) {
+        playerView.classList.remove('active');
 
-        // Standard mobile minimize functionality
-        if (playerView && playerView.classList.contains('active')) {
-            playerView.classList.remove('active');
-            setTimeout(() => {
-                if (minimizedPlayer) minimizedPlayer.classList.add('active');
-            }, 250);
-        }
-    };
+        setTimeout(() => {
+            if (minimizedPlayer) minimizedPlayer.classList.add('active');
+        }, 250);
+      }
+   };
 
     const restorePlayer = (e) => {
         if (isDesktop() || e.target.closest('#exit-player-btn')) return;
@@ -326,13 +352,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    // MODIFIED: closePlayer with desktop fix and new URL logic
     const closePlayer = async (e) => {
         e.stopPropagation();
-        
-        // Hide the player on ALL devices and re-enable background scrolling
+
         if (playerView) playerView.classList.remove('active');
         if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-        document.body.classList.remove('player-active');
         
         const youtubePlayer = document.getElementById('youtube-player');
         if (youtubePlayer) {
@@ -343,7 +368,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (ui) ui.setEnabled(false);
         if (player) await player.unload();
         activeStream = null;
-        history.pushState({}, '', '/home');
+        
+        // Revert to the current category base URL
+        history.pushState({}, '', `/home/${toCategorySlug(activeCategory)}`);
     };
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
