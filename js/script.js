@@ -286,25 +286,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         
+        // Show the player view on ALL devices and prevent background scrolling
+        if (playerView) playerView.classList.add('active');
+        document.body.classList.add('player-active');
+
+        // Handle minimized player setup for mobile only
         if (!isDesktop()) {
             document.getElementById('minimized-player-logo').src = stream.logo;
             document.getElementById('minimized-player-name').textContent = stream.name;
             document.getElementById('minimized-player-category').textContent = stream.category;
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-            if (playerView) playerView.classList.add('active');
         }
     };
 
     const minimizePlayer = () => {
-    if (isDesktop()) return;
-    if (playerView && playerView.classList.contains('active')) {
-        playerView.classList.remove('active');
+        // On desktop, this button will act as a close button
+        if (isDesktop()) {
+            closePlayer({ stopPropagation: () => {} }); // Pass a dummy event object
+            return;
+        }
 
-        setTimeout(() => {
-            if (minimizedPlayer) minimizedPlayer.classList.add('active');
-        }, 250);
-      }
-   };
+        // Standard mobile minimize functionality
+        if (playerView && playerView.classList.contains('active')) {
+            playerView.classList.remove('active');
+            setTimeout(() => {
+                if (minimizedPlayer) minimizedPlayer.classList.add('active');
+            }, 250);
+        }
+    };
 
     const restorePlayer = (e) => {
         if (isDesktop() || e.target.closest('#exit-player-btn')) return;
@@ -319,10 +328,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const closePlayer = async (e) => {
         e.stopPropagation();
-        if (!isDesktop()) {
-            if (playerView) playerView.classList.remove('active');
-            if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-        }
+        
+        // Hide the player on ALL devices and re-enable background scrolling
+        if (playerView) playerView.classList.remove('active');
+        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+        document.body.classList.remove('player-active');
+        
         const youtubePlayer = document.getElementById('youtube-player');
         if (youtubePlayer) {
             youtubePlayer.src = '';
