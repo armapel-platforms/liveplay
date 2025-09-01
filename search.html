@@ -145,7 +145,8 @@
                         card.addEventListener('click', () => {
                              if (currentUser) {
                                 const channelName = encodeURIComponent(stream.name.replace(/\s+/g, '-'));
-                                window.location.href = `/home?play=${channelName}`;
+                                // --- THIS IS THE MODIFIED LINE ---
+                                window.location.href = `/home/search?play=${channelName}`;
                              } else {
                                 showAuthPopup();
                              }
