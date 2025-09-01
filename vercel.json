@@ -10,7 +10,6 @@
     { "source": "/home/about-us", "destination": "/about.html" },
     { "source": "/home/terms-of-service", "destination": "/terms.html" },
     { "source": "/home/privacy-policy", "destination": "/privacy.html" },
-    { "source": "/home/faq", "destination": "/faq.html" },
-    { "source": "/((?!api/|logo/|css/|js/).*)", "destination": "/index.html" }
+    { "source": "/home/faq", "destination": "/faq.html" }
   ]
 }
