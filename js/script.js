@@ -97,7 +97,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <li><a href="/home/faq"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
                 <li><a href="/home/privacy-policy"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
                 <li><a href="/home/terms-of-service"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
-                <li><a href="/home/license"><span class="material-symbols-outlined">balance</span> License</a></li>
             </ul>`;
         if (floatingMenu) floatingMenu.innerHTML = menuContent;
         
