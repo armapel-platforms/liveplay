@@ -168,8 +168,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             return acc;
         }, {});
 
-        const categories = ['ALL', 'GENERAL', 'NEWS', 'ENTERTAINMENT', 'MOVIES', 'SPORTS', 'KIDS', 'INFOTAINMENT', 'LIFESTYLE + FOOD', 'MUSIC', 'ACTION + CRIME', 'NATURE + ANIMAL', 'OVERSEAS', 'RELIGIOUS', 'YOUTUBE LIVE'];
-        const categoryIcons = { ALL: 'apps', GENERAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', 'NATURE + ANIMAL': 'pets', OVERSEAS: 'globe', RELIGIOUS: 'church', 'YOUTUBE LIVE': 'smart_display' };
+        const categories = ['ALL', 'General', 'News', 'Entertainment', 'Movies', 'Sports', 'Kids', 'Infotainment', 'Lifestyle + Food', 'Music', 'Action + Crime', 'Nature + Animal', 'Overseas', 'Religious', 'YouTube Live'];
+        const categoryIcons = { ALL: 'apps', General: 'tv_gen', News: 'news', Entertainment: 'theater_comedy', Movies: 'theaters', Sports: 'sports_basketball', Kids: 'smart_toy', Infotainment: 'emoji_objects', 'Lifestyle + Food': 'restaurant', Music: 'music_note', 'Action + Crime': 'local_police', 'Nature + Animal': 'pets', Overseas: 'globe', Religious: 'church', 'YouTube Live': 'smart_display' };
         
         const orderedCategories = categories.filter(c => c !== 'ALL' && groupedByCategory[c]);
         orderedCategories.forEach(category => {
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (categoryPillsContainer && channelListingsContainer) {
             const categories = ['ALL', ...new Set(streamsData.map(s => s.category))];
-            const categoryIcons = { ALL: 'apps', GENERAL: 'tv_gen', NEWS: 'news', ENTERTAINMENT: 'theater_comedy', MOVIES: 'theaters', SPORTS: 'sports_basketball', KIDS: 'smart_toy', INFOTAINMENT: 'emoji_objects', 'LIFESTYLE + FOOD': 'restaurant', MUSIC: 'music_note', 'ACTION + CRIME': 'local_police', 'NATURE + ANIMAL': 'pets', OVERSEAS: 'globe', RELIGIOUS: 'church', 'YOUTUBE LIVE': 'smart_display' };
+            const categoryIcons = { ALL: 'apps', General: 'tv_gen', News: 'news', Entertainment: 'theater_comedy', Movies: 'theaters', Sports: 'sports_basketball', Kids: 'smart_toy', Infotainment: 'emoji_objects', 'Lifestyle + Food': 'restaurant', Music: 'music_note', 'Action + Crime': 'local_police', 'Nature + Animal': 'pets', Overseas: 'globe', Religious: 'church', 'YouTube Live': 'smart_display' };
             
             categoryPillsContainer.innerHTML = '';
             categories.forEach(category => {
