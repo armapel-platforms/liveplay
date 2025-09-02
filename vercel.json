@@ -11,6 +11,6 @@
     { "source": "/home/terms-of-service", "destination": "/terms.html" },
     { "source": "/home/privacy-policy", "destination": "/privacy.html" },
     { "source": "/home/faq", "destination": "/faq.html" }
-    { "source": "/home/license", "destination": "/LICENSE" }
+    { "source": "/home/license", "destination": "/LICENSE.txt" }
   ]
 }
