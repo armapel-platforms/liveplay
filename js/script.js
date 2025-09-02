@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let ui = null;
     let currentUser = null;
 
-    // --- CORE LOGIC: Player and Layout Variables ---
     const playerView = document.getElementById('player-view');
     const minimizedPlayer = document.getElementById('minimized-player');
     const minimizeBtn = document.getElementById('minimize-player-btn');
@@ -48,41 +47,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // --- MODIFICATION 1: ADD LAYOUT SETUP LOGIC ---
-    // This function sets the correct player state based on screen size.
     const setupLayout = () => {
         if (isDesktop()) {
-            // On DESKTOP:
-            // 1. Make the player container permanently visible.
             if (playerView) playerView.classList.add('active');
-            
-            // 2. Hide the minimize button, as it's a mobile-only feature.
             if (minimizeBtn) minimizeBtn.style.display = 'none';
-
-            // 3. Ensure the minimized player (mobile feature) is hidden.
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
 
         } else {
-            // On MOBILE:
-            // 1. Restore the minimize button's visibility.
             if (minimizeBtn) minimizeBtn.style.display = 'flex';
-            
-            // 2. If no stream is active, hide the player.
-            //    The player visibility is controlled by user actions (open/close).
             if (!activeStream && playerView) {
                 playerView.classList.remove('active');
             }
         }
     };
 
-    // Initial setup on page load
     setVideoPoster();
     setupLayout(); 
     window.addEventListener('resize', () => {
         setVideoPoster();
         setupLayout();
     });
-    // --- END OF MODIFICATION 1 ---
 
     if (document.getElementById('featured-slider')) {
         window.addEventListener('scroll', () => {
@@ -113,6 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <li><a href="/home/faq"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
                 <li><a href="/home/privacy-policy"><span class="material-symbols-outlined">shield</span> Privacy Policy</a></li>
                 <li><a href="/home/terms-of-service"><span class="material-symbols-outlined">gavel</span> Terms of Service</a></li>
+                <li><a href="/home/license"><span class="material-symbols-outlined">balance</span> License</a></li>
             </ul>`;
         if (floatingMenu) floatingMenu.innerHTML = menuContent;
         
@@ -321,17 +306,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('player-channel-category').textContent = stream.category;
         
         if (!isDesktop()) {
-            // Mobile-only logic
             document.getElementById('minimized-player-logo').src = stream.logo;
             document.getElementById('minimized-player-name').textContent = stream.name;
             document.getElementById('minimized-player-category').textContent = stream.category;
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-            if (playerView) playerView.classList.add('active'); // Show player on mobile
+            if (playerView) playerView.classList.add('active');
         }
     };
 
-    // --- NO CHANGES NEEDED FOR `minimizePlayer` and `restorePlayer` ---
-    // Their mobile-only logic is correct.
     const minimizePlayer = () => {
         if (isDesktop()) return;
         if (playerView && playerView.classList.contains('active')) {
@@ -353,12 +335,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // --- MODIFICATION 2: REPLACE `closePlayer` FUNCTION ---
-    // This new version handles desktop and mobile differently.
     const closePlayer = async (e) => {
         e.stopPropagation();
 
-        // Universal actions for both layouts
         const youtubePlayer = document.getElementById('youtube-player');
         if (youtubePlayer) {
             youtubePlayer.src = '';
@@ -368,23 +347,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (ui) ui.setEnabled(false);
         if (player) {
             await player.unload();
-            setVideoPoster(); // Reset to poster image
+            setVideoPoster();
         }
         activeStream = null;
         history.pushState({}, '', '/home');
 
-        // Layout-specific actions
         if (isDesktop()) {
-            // On DESKTOP, just reset the text. Don't hide the player.
             document.getElementById('player-channel-name').textContent = 'Channel Name';
             document.getElementById('player-channel-category').textContent = 'Category';
         } else {
-            // On MOBILE, hide the player containers.
             if (playerView) playerView.classList.remove('active');
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
         }
     };
-    // --- END OF MODIFICATION 2 ---
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
