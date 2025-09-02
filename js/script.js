@@ -251,7 +251,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const openPlayer = async (stream) => {
         const youtubePlayer = document.getElementById('youtube-player');
         activeStream = stream;
-
         if (stream.type === 'youtube') {
             if (player) await player.unload();
             if (ui) ui.setEnabled(false);
@@ -286,28 +285,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         
+        if (playerView) playerView.classList.add('active');
         if (!isDesktop()) {
             document.getElementById('minimized-player-logo').src = stream.logo;
             document.getElementById('minimized-player-name').textContent = stream.name;
             document.getElementById('minimized-player-category').textContent = stream.category;
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-            if (playerView) playerView.classList.add('active');
         }
     };
 
     const minimizePlayer = () => {
-    if (isDesktop()) return;
-    if (playerView && playerView.classList.contains('active')) {
-        playerView.classList.remove('active');
+        if (isDesktop()) return; 
 
-        setTimeout(() => {
-            if (minimizedPlayer) minimizedPlayer.classList.add('active');
-        }, 250);
-      }
-   };
+        if (playerView && playerView.classList.contains('active')) {
+            playerView.classList.remove('active');
+            setTimeout(() => {
+                if (minimizedPlayer) minimizedPlayer.classList.add('active');
+            }, 250);
+        }
+    };
 
     const restorePlayer = (e) => {
         if (isDesktop() || e.target.closest('#exit-player-btn')) return;
+
         if (minimizedPlayer && minimizedPlayer.classList.contains('active')) {
             minimizedPlayer.classList.remove('active');
             if (playerView) playerView.classList.add('active');
@@ -319,10 +319,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const closePlayer = async (e) => {
         e.stopPropagation();
+        if (playerView) playerView.classList.remove('active');
         if (!isDesktop()) {
-            if (playerView) playerView.classList.remove('active');
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
         }
+
         const youtubePlayer = document.getElementById('youtube-player');
         if (youtubePlayer) {
             youtubePlayer.src = '';
