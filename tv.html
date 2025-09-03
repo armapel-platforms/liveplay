@@ -25,10 +25,17 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/shaka-player/4.3.4/controls.css">
     <style>
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: #000; color: #fff;
-            font-family: 'TT Hoves Pro Trial', sans-serif;
-            overflow: hidden; user-select: none; cursor: none;
+        margin: 0; padding: 0; width: 100%; height: 100%;
+        background-color: #000; color: #fff;
+        font-family: 'TT Hoves Pro Trial', sans-serif;
+        overflow: hidden; user-select: none; 
+        cursor: none;
+        -webkit-cursor-visibility: hidden;
+        }
+        
+        * {
+        cursor: none;
+        -webkit-cursor-visibility: hidden;
         }
 
         #video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
