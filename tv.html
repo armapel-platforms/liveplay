@@ -240,11 +240,34 @@
         }
         
         function setupRemoteClickListeners() {
-            document.getElementById('btn-up').addEventListener('click', () => changeChannel(1));
-            document.getElementById('btn-down').addEventListener('click', () => changeChannel(-1));
+            document.getElementById('btn-up').addEventListener('click', () => {
+                if (isSidebarActive) {
+                    currentFocusIndex = Math.max(0, currentFocusIndex - 1);
+                    updateFocus();
+                } else {
+                    changeChannel(1);
+                }
+            });
+
+            document.getElementById('btn-down').addEventListener('click', () => {
+                if (isSidebarActive) {
+                    currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1);
+                    updateFocus();
+                } else {
+                    changeChannel(-1);
+                }
+            });
+
             document.getElementById('btn-left').addEventListener('click', showSidebar);
             document.getElementById('btn-right').addEventListener('click', hideSidebar);
-            document.getElementById('btn-ok').addEventListener('click', showAndHideInfo);
+
+            document.getElementById('btn-ok').addEventListener('click', () => {
+                if (isSidebarActive) {
+                    selectChannelFromList();
+                } else {
+                    showAndHideInfo();
+                }
+            });
         }
 
         async function loadChannel(channel) {
