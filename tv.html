@@ -163,7 +163,7 @@
         </div>
     </div>
 
-        <script>
+            <script>
         let channelList = [];
         let currentChannelIndex = 0;
         let infoTimeout;
@@ -171,13 +171,19 @@
         let isSidebarActive = false;
         let currentFocusIndex = 0;
 
-        // Variables for long-press detection
-        let longPressTimer;
-        const longPressDuration = 750; // Time in ms to hold for a long press
+        // --- Timers and Flags for Long Press ---
+        let playLongPressTimer;
+        let isPlayKeyDown = false;
+        const playLongPressDuration = 750; // Hold 'Play' for 750ms to show sidebar
+
+        let channelChangeInterval;
+        let isChannelKeyDown = false;
+        const channelChangeDelay = 500; // Wait 500ms before starting rapid change
+        const channelChangeSpeed = 200; // Change channel every 200ms after that
 
         const video = document.getElementById('video');
         const fadeOverlay = document.getElementById('fade-overlay');
-        const liveplayLogo = document.getElementById('liveplay-logo');
+        const liveplayLogo = document.getElementById('live-play-logo');
         const channelInfo = document.getElementById('channel-info');
         const channelName = document.getElementById('channel-name');
         const channelCategory = document.getElementById('channel-category');
@@ -200,7 +206,6 @@
                 if (shaka.Player.isBrowserSupported()) await initPlayer();
                 else console.error('Browser not supported!');
 
-                // We now need to listen for both keydown and keyup events
                 document.addEventListener('keydown', handleKeyDown);
                 document.addEventListener('keyup', handleKeyUp);
 
@@ -262,9 +267,10 @@
             }, 4000);
         }
         
-        // This function handles the initial press of a key
         function handleKeyDown(event) {
+            if (event.repeat) return; // Ignore repeating keydown events
             event.preventDefault();
+
             if (isExitPopupActive) {
                 const currentFocus = document.activeElement;
                 if (event.keyCode === 37) { if (currentFocus === exitConfirmBtn) exitCancelBtn.focus(); } 
@@ -280,31 +286,55 @@
                 }
             } else {
                 switch (event.keyCode) {
-                    case 427: case 38: changeChannel(1); break;
-                    case 428: case 40: changeChannel(-1); break;
-                    case 8: case 461: case 10009: showExitPopup(); break;
-
-                    // This is the new long-press logic
+                    case 427: // Channel Up
+                    case 38:  // Arrow Up
+                        handleChannelChangeStart(1);
+                        break;
+                    case 428: // Channel Down
+                    case 40:  // Arrow Down
+                        handleChannelChangeStart(-1);
+                        break;
+                    case 8: case 461: case 10009: // Back
+                        showExitPopup(); 
+                        break;
                     case 415: // Play button
-                        // If a timer isn't already running, start one.
-                        // The 'repeating' keydown events won't create new timers.
-                        if (!longPressTimer) {
-                            longPressTimer = setTimeout(showSidebar, longPressDuration);
-                        }
+                        isPlayKeyDown = true;
+                        playLongPressTimer = setTimeout(() => {
+                            if (isPlayKeyDown) showSidebar();
+                        }, playLongPressDuration);
                         break;
                 }
             }
         }
 
-        // This new function handles the release of a key
         function handleKeyUp(event) {
-            // Check if the released key is the Play button
-            if (event.keyCode === 415) {
-                // If it is, cancel the timer. If the timer already fired, this does nothing.
-                clearTimeout(longPressTimer);
-                // Reset the timer variable so it can be started again on the next press.
-                longPressTimer = null;
+            isPlayKeyDown = false;
+            isChannelKeyDown = false;
+
+            switch(event.keyCode) {
+                case 415: // Play button
+                    clearTimeout(playLongPressTimer);
+                    break;
+                case 427: case 38: // Channel Up / Arrow Up
+                case 428: case 40: // Channel Down / Arrow Down
+                    clearInterval(channelChangeInterval);
+                    break;
             }
+        }
+
+        function handleChannelChangeStart(direction) {
+            isChannelKeyDown = true;
+            // 1. Change channel once immediately on first press
+            changeChannel(direction);
+
+            // 2. After a delay, start the rapid-change interval
+            setTimeout(() => {
+                if (isChannelKeyDown) { // Check if the key is still being held
+                    channelChangeInterval = setInterval(() => {
+                        changeChannel(direction);
+                    }, channelChangeSpeed);
+                }
+            }, channelChangeDelay);
         }
 
         function changeChannel(direction) {
@@ -324,7 +354,7 @@
         }
 
         function showSidebar() {
-            if (isSidebarActive) return; // Don't do anything if it's already shown
+            if (isSidebarActive) return;
             isSidebarActive = true;
             currentFocusIndex = currentChannelIndex;
             sidebar.classList.add('show');
