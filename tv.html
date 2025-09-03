@@ -7,8 +7,9 @@
     <script>
         (function() {
             const userAgent = navigator.userAgent;
-            const isMobileOrTablet = /Mobi|iPhone|iPad|iPod/i.test(userAgent) || (/Android/i.test(userAgent) && !/TV/i.test(userAgent));
-            if (isMobileOrTablet) {
+            const isTvDevice = /TV|Tizen|Web0S|Bravia|Viera|SMART-TV|SmartTV|AppleTV|GoogleTV|Roku|CrKey|AFT/i.test(userAgent);
+
+            if (!isTvDevice) {
                 window.location.href = '/404';
             }
         })();
