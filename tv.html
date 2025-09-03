@@ -10,7 +10,7 @@
             const isTvDevice = /TV|Tizen|Web0S|Bravia|Viera|SMART-TV|SmartTV|AppleTV|GoogleTV|Roku|CrKey|AFT/i.test(userAgent);
 
             if (!isTvDevice) {
-                window.location.href = '/404';
+                // window.location.href = '/404';
             }
         })();
     </script>
@@ -42,7 +42,7 @@
     }
     #fade-overlay.show { opacity: 1; }
 
-    #liveplay-logo, #channel-info, #live-indicator-corner {
+    #liveplay-logo, #channel-info, #live-indicator-corner, #remote-control {
         position: absolute;
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
@@ -51,7 +51,7 @@
     }
     #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 600; }
     #channel-info { left: 50px; bottom: 40px; }
-    #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show { opacity: 1; }
+    #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show, #remote-control.show { opacity: 1; }
 
     #channel-name { font-size: 3em; margin: 0; }
     #channel-category { font-size: 1.5em; margin: 5px 0 0 0; color: #ccc; }
@@ -92,9 +92,7 @@
     #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
 
     #remote-control {
-        position: absolute;
-        z-index: 3;
-        top: 40px;
+        bottom: 120px;
         right: 50px;
         display: grid;
         grid-template-areas:
@@ -105,6 +103,9 @@
         background-color: rgba(25, 25, 25, 0.7);
         padding: 8px;
         border-radius: 12px;
+        pointer-events: none;
+    }
+    #remote-control.show {
         pointer-events: auto;
     }
 
@@ -135,7 +136,7 @@
     #live-indicator-corner {
         display: flex; align-items: center; gap: 8px;
         color: #ff4d00; font-weight: 200; font-size: 1.5rem;
-        top: 180px;
+        bottom: 40px;
         right: 50px;
     }
     .sidebar-live-icon { color: #ff4d00; }
@@ -232,6 +233,7 @@
         const channelName = document.getElementById('channel-name');
         const channelCategory = document.getElementById('channel-category');
         const liveIndicatorCorner = document.getElementById('live-indicator-corner');
+        const remoteControl = document.getElementById('remote-control');
         const exitPopupOverlay = document.getElementById('exit-popup-overlay');
         const exitConfirmBtn = document.getElementById('exit-confirm-btn');
         const exitCancelBtn = document.getElementById('exit-cancel-btn');
@@ -274,11 +276,10 @@
         }
         
         function simulateKeyPress(keyCode) {
-            const event = new KeyboardEvent('keydown', {
-                keyCode: keyCode,
-                bubbles: true
-            });
-            document.dispatchEvent(event);
+            // Dispatch keydown
+            document.dispatchEvent(new KeyboardEvent('keydown', { keyCode: keyCode, bubbles: true }));
+            // Dispatch keyup to ensure it's treated as a single press
+            document.dispatchEvent(new KeyboardEvent('keyup', { keyCode: keyCode, bubbles: true }));
         }
 
         function setupRemoteClickListeners() {
@@ -288,7 +289,6 @@
             document.getElementById('btn-right').addEventListener('click', () => simulateKeyPress(39));
             document.getElementById('btn-ok').addEventListener('click', () => simulateKeyPress(13));
         }
-
 
         async function loadChannel(channel) {
             if (!channel) return;
@@ -318,17 +318,21 @@
             liveplayLogo.classList.add('show');
             channelInfo.classList.add('show');
             liveIndicatorCorner.classList.add('show');
+            remoteControl.classList.add('show');
             clearTimeout(infoTimeout);
             infoTimeout = setTimeout(() => {
                 fadeOverlay.classList.remove('show');
                 liveplayLogo.classList.remove('show');
                 channelInfo.classList.remove('show');
                 liveIndicatorCorner.classList.remove('show');
+                remoteControl.classList.remove('show');
             }, 4000);
         }
 
         function handleKeyDown(event) {
-            if (event.repeat && event.keyCode !== 38 && event.keyCode !== 40) return;
+            // --- BUG FIX: Ignore all repeated keydown events from the browser ---
+            if (event.repeat) return;
+            
             event.preventDefault();
 
             if (isExitPopupActive) {
@@ -342,8 +346,8 @@
                     case 38: currentFocusIndex = Math.max(0, currentFocusIndex - 1); updateFocus(); break;
                     case 40: currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1); updateFocus(); break;
                     case 13: selectChannelFromList(); break;
-                    case 39: // Arrow Right
-                    case 8:  // Back
+                    case 39: 
+                    case 8:  
                     case 461:
                     case 10009:
                          hideSidebar();
@@ -371,12 +375,16 @@
         }
 
         function handleChannelChangeStart(direction) {
-            if (isChannelKeyDown) return;
+            // This flag check ensures the logic only runs once on the initial keydown
+            if (isChannelKeyDown) return; 
             isChannelKeyDown = true;
+            
+            // Change channel immediately on the first press
             changeChannel(direction);
 
+            // After a delay, start the rapid-change interval if the key is still held
             setTimeout(() => {
-                if (isChannelKeyDown) {
+                if (isChannelKeyDown) { 
                     channelChangeInterval = setInterval(() => {
                         changeChannel(direction);
                     }, channelChangeSpeed);
