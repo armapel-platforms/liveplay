@@ -514,6 +514,14 @@ header.subpage-header h1 {
     background-size: cover;
 }
 
+#video-player:-webkit-full-screen {
+    border-radius: 0;
+}
+
+#video-player:fullscreen {
+    border-radius: 0;
+}
+
 .player-info { 
     width: 100%; 
     max-width: 960px; 
