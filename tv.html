@@ -257,6 +257,9 @@
 
                 document.addEventListener('keydown', handleKeyDown);
                 document.addEventListener('keyup', handleKeyUp);
+                
+                // --- THIS IS THE KEY LINE FOR YOUR REQUEST ---
+                // It makes the entire video screen clickable to show the controls.
                 videoContainer.addEventListener('click', showAndHideInfo);
                 
                 setupRemoteClickListeners();
