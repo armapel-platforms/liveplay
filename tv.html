@@ -8,7 +8,6 @@
         (function() {
             const userAgent = navigator.userAgent;
             const isTvDevice = /TV|Tizen|Web0S|Bravia|Viera|SMART-TV|SmartTV|AppleTV|GoogleTV|Roku|CrKey|AFT/i.test(userAgent);
-            // We'll allow this to run on desktop for easier development.
             // if (!isTvDevice) { window.location.href = '/404'; }
         })();
     </script>
@@ -45,7 +44,7 @@
             z-index: 3;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
         }
-        #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 600; }
+        #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 800; }
         #channel-info { left: 50px; bottom: 40px; }
         #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show, #remote-control.show { opacity: 1; }
         #channel-name { font-size: 3em; margin: 0; }
@@ -97,7 +96,7 @@
         #btn-ok { grid-area: ok; background-color: rgba(120, 120, 120, 0.7); }
         #live-indicator-corner {
             display: flex; align-items: center; gap: 8px; color: #ff4d00;
-            font-weight: 200; font-size: 1.5rem; bottom: 40px; right: 50px;
+            font-weight: 400; font-size: 1.5rem; bottom: 40px; right: 50px;
         }
         .sidebar-live-icon { color: #ff4d00; }
         #channel-list-container li.focused .sidebar-live-icon { color: #fff; }
@@ -224,7 +223,6 @@
 
         async function initPlayer() {
             player = new shaka.Player(video);
-            player.configure('ui.enabled', false);
             player.addEventListener('error', onErrorEvent);
             await loadChannel(channelList[currentChannelIndex]);
             showAndHideInfo();
@@ -252,7 +250,6 @@
                 }
 
                 player.configure('drm.clearKeys', streamData.clearKey || {});
-
                 await player.load(streamData.manifestUri);
 
             } catch (error) {
@@ -366,7 +363,7 @@
         function updateTimeDate() {
             const now = new Date();
             const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const date = now.toLocaleDateDateString([], { month: 'short', day: 'numeric' });
+            const date = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
             timeDateElement.textContent = `${date}, ${time}`;
         }
 
