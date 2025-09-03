@@ -269,7 +269,7 @@ header.subpage-header h1 {
 .slide-overlay { 
     position: absolute; 
     inset: 0;
-    background: radial-gradient(to right, rgba(0, 0, 0, 0.7) 0%, transparent 50%)
+    background: radial-gradient(to right, rgba(0, 0, 0, 0.7) 0%, transparent 50%);
 }
 
 .slide-content { 
