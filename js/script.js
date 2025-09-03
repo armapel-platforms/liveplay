@@ -269,10 +269,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!response.ok) throw new Error(`Stream data not found for ${stream.name}.`);
                 const secureData = await response.json();
                 
+                // --- FIX STARTS HERE ---
                 const playlistItem = {
                     file: secureData.manifestUri,
-                    image: stream.logo
+                    image: stream.logo,
+                    // Explicitly tell JW Player the type of stream it is loading
+                    type: stream.type === 'mpegdash' ? 'dash' : 'hls'
                 };
+                // --- FIX ENDS HERE ---
 
                 if (secureData.clearKey && Object.keys(secureData.clearKey).length > 0) {
                     playlistItem.drm = { "widevine": { "clearkeys": secureData.clearKey } };
