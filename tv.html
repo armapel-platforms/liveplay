@@ -163,13 +163,17 @@
         </div>
     </div>
 
-    <script>
+        <script>
         let channelList = [];
         let currentChannelIndex = 0;
         let infoTimeout;
         let isExitPopupActive = false;
         let isSidebarActive = false;
         let currentFocusIndex = 0;
+
+        // Variables for long-press detection
+        let longPressTimer;
+        const longPressDuration = 750; // Time in ms to hold for a long press
 
         const video = document.getElementById('video');
         const fadeOverlay = document.getElementById('fade-overlay');
@@ -196,7 +200,10 @@
                 if (shaka.Player.isBrowserSupported()) await initPlayer();
                 else console.error('Browser not supported!');
 
-                document.addEventListener('keydown', handleKeyPress);
+                // We now need to listen for both keydown and keyup events
+                document.addEventListener('keydown', handleKeyDown);
+                document.addEventListener('keyup', handleKeyUp);
+
                 exitConfirmBtn.addEventListener('click', handleExitConfirm);
                 exitCancelBtn.addEventListener('click', handleExitCancel);
 
@@ -220,21 +227,16 @@
 
         async function loadChannel(channel) {
             if (!channel) return;
-
             updateChannelInfo(channel);
-
             try {
                 const streamResponse = await fetch(`/api/getStream.js?name=${encodeURIComponent(channel.name)}`);
                 if (!streamResponse.ok) throw new Error(`Stream for ${channel.name} not found`);
                 const streamData = await streamResponse.json();
-                
                 if (player.getMediaElement()) await player.unload();
-            
                 player.configure('drm', { clearKeys: {} });
                 if (streamData.clearKey) {
                     player.configure({ drm: { clearKeys: streamData.clearKey } });
                 }
-
                 await player.load(streamData.manifestUri);
             } catch (error) {
                 console.error(`Failed to load stream for ${channel.name}:`, error);
@@ -260,7 +262,8 @@
             }, 4000);
         }
         
-        function handleKeyPress(event) {
+        // This function handles the initial press of a key
+        function handleKeyDown(event) {
             event.preventDefault();
             if (isExitPopupActive) {
                 const currentFocus = document.activeElement;
@@ -277,11 +280,30 @@
                 }
             } else {
                 switch (event.keyCode) {
-                    case 38: changeChannel(1); break;
-                    case 40: changeChannel(-1); break;
-                    case 39: showSidebar(); break;
+                    case 427: case 38: changeChannel(1); break;
+                    case 428: case 40: changeChannel(-1); break;
                     case 8: case 461: case 10009: showExitPopup(); break;
+
+                    // This is the new long-press logic
+                    case 415: // Play button
+                        // If a timer isn't already running, start one.
+                        // The 'repeating' keydown events won't create new timers.
+                        if (!longPressTimer) {
+                            longPressTimer = setTimeout(showSidebar, longPressDuration);
+                        }
+                        break;
                 }
+            }
+        }
+
+        // This new function handles the release of a key
+        function handleKeyUp(event) {
+            // Check if the released key is the Play button
+            if (event.keyCode === 415) {
+                // If it is, cancel the timer. If the timer already fired, this does nothing.
+                clearTimeout(longPressTimer);
+                // Reset the timer variable so it can be started again on the next press.
+                longPressTimer = null;
             }
         }
 
@@ -296,17 +318,13 @@
             channelList.forEach((channel, index) => {
                 const li = document.createElement('li');
                 li.dataset.index = index;
-                li.innerHTML = `
-                    <span>${channel.name}</span>
-                    <span class="sidebar-live-icon">
-                        <span class="material-symbols-outlined">sensors</span>
-                    </span>
-                `;
+                li.innerHTML = `<span>${channel.name}</span><span class="sidebar-live-icon"><span class="material-symbols-outlined">sensors</span></span>`;
                 channelListContainer.appendChild(li);
             });
         }
 
         function showSidebar() {
+            if (isSidebarActive) return; // Don't do anything if it's already shown
             isSidebarActive = true;
             currentFocusIndex = currentChannelIndex;
             sidebar.classList.add('show');
