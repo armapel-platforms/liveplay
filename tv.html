@@ -43,7 +43,7 @@
     }
     #fade-overlay.show { opacity: 1; }
 
-    #liveplay-logo, #channel-info, #live-indicator-corner {
+    #liveplay-logo, #channel-info, #live-indicator-corner, #remote-control {
         position: absolute;
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
@@ -52,7 +52,7 @@
     }
     #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 800; }
     #channel-info { left: 50px; bottom: 40px; }
-    #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show { opacity: 1; }
+    #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show, #remote-control.show { opacity: 1; }
 
     #channel-name { font-size: 3em; margin: 0; }
     #channel-category { font-size: 1.5em; margin: 5px 0 0 0; color: #ccc; }
@@ -69,7 +69,7 @@
         transform: translateX(0);
         pointer-events: auto;
     }
-
+    
     #click-overlay {
         position: fixed;
         top: 0;
@@ -102,8 +102,47 @@
     }
     #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
 
+    #remote-control {
+        bottom: 120px;
+        right: 50px;
+        display: grid;
+        grid-template-areas:
+            ". up ."
+            "left ok right"
+            ". down .";
+        gap: 6px;
+        background-color: rgba(25, 25, 25, 0.7);
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    .remote-btn {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(80, 80, 80, 0.6);
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        pointer-events: auto;
+    }
+    .remote-btn:hover {
+        background-color: rgba(120, 120, 120, 0.9);
+    }
+    #btn-up { grid-area: up; }
+    #btn-down { grid-area: down; }
+    #btn-left { grid-area: left; }
+    #btn-right { grid-area: right; }
+    #btn-ok {
+        grid-area: ok;
+        background-color: rgba(120, 120, 120, 0.7);
+    }
+
     #live-indicator-corner {
-        display: flex; align-items: center; gap: 8px;
+        display: flex; align-items: center; gap: 7px;
         color: #ff4d00; font-weight: 400; font-size: 1.5rem;
         bottom: 40px;
         right: 50px;
@@ -163,6 +202,14 @@
         <p id="channel-category"></p>
     </div>
 
+    <div id="remote-control">
+        <span id="btn-up" class="remote-btn material-symbols-outlined">keyboard_arrow_up</span>
+        <span id="btn-left" class="remote-btn material-symbols-outlined">keyboard_arrow_left</span>
+        <span id="btn-ok" class="remote-btn material-symbols-outlined">circle</span>
+        <span id="btn-right" class="remote-btn material-symbols-outlined">keyboard_arrow_right</span>
+        <span id="btn-down" class="remote-btn material-symbols-outlined">keyboard_arrow_down</span>
+    </div>
+
     <div id="live-indicator-corner">
         <span class="material-symbols-outlined">sensors</span> LIVE
     </div>
@@ -184,10 +231,12 @@
         let isExitPopupActive = false;
         let isSidebarActive = false;
         let currentFocusIndex = 0;
+
         let channelChangeInterval;
         let isChannelKeyDown = false;
         const channelChangeDelay = 500;
         const channelChangeSpeed = 200;
+
         const video = document.getElementById('video');
         const clickOverlay = document.getElementById('click-overlay');
         const fadeOverlay = document.getElementById('fade-overlay');
@@ -196,6 +245,7 @@
         const channelName = document.getElementById('channel-name');
         const channelCategory = document.getElementById('channel-category');
         const liveIndicatorCorner = document.getElementById('live-indicator-corner');
+        const remoteControl = document.getElementById('remote-control');
         const exitPopupOverlay = document.getElementById('exit-popup-overlay');
         const exitConfirmBtn = document.getElementById('exit-confirm-btn');
         const exitCancelBtn = document.getElementById('exit-cancel-btn');
@@ -218,6 +268,8 @@
                 document.addEventListener('keyup', handleKeyUp);
                 
                 clickOverlay.addEventListener('click', showAndHideInfo);
+                
+                setupRemoteClickListeners();
 
                 populateChannelList();
                 updateTimeDate();
@@ -235,6 +287,14 @@
             player.addEventListener('error', onErrorEvent);
             await loadChannel(channelList[currentChannelIndex]);
             showAndHideInfo();
+        }
+        
+        function setupRemoteClickListeners() {
+            document.getElementById('btn-up').addEventListener('click', () => handleChannelChangeStart(1));
+            document.getElementById('btn-down').addEventListener('click', () => handleChannelChangeStart(-1));
+            document.getElementById('btn-left').addEventListener('click', showSidebar);
+            document.getElementById('btn-right').addEventListener('click', hideSidebar);
+            document.getElementById('btn-ok').addEventListener('click', showAndHideInfo);
         }
 
         async function loadChannel(channel) {
@@ -265,12 +325,14 @@
             liveplayLogo.classList.add('show');
             channelInfo.classList.add('show');
             liveIndicatorCorner.classList.add('show');
+            remoteControl.classList.add('show');
             clearTimeout(infoTimeout);
             infoTimeout = setTimeout(() => {
                 fadeOverlay.classList.remove('show');
                 liveplayLogo.classList.remove('show');
                 channelInfo.classList.remove('show');
                 liveIndicatorCorner.classList.remove('show');
+                remoteControl.classList.remove('show');
             }, 4000);
         }
 
@@ -298,10 +360,6 @@
                 }
             } else {
                 switch (event.keyCode) {
-                    case 427: case 38: handleChannelChangeStart(1); break;
-                    case 428: case 40: handleChannelChangeStart(-1); break;
-                    case 37: showSidebar(); break;
-                    case 13: showAndHideInfo(); break;
                     case 8: case 461: case 10009: showExitPopup(); break;
                 }
             }
@@ -323,13 +381,22 @@
             
             changeChannel(direction);
 
-            setTimeout(() => {
-                if (isChannelKeyDown) { 
-                    channelChangeInterval = setInterval(() => {
-                        changeChannel(direction);
-                    }, channelChangeSpeed);
+            const intervalId = setInterval(() => {
+                if (isChannelKeyDown) {
+                    changeChannel(direction);
+                } else {
+                    clearInterval(intervalId);
                 }
-            }, channelChangeDelay);
+            }, channelChangeSpeed);
+
+            const stop surfing = () => {
+                isChannelKeyDown = false;
+                clearInterval(intervalId);
+                document.removeEventListener('mouseup', stop surfing);
+                document.removeEventListener('touchend', stop surfing);
+            };
+            document.addEventListener('mouseup', stop surfing);
+            document.addEventListener('touchend', stop surfing);
         }
 
         function changeChannel(direction) {
