@@ -29,7 +29,7 @@
         background-color: #000; color: #fff;
         font-family: 'TT Hoves Pro Trial', sans-serif;
         overflow: hidden; user-select: none;
-        cursor: none;
+        cursor: default;
     }
 
     #video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
@@ -42,7 +42,6 @@
     }
     #fade-overlay.show { opacity: 1; }
 
-    /* --- MODIFIED: Removed #remote-control from this rule --- */
     #liveplay-logo, #channel-info, #live-indicator-corner {
         position: absolute;
         opacity: 0;
@@ -52,7 +51,6 @@
     }
     #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 600; }
     #channel-info { left: 50px; bottom: 40px; }
-    /* --- MODIFIED: Removed #remote-control.show from this rule --- */
     #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show { opacity: 1; }
 
     #channel-name { font-size: 3em; margin: 0; }
@@ -89,7 +87,7 @@
         display: flex; justify-content: space-between; align-items: center;
         padding: 20px 30px; font-size: 1.4em; border-bottom: 1px solid #222;
         transition: background-color 0.2s ease;
-        cursor: default;
+        cursor: pointer;
     }
     #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
 
@@ -107,7 +105,7 @@
         background-color: rgba(25, 25, 25, 0.7);
         padding: 8px;
         border-radius: 12px;
-        pointer-events: none;
+        pointer-events: auto;
     }
 
     .remote-btn {
@@ -119,16 +117,12 @@
         background-color: rgba(80, 80, 80, 0.6);
         border-radius: 50%;
         font-size: 24px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
     }
-        
-    .remote-btn .material-symbols-outlined {
-        font-variation-settings:
-        'FILL' 1,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 24
+    .remote-btn:hover {
+        background-color: rgba(120, 120, 120, 0.9);
     }
-        
     #btn-up { grid-area: up; }
     #btn-down { grid-area: down; }
     #btn-left { grid-area: left; }
@@ -137,7 +131,6 @@
         grid-area: ok;
         background-color: rgba(120, 120, 120, 0.7);
     }
-
 
     #live-indicator-corner {
         display: flex; align-items: center; gap: 8px;
@@ -170,7 +163,7 @@
         background-color: #333; color: white; border: 2px solid #555; padding: 15px 40px;
         font-size: 1.5em; font-family: 'TT Hoves Pro Trial', sans-serif; border-radius: 5px;
         margin: 0 20px;
-        cursor: default;
+        cursor: pointer;
         transition: transform 0.2s ease, background-color 0.2s ease;
     }
     .exit-buttons button:focus {
@@ -200,7 +193,7 @@
     <div id="remote-control">
         <span id="btn-up" class="remote-btn material-symbols-outlined">keyboard_arrow_up</span>
         <span id="btn-left" class="remote-btn material-symbols-outlined">keyboard_arrow_left</span>
-        <span id="btn-ok" class="remote-btn material-symbols-outlined">circle</span>
+        <span id="btn-ok" class="remote-btn material-symbols-outlined">check</span>
         <span id="btn-right" class="remote-btn material-symbols-outlined">keyboard_arrow_right</span>
         <span id="btn-down" class="remote-btn material-symbols-outlined">keyboard_arrow_down</span>
     </div>
@@ -259,6 +252,8 @@
 
                 document.addEventListener('keydown', handleKeyDown);
                 document.addEventListener('keyup', handleKeyUp);
+                
+                setupRemoteClickListeners();
 
                 populateChannelList();
                 updateTimeDate();
@@ -277,6 +272,23 @@
             await loadChannel(channelList[currentChannelIndex]);
             showAndHideInfo();
         }
+        
+        function simulateKeyPress(keyCode) {
+            const event = new KeyboardEvent('keydown', {
+                keyCode: keyCode,
+                bubbles: true
+            });
+            document.dispatchEvent(event);
+        }
+
+        function setupRemoteClickListeners() {
+            document.getElementById('btn-up').addEventListener('click', () => simulateKeyPress(38));
+            document.getElementById('btn-down').addEventListener('click', () => simulateKeyPress(40));
+            document.getElementById('btn-left').addEventListener('click', () => simulateKeyPress(37));
+            document.getElementById('btn-right').addEventListener('click', () => simulateKeyPress(39));
+            document.getElementById('btn-ok').addEventListener('click', () => simulateKeyPress(13));
+        }
+
 
         async function loadChannel(channel) {
             if (!channel) return;
@@ -306,7 +318,6 @@
             liveplayLogo.classList.add('show');
             channelInfo.classList.add('show');
             liveIndicatorCorner.classList.add('show');
-            // --- MODIFIED: Removed remoteControl from the fade logic ---
             clearTimeout(infoTimeout);
             infoTimeout = setTimeout(() => {
                 fadeOverlay.classList.remove('show');
@@ -331,9 +342,8 @@
                     case 38: currentFocusIndex = Math.max(0, currentFocusIndex - 1); updateFocus(); break;
                     case 40: currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1); updateFocus(); break;
                     case 13: selectChannelFromList(); break;
-                    case 39:
-                    case 37:
-                    case 8:
+                    case 39: // Arrow Right
+                    case 8:  // Back
                     case 461:
                     case 10009:
                          hideSidebar();
@@ -344,6 +354,7 @@
                     case 427: case 38: handleChannelChangeStart(1); break;
                     case 428: case 40: handleChannelChangeStart(-1); break;
                     case 37: showSidebar(); break;
+                    case 13: showAndHideInfo(); break;
                     case 8: case 461: case 10009: showExitPopup(); break;
                 }
             }
@@ -385,6 +396,10 @@
                 const li = document.createElement('li');
                 li.dataset.index = index;
                 li.innerHTML = `<span>${channel.name}</span><span class="sidebar-live-icon"><span class="material-symbols-outlined">sensors</span></span>`;
+                li.addEventListener('click', () => {
+                    currentFocusIndex = index;
+                    selectChannelFromList();
+                });
                 channelListContainer.appendChild(li);
             });
         }
@@ -427,8 +442,6 @@
             const date = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
             timeDateElement.textContent = `${date}, ${time}`;
         }
-
-
 
         function showExitPopup() {
             isExitPopupActive = true;
