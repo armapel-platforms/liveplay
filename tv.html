@@ -37,14 +37,15 @@
             z-index: 2; pointer-events: none; opacity: 0; transition: opacity 0.5s ease-in-out;
         }
         #fade-overlay.show { opacity: 1; }
-        #liveplay-logo, #channel-info, #live-indicator-corner, #remote-control {
+        #liveplay-logo, #channel-info, #live-indicator-corner {
             position: absolute;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        }
-        #liveplay-logo, #channel-info, #live-indicator-corner {
             z-index: 3;
+        }
+        #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show { 
+            opacity: 1; 
         }
         #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 700; }
         #channel-info { left: 50px; bottom: 40px; }
@@ -82,11 +83,17 @@
         #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
         
         #remote-control {
+            position: absolute;
             bottom: 120px; right: 50px; display: grid;
             grid-template-areas: ". up ." "left ok right" ". down .";
             gap: 6px; background-color: rgba(25, 25, 25, 0.7);
             padding: 8px; border-radius: 12px;
             z-index: 5;
+            opacity: 0.4;
+            transition: opacity 0.2s ease-in-out;
+        }
+        #remote-control:hover {
+            opacity: 1;
         }
 
         .remote-btn {
