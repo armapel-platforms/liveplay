@@ -70,14 +70,13 @@
         pointer-events: auto;
     }
     
-    /* --- NEW: Click overlay to reliably catch screen clicks --- */
     #click-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: 4; /* Higher than UI, lower than sidebar */
+        z-index: 4;
         cursor: pointer;
     }
 
@@ -191,11 +190,12 @@
         <ul id="channel-list-container"></ul>
     </div>
 
-    <!-- NEW: This div is the new target for screen clicks -->
     <div id="click-overlay"></div>
 
     <div id="fade-overlay"></div>
     <div id="video-container"><video id="video" poster="" autoplay></video></div>
+
+    <div id="liveplay-logo">liveplay</div>
 
     <div id="channel-info">
         <h1 id="channel-name">Loading...</h1>
@@ -238,7 +238,6 @@
         const channelChangeSpeed = 200;
 
         const video = document.getElementById('video');
-        // --- MODIFIED: Get the new click overlay element ---
         const clickOverlay = document.getElementById('click-overlay');
         const fadeOverlay = document.getElementById('fade-overlay');
         const liveplayLogo = document.getElementById('liveplay-logo');
@@ -268,7 +267,6 @@
                 document.addEventListener('keydown', handleKeyDown);
                 document.addEventListener('keyup', handleKeyUp);
                 
-                // --- MODIFIED: The click listener is now on the reliable overlay ---
                 clickOverlay.addEventListener('click', showAndHideInfo);
                 
                 setupRemoteClickListeners();
