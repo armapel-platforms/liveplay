@@ -269,7 +269,10 @@ header.subpage-header h1 {
 .slide-overlay { 
     position: absolute; 
     inset: 0;
-    background: radial-gradient(circle at top right, transparent 35%, black 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    mask-image: radial-gradient(circle at top right, transparent, black 50%);
+    -webkit-mask-image: radial-gradient(circle at top right, transparent, black 50%);
 }
 
 .slide-content { 
