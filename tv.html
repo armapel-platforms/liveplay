@@ -10,7 +10,7 @@
             const isTvDevice = /TV|Tizen|Web0S|Bravia|Viera|SMART-TV|SmartTV|AppleTV|GoogleTV|Roku|CrKey|AFT/i.test(userAgent);
 
             if (!isTvDevice) {
-                window.location.href = '/404';
+                // window.location.href = '/404';
             }
         })();
     </script>
@@ -28,22 +28,21 @@
         margin: 0; padding: 0; width: 100%; height: 100%;
         background-color: #000; color: #fff;
         font-family: 'TT Hoves Pro Trial', sans-serif;
-        overflow: hidden; user-select: none; 
+        overflow: hidden; user-select: none;
         cursor: none;
-        pointer-events: none;
     }
-    
+
     #video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
     video { width: 100%; height: 100%; }
 
     #fade-overlay {
-        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 75%, rgba(0,0,0,0.9) 100%);
         z-index: 2; pointer-events: none; opacity: 0; transition: opacity 0.5s ease-in-out;
     }
     #fade-overlay.show { opacity: 1; }
 
-    #liveplay-logo, #channel-info, #live-indicator-corner {
+    #liveplay-logo, #channel-info, #live-indicator-corner, #remote-control {
         position: absolute;
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
@@ -52,8 +51,8 @@
     }
     #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 600; }
     #channel-info { left: 50px; bottom: 40px; }
-    #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show { opacity: 1; }
-    
+    #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show, #remote-control.show { opacity: 1; }
+
     #channel-name { font-size: 3em; margin: 0; }
     #channel-category { font-size: 1.5em; margin: 5px 0 0 0; color: #ccc; }
 
@@ -64,9 +63,9 @@
         z-index: 50; display: flex; flex-direction: column;
         transform: translateX(-100%); transition: transform 0.3s ease-in-out;
     }
-    
-    #sidebar.show { 
-        transform: translateX(0); 
+
+    #sidebar.show {
+        transform: translateX(0);
         pointer-events: auto;
     }
 
@@ -83,7 +82,7 @@
     #channel-list-container::-webkit-scrollbar { width: 8px; }
     #channel-list-container::-webkit-scrollbar-track { background: #222; }
     #channel-list-container::-webkit-scrollbar-thumb { background-color: #555; border-radius: 6px; }
-    
+
     #channel-list-container li {
         display: flex; justify-content: space-between; align-items: center;
         padding: 20px 30px; font-size: 1.4em; border-bottom: 1px solid #222;
@@ -91,11 +90,56 @@
         cursor: default;
     }
     #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
-    
+
+    #remote-control {
+        top: 40px;
+        right: 50px;
+        display: grid;
+        grid-template-areas:
+            ". up ."
+            "left ok right"
+            ". down .";
+        gap: 6px;
+        background-color: rgba(25, 25, 25, 0.7);
+        padding: 8px;
+        border-radius: 12px;
+        pointer-events: none;
+    }
+
+    .remote-btn {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(80, 80, 80, 0.6);
+        border-radius: 50%;
+        font-size: 24px; /* Default size for all icons */
+    }
+        
+    .remote-btn .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+        
+    #btn-up { grid-area: up; }
+    #btn-down { grid-area: down; }
+    #btn-left { grid-area: left; }
+    #btn-right { grid-area: right; }
+    #btn-ok {
+        grid-area: ok;
+        background-color: rgba(120, 120, 120, 0.7);
+    }
+
+
     #live-indicator-corner {
         display: flex; align-items: center; gap: 8px;
         color: #ff4d00; font-weight: 200; font-size: 1.5rem;
-        bottom: 40px; right: 50px;
+        top: 180px;
+        right: 50px;
     }
     .sidebar-live-icon { color: #ff4d00; }
     #channel-list-container li.focused .sidebar-live-icon { color: #fff; }
@@ -107,10 +151,10 @@
         display: flex; align-items: center; justify-content: center; z-index: 100;
         opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
     }
-    
-    #exit-popup-overlay.show { 
-        opacity: 1; 
-        pointer-events: auto; 
+
+    #exit-popup-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .exit-popup {
@@ -121,7 +165,7 @@
     .exit-buttons button {
         background-color: #333; color: white; border: 2px solid #555; padding: 15px 40px;
         font-size: 1.5em; font-family: 'TT Hoves Pro Trial', sans-serif; border-radius: 5px;
-        margin: 0 20px; 
+        margin: 0 20px;
         cursor: default;
         transition: transform 0.2s ease, background-color 0.2s ease;
     }
@@ -149,6 +193,14 @@
         <p id="channel-category"></p>
     </div>
 
+    <div id="remote-control">
+        <span id="btn-up" class="remote-btn material-symbols-outlined">keyboard_arrow_up</span>
+        <span id="btn-left" class="remote-btn material-symbols-outlined">keyboard_arrow_left</span>
+        <span id="btn-ok" class="remote-btn material-symbols-outlined">circle</span>
+        <span id="btn-right" class="remote-btn material-symbols-outlined">keyboard_arrow_right</span>
+        <span id="btn-down" class="remote-btn material-symbols-outlined">keyboard_arrow_down</span>
+    </div>
+
     <div id="live-indicator-corner">
         <span class="material-symbols-outlined">sensors</span> LIVE
     </div>
@@ -163,7 +215,7 @@
         </div>
     </div>
 
-            <script>
+    <script>
         let channelList = [];
         let currentChannelIndex = 0;
         let infoTimeout;
@@ -171,23 +223,19 @@
         let isSidebarActive = false;
         let currentFocusIndex = 0;
 
-        // --- Timers and Flags for Long Press ---
-        let playLongPressTimer;
-        let isPlayKeyDown = false;
-        const playLongPressDuration = 750; // Hold 'Play' for 750ms to show sidebar
-
         let channelChangeInterval;
         let isChannelKeyDown = false;
-        const channelChangeDelay = 500; // Wait 500ms before starting rapid change
-        const channelChangeSpeed = 200; // Change channel every 200ms after that
+        const channelChangeDelay = 500;
+        const channelChangeSpeed = 200;
 
         const video = document.getElementById('video');
         const fadeOverlay = document.getElementById('fade-overlay');
-        const liveplayLogo = document.getElementById('live-play-logo');
+        const liveplayLogo = document.getElementById('liveplay-logo');
         const channelInfo = document.getElementById('channel-info');
         const channelName = document.getElementById('channel-name');
         const channelCategory = document.getElementById('channel-category');
         const liveIndicatorCorner = document.getElementById('live-indicator-corner');
+        const remoteControl = document.getElementById('remote-control');
         const exitPopupOverlay = document.getElementById('exit-popup-overlay');
         const exitConfirmBtn = document.getElementById('exit-confirm-btn');
         const exitCancelBtn = document.getElementById('exit-cancel-btn');
@@ -208,9 +256,6 @@
 
                 document.addEventListener('keydown', handleKeyDown);
                 document.addEventListener('keyup', handleKeyUp);
-
-                exitConfirmBtn.addEventListener('click', handleExitConfirm);
-                exitCancelBtn.addEventListener('click', handleExitCancel);
 
                 populateChannelList();
                 updateTimeDate();
@@ -258,78 +303,67 @@
             liveplayLogo.classList.add('show');
             channelInfo.classList.add('show');
             liveIndicatorCorner.classList.add('show');
+            remoteControl.classList.add('show');
             clearTimeout(infoTimeout);
             infoTimeout = setTimeout(() => {
                 fadeOverlay.classList.remove('show');
                 liveplayLogo.classList.remove('show');
                 channelInfo.classList.remove('show');
                 liveIndicatorCorner.classList.remove('show');
+                remoteControl.classList.remove('show');
             }, 4000);
         }
-        
+
         function handleKeyDown(event) {
-            if (event.repeat) return; // Ignore repeating keydown events
+            if (event.repeat && event.keyCode !== 38 && event.keyCode !== 40) return;
             event.preventDefault();
 
             if (isExitPopupActive) {
                 const currentFocus = document.activeElement;
-                if (event.keyCode === 37) { if (currentFocus === exitConfirmBtn) exitCancelBtn.focus(); } 
-                else if (event.keyCode === 39) { if (currentFocus === exitCancelBtn) exitConfirmBtn.focus(); } 
-                else if (event.keyCode === 13) { currentFocus.click(); } 
+                if (event.keyCode === 37) { if (currentFocus === exitConfirmBtn) exitCancelBtn.focus(); }
+                else if (event.keyCode === 39) { if (currentFocus === exitCancelBtn) exitConfirmBtn.focus(); }
+                else if (event.keyCode === 13) { currentFocus.click(); }
                 else if (event.keyCode === 8 || event.keyCode === 461 || event.keyCode === 10009) { handleExitCancel(); }
             } else if (isSidebarActive) {
                 switch (event.keyCode) {
                     case 38: currentFocusIndex = Math.max(0, currentFocusIndex - 1); updateFocus(); break;
                     case 40: currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1); updateFocus(); break;
                     case 13: selectChannelFromList(); break;
-                    case 37: case 8: case 461: case 10009: hideSidebar(); break;
+                    case 39: // Arrow Right
+                    case 37: // Arrow Left
+                    case 8:  // Back
+                    case 461:
+                    case 10009:
+                         hideSidebar();
+                         break;
                 }
             } else {
                 switch (event.keyCode) {
-                    case 427: // Channel Up
-                    case 38:  // Arrow Up
-                        handleChannelChangeStart(1);
-                        break;
-                    case 428: // Channel Down
-                    case 40:  // Arrow Down
-                        handleChannelChangeStart(-1);
-                        break;
-                    case 8: case 461: case 10009: // Back
-                        showExitPopup(); 
-                        break;
-                    case 415: // Play button
-                        isPlayKeyDown = true;
-                        playLongPressTimer = setTimeout(() => {
-                            if (isPlayKeyDown) showSidebar();
-                        }, playLongPressDuration);
-                        break;
+                    case 427: case 38: handleChannelChangeStart(1); break;
+                    case 428: case 40: handleChannelChangeStart(-1); break;
+                    case 37: showSidebar(); break;
+                    case 8: case 461: case 10009: showExitPopup(); break;
                 }
             }
         }
 
         function handleKeyUp(event) {
-            isPlayKeyDown = false;
             isChannelKeyDown = false;
-
             switch(event.keyCode) {
-                case 415: // Play button
-                    clearTimeout(playLongPressTimer);
-                    break;
-                case 427: case 38: // Channel Up / Arrow Up
-                case 428: case 40: // Channel Down / Arrow Down
+                case 427: case 38:
+                case 428: case 40:
                     clearInterval(channelChangeInterval);
                     break;
             }
         }
 
         function handleChannelChangeStart(direction) {
+            if (isChannelKeyDown) return;
             isChannelKeyDown = true;
-            // 1. Change channel once immediately on first press
             changeChannel(direction);
 
-            // 2. After a delay, start the rapid-change interval
             setTimeout(() => {
-                if (isChannelKeyDown) { // Check if the key is still being held
+                if (isChannelKeyDown) {
                     channelChangeInterval = setInterval(() => {
                         changeChannel(direction);
                     }, channelChangeSpeed);
@@ -391,7 +425,7 @@
             const date = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
             timeDateElement.textContent = `${date}, ${time}`;
         }
-        
+
         function showExitPopup() {
             isExitPopupActive = true;
             exitPopupOverlay.classList.add('show');
