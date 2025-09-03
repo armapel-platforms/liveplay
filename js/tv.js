@@ -1,10 +1,9 @@
-        let channelList = [];
+       let channelList = [];
         let currentChannelIndex = 0;
         let infoTimeout;
         let isExitPopupActive = false;
         let isSidebarActive = false;
         let currentFocusIndex = 0;
-        let isChannelKeyDown = false;
         const video = document.getElementById('video');
         const clickOverlay = document.getElementById('click-overlay');
         const fadeOverlay = document.getElementById('fade-overlay');
@@ -22,6 +21,11 @@
         const timeDateElement = document.getElementById('time-date');
         let player;
 
+        let scrollTimeout;
+        let scrollInterval;
+        const scrollDelay = 400;
+        const scrollSpeed = 100;
+
         async function init() {
             try {
                 const response = await fetch('/api/getChannels.js');
@@ -37,7 +41,6 @@
                 else console.error('Browser not supported!');
 
                 document.addEventListener('keydown', handleKeyDown);
-                document.addEventListener('keyup', handleKeyUp);
                 clickOverlay.addEventListener('click', showAndHideInfo);
                 setupRemoteClickListeners();
                 populateChannelList();
@@ -58,28 +61,56 @@
             showAndHideInfo();
         }
         
+        function moveFocus(direction) {
+            if (direction === 1) { 
+                currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1);
+            } else {
+                currentFocusIndex = Math.max(0, currentFocusIndex - 1);
+            }
+            updateFocus();
+        }
+
+        function startScrolling(direction) {
+            stopScrolling();
+            moveFocus(direction);
+
+            scrollTimeout = setTimeout(() => {
+                scrollInterval = setInterval(() => {
+                    moveFocus(direction);
+                }, scrollSpeed);
+            }, scrollDelay);
+        }
+
+        function stopScrolling() {
+            clearTimeout(scrollTimeout);
+            clearInterval(scrollInterval);
+        }
+
         function setupRemoteClickListeners() {
-            document.getElementById('btn-up').addEventListener('click', () => {
+            const btnUp = document.getElementById('btn-up');
+            const btnDown = document.getElementById('btn-down');
+            btnUp.addEventListener('mousedown', () => {
                 if (isSidebarActive) {
-                    currentFocusIndex = Math.max(0, currentFocusIndex - 1);
-                    updateFocus();
+                    startScrolling(-1);
                 } else {
                     changeChannel(1);
                 }
             });
 
-            document.getElementById('btn-down').addEventListener('click', () => {
+            btnDown.addEventListener('mousedown', () => {
                 if (isSidebarActive) {
-                    currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1);
-                    updateFocus();
+                    startScrolling(1);
                 } else {
                     changeChannel(-1);
                 }
             });
 
+            btnUp.addEventListener('mouseup', stopScrolling);
+            btnUp.addEventListener('mouseleave', stopScrolling);
+            btnDown.addEventListener('mouseup', stopScrolling);
+            btnDown.addEventListener('mouseleave', stopScrolling);
             document.getElementById('btn-left').addEventListener('click', showSidebar);
             document.getElementById('btn-right').addEventListener('click', hideSidebar);
-
             document.getElementById('btn-ok').addEventListener('click', () => {
                 if (isSidebarActive) {
                     selectChannelFromList();
@@ -104,6 +135,7 @@
 
                 player.configure('drm.clearKeys', streamData.clearKey || {});
                 await player.load(streamData.manifestUri);
+                
                 video.play();
 
             } catch (error) {
@@ -151,13 +183,11 @@
                 }
             } else {
                 switch (event.keyCode) {
+                    case 37: showSidebar(); break;
+                    case 13: showAndHideInfo(); break;
                     case 8: case 461: case 10009: showExitPopup(); break;
                 }
             }
-        }
-
-        function handleKeyUp(event) {
-            isChannelKeyDown = false;
         }
         
         function changeChannel(direction) {
