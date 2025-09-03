@@ -15,15 +15,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         target.appendChild(circle);
     };
 
-    const staticRippleElements = document.querySelectorAll('.icon-link, #minimized-player, .back-link, .video-player-container');
+    const staticRippleElements = document.querySelectorAll('.icon-link, #minimized-player, .back-link');
     staticRippleElements.forEach(elem => elem.addEventListener("click", createRipple));
 
     const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
     let streamsData = [];
+    const videoElement = document.getElementById('video-player');
+    const playerWrapper = document.getElementById('video-player-wrapper');
     const authPopup = document.getElementById('auth-popup-overlay');
     const closePopupBtn = document.getElementById('close-popup');
+    let player = null;
+    let ui = null;
     let currentUser = null;
 
     const playerView = document.getElementById('player-view');
@@ -33,13 +37,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     let activeStream = null;
 
     const isDesktop = () => window.innerWidth >= 1024;
-    const getPoster = () => isDesktop() ? '/logo/desktop-poster.png' : '/logo/attention.png';
+
+    const setVideoPoster = () => {
+        if (!videoElement) return;
+        if (isDesktop()) {
+            videoElement.poster = '/logo/desktop-poster.png';
+        } else {
+            videoElement.poster = '/logo/attention.png';
+        }
+    };
 
     const setupLayout = () => {
         if (isDesktop()) {
             if (playerView) playerView.classList.add('active');
             if (minimizeBtn) minimizeBtn.style.display = 'none';
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+
         } else {
             if (minimizeBtn) minimizeBtn.style.display = 'flex';
             if (!activeStream && playerView) {
@@ -48,8 +61,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    setVideoPoster();
     setupLayout(); 
-    window.addEventListener('resize', setupLayout);
+    window.addEventListener('resize', () => {
+        setVideoPoster();
+        setupLayout();
+    });
 
     if (document.getElementById('featured-slider')) {
         window.addEventListener('scroll', () => {
@@ -74,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <li><a href="/home/login"><span class="material-symbols-outlined">login</span> Log In / Sign Up</a></li>
                 </ul>`;
         }
-        menuContent += `
+                menuContent += `
             <ul>
                 <li><a href="/home/about-us"><span class="material-symbols-outlined">info</span> About Us</a></li>
                 <li><a href="/home/faq"><span class="material-symbols-outlined">quiz</span> FAQ</a></li>
@@ -237,76 +254,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    const initPlayer = () => {
-        const playerInstance = jwplayer('video-player').setup({
-            image: getPoster(),
-            width: "100%",
-            height: "100%",
-            stretching: "uniform",
-        });
-        playerInstance.on('error', (event) => {
-            console.error('--- FATAL PLAYER ERROR [RUNTIME] ---', event);
-        });
+    const initPlayer = async () => {
+        shaka.polyfill.installAll();
+        if (shaka.Player.isBrowserSupported()) {
+            player = new shaka.Player(videoElement);
+            ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
+            ui.getControls();
+            player.addEventListener('error', onError);
+        } else { console.error('Browser not supported!'); }
     };
 
-    const openPlayer = async (stream) => {
-        console.log("INFO: Attempting to play stream:", stream);
+    const onError = (event) => console.error('Player Error', event.detail);
 
+    const openPlayer = async (stream) => {
         const youtubePlayer = document.getElementById('youtube-player');
-        const jwPlayerContainer = document.getElementById('video-player');
         activeStream = stream;
 
         if (stream.type === 'youtube') {
-            console.log("INFO: Stream type is YouTube. Stopping JW Player and showing YouTube iframe.");
-            jwplayer('video-player').stop();
-            jwPlayerContainer.style.display = 'none';
-            youtubePlayer.src = stream.embedUrl;
-            youtubePlayer.style.display = 'block';
+            if (player) await player.unload();
+            if (ui) ui.setEnabled(false);
+            if (videoElement) videoElement.style.display = 'none';
+            if (youtubePlayer) {
+                youtubePlayer.src = stream.embedUrl;
+                youtubePlayer.style.display = 'block';
+            }
         } else {
-            console.log("INFO: Stream type is not YouTube. Preparing JW Player.");
-            youtubePlayer.style.display = 'none';
-            youtubePlayer.src = '';
-            jwPlayerContainer.style.display = 'block';
+            if (youtubePlayer) {
+                youtubePlayer.style.display = 'none';
+                youtubePlayer.src = '';
+            }
+            if (videoElement) videoElement.style.display = 'block';
             
+            if (!player) await initPlayer();
+            if (ui) ui.setEnabled(true);
+
             try {
-                console.log(`INFO: Fetching stream data from API for: ${stream.name}`);
                 const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
-                
-                console.log("INFO: API Response Status:", response.status);
-                if (!response.ok) {
-                    throw new Error(`API call failed for ${stream.name}. Status: ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error(`Stream data not found for ${stream.name}.`);
                 const secureData = await response.json();
-                console.log("INFO: Received secure data from API:", secureData);
 
-                if (!secureData || !secureData.manifestUri) {
-                    throw new Error("API response is missing the 'manifestUri' property.");
-                }
-                
-                const playlistItem = {
-                    file: secureData.manifestUri,
-                    image: stream.logo,
-                    type: stream.type === 'mpegdash' ? 'dash' : 'hls'
-                };
-                
-                console.log("INFO: Constructed this playlist item for JW Player:", playlistItem);
-
-                if (secureData.clearKey && Object.keys(secureData.clearKey).length > 0) {
-                    console.log("INFO: DRM ClearKey found. Adding to playlist item.");
-                    playlistItem.drm = { "widevine": { "clearkeys": secureData.clearKey } };
-                }
-                
-                console.log("INFO: Loading playlist into JW Player...");
-                jwplayer('video-player').load([playlistItem]);
-                jwplayer('video-player').play(true);
-                console.log("SUCCESS: Play command issued to JW Player.");
-
+                player.configure({ drm: { clearKeys: secureData.clearKey || {} } });
+                await player.load(secureData.manifestUri);
+                videoElement.play();
             } catch (e) {
-                console.error('--- FATAL PLAYER ERROR [SETUP] ---', e);
+                console.error('Player Error', e);
+                onError(e);
             }
         }
-
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         
@@ -318,8 +312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (playerView) playerView.classList.add('active');
         }
     };
-    
-    // --- THIS SECTION WAS LIKELY DELETED ---
+
     const minimizePlayer = () => {
         if (isDesktop()) return;
         if (playerView && playerView.classList.contains('active')) {
@@ -336,22 +329,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             minimizedPlayer.classList.remove('active');
             if (playerView) playerView.classList.add('active');
             if (activeStream && activeStream.type !== 'youtube') {
-                 jwplayer('video-player').play();
+                 if (videoElement) videoElement.play();
             }
         }
     };
 
-    const closePlayer = (e) => {
+    const closePlayer = async (e) => {
         e.stopPropagation();
-        
-        const youtubePlayer = document.getElementById('youtube-player');
-        youtubePlayer.src = '';
-        youtubePlayer.style.display = 'none';
-        
-        document.getElementById('video-player').style.display = 'block';
-        jwplayer('video-player').stop();
-        initPlayer();
 
+        const youtubePlayer = document.getElementById('youtube-player');
+        if (youtubePlayer) {
+            youtubePlayer.src = '';
+            youtubePlayer.style.display = 'none';
+        }
+        if (videoElement) videoElement.style.display = 'block';
+        if (ui) ui.setEnabled(false);
+        if (player) {
+            await player.unload();
+            setVideoPoster();
+        }
         activeStream = null;
         history.pushState({}, '', '/home');
 
@@ -363,12 +359,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (minimizedPlayer) minimizedPlayer.classList.remove('active');
         }
     };
-    // --- END OF MISSING SECTION ---
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
     
-    initPlayer();
     await initializePage();
 });
