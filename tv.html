@@ -10,7 +10,7 @@
             const isTvDevice = /TV|Tizen|Web0S|Bravia|Viera|SMART-TV|SmartTV|AppleTV|GoogleTV|Roku|CrKey|AFT/i.test(userAgent);
 
             if (!isTvDevice) {
-                window.location.href = '/404';
+                // window.location.href = '/404';
             }
         })();
     </script>
@@ -34,7 +34,6 @@
 
     #video-container {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
-        cursor: pointer;
     }
     video { width: 100%; height: 100%; }
 
@@ -51,7 +50,6 @@
         transition: opacity 0.5s ease-in-out;
         z-index: 3;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        /* --- FIX: All UI containers are now transparent to clicks by default --- */
         pointer-events: none;
     }
     #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 600; }
@@ -72,6 +70,17 @@
     #sidebar.show {
         transform: translateX(0);
         pointer-events: auto;
+    }
+    
+    /* --- NEW: Click overlay to reliably catch screen clicks --- */
+    #click-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 4; /* Higher than UI, lower than sidebar */
+        cursor: pointer;
     }
 
     .sidebar-header {
@@ -109,7 +118,6 @@
         padding: 8px;
         border-radius: 12px;
     }
-    /* --- REMOVED: No longer need to toggle pointer-events on the container --- */
 
     .remote-btn {
         width: 35px;
@@ -122,7 +130,6 @@
         font-size: 24px;
         cursor: pointer;
         transition: background-color 0.2s ease;
-        /* --- FIX: Only the buttons themselves are clickable --- */
         pointer-events: auto;
     }
     .remote-btn:hover {
@@ -186,6 +193,9 @@
         <ul id="channel-list-container"></ul>
     </div>
 
+    <!-- NEW: This div is the new target for screen clicks -->
+    <div id="click-overlay"></div>
+
     <div id="fade-overlay"></div>
     <div id="video-container"><video id="video" poster="" autoplay></video></div>
 
@@ -230,7 +240,8 @@
         const channelChangeSpeed = 200;
 
         const video = document.getElementById('video');
-        const videoContainer = document.getElementById('video-container');
+        // --- MODIFIED: Get the new click overlay element ---
+        const clickOverlay = document.getElementById('click-overlay');
         const fadeOverlay = document.getElementById('fade-overlay');
         const liveplayLogo = document.getElementById('liveplay-logo');
         const channelInfo = document.getElementById('channel-info');
@@ -259,7 +270,8 @@
                 document.addEventListener('keydown', handleKeyDown);
                 document.addEventListener('keyup', handleKeyUp);
                 
-                videoContainer.addEventListener('click', showAndHideInfo);
+                // --- MODIFIED: The click listener is now on the reliable overlay ---
+                clickOverlay.addEventListener('click', showAndHideInfo);
                 
                 setupRemoteClickListeners();
 
@@ -287,9 +299,6 @@
         }
 
         function setupRemoteClickListeners() {
-            // Clicks on buttons will perform their action AND the click will bubble up...
-            // ...to the videoContainer, which correctly resets the fade-out timer.
-            // This is the desired behavior, so no event.stopPropagation() is needed.
             document.getElementById('btn-up').addEventListener('click', () => simulateKeyPress(38));
             document.getElementById('btn-down').addEventListener('click', () => simulateKeyPress(40));
             document.getElementById('btn-left').addEventListener('click', () => simulateKeyPress(37));
@@ -421,6 +430,8 @@
             sidebar.classList.add('show');
             updateFocus();
         }
+
+
 
         function hideSidebar() {
             isSidebarActive = false;
