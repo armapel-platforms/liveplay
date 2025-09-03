@@ -47,6 +47,9 @@ let channelList = [];
                 populateChannelList();
                 updateTimeDate();
                 setInterval(updateTimeDate, 1000);
+                
+                exitConfirmBtn.addEventListener('click', handleExitConfirm);
+                exitCancelBtn.addEventListener('click', handleExitCancel);
 
             } catch (error) {
                 console.error("Failed to initialize app:", error);
@@ -98,32 +101,44 @@ let channelList = [];
         function setupRemoteClickListeners() {
             const btnUp = document.getElementById('btn-up');
             const btnDown = document.getElementById('btn-down');
+            const btnLeft = document.getElementById('btn-left');
+            const btnRight = document.getElementById('btn-right');
+            const btnOk = document.getElementById('btn-ok');
 
             btnUp.addEventListener('mousedown', () => {
-                if (isSidebarActive) {
-                    startScrolling(-1);
-                } else {
-                    changeChannel(1);
-                }
+                if (isExitPopupActive) return;
+                if (isSidebarActive) { startScrolling(-1); } else { changeChannel(1); }
             });
-
-            btnDown.addEventListener('mousedown', () => {
-                if (isSidebarActive) {
-                    startScrolling(1);
-                } else {
-                    changeChannel(-1);
-                }
-            });
-
             btnUp.addEventListener('mouseup', stopScrolling);
             btnUp.addEventListener('mouseleave', stopScrolling);
+
+            btnDown.addEventListener('mousedown', () => {
+                if (isExitPopupActive) return;
+                if (isSidebarActive) { startScrolling(1); } else { changeChannel(-1); }
+            });
             btnDown.addEventListener('mouseup', stopScrolling);
             btnDown.addEventListener('mouseleave', stopScrolling);
-            document.getElementById('btn-left').addEventListener('click', toggleSidebar);
-            document.getElementById('btn-right').addEventListener('click', showExitPopup);
+            
+            btnLeft.addEventListener('click', () => {
+                if (isExitPopupActive) {
+                    exitCancelBtn.focus();
+                } else {
+                    toggleSidebar();
+                }
+            });
 
-            document.getElementById('btn-ok').addEventListener('click', () => {
-                if (isSidebarActive) {
+            btnRight.addEventListener('click', () => {
+                if (isExitPopupActive) {
+                    exitConfirmBtn.focus();
+                } else {
+                    showExitPopup();
+                }
+            });
+
+            btnOk.addEventListener('click', () => {
+                if (isExitPopupActive) {
+                    document.activeElement.click();
+                } else if (isSidebarActive) {
                     selectChannelFromList();
                 } else {
                     showAndHideInfo();
@@ -181,44 +196,29 @@ let channelList = [];
 
             if (isExitPopupActive) {
                 const currentFocus = document.activeElement;
-                if (event.keyCode === 37) { if (currentFocus === exitConfirmBtn) exitCancelBtn.focus(); }
-                else if (event.keyCode === 39) { if (currentFocus === exitCancelBtn) exitConfirmBtn.focus(); }
-                else if (event.keyCode === 13) { currentFocus.click(); }
-                else if (event.keyCode === 8 || event.keyCode === 461 || event.keyCode === 10009) { handleExitCancel(); }
+                if (event.keyCode === 37) {
+                    if (currentFocus === exitConfirmBtn) exitCancelBtn.focus();
+                } else if (event.keyCode === 39) {
+                    if (currentFocus === exitCancelBtn) exitConfirmBtn.focus();
+                } else if (event.keyCode === 13) {
+                    currentFocus.click();
+                } else if (event.keyCode === 8 || event.keyCode === 461 || event.keyCode === 10009) {
+                    handleExitCancel();
+                }
             } else if (isSidebarActive) {
                 switch (event.keyCode) {
-                    case 37:
-                        hideSidebar();
-                        break;
-                    case 38: 
-                        currentFocusIndex = Math.max(0, currentFocusIndex - 1);
-                        updateFocus();
-                        break;
-                    case 40: 
-                        currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1);
-                        updateFocus();
-                        break;
-                    case 13:
-                        selectChannelFromList();
-                        break;
-                    case 8: case 461: case 10009:
-                         hideSidebar();
-                         break;
+                    case 37: hideSidebar(); break;
+                    case 38: moveFocus(-1); break;
+                    case 40: moveFocus(1); break;
+                    case 13: selectChannelFromList(); break;
+                    case 8: case 461: case 10009: hideSidebar(); break;
                 }
             } else {
                 switch (event.keyCode) {
-                    case 37:
-                        showSidebar();
-                        break;
-                    case 39:
-                        showExitPopup();
-                        break;
-                    case 13:
-                        showAndHideInfo();
-                        break;
-                    case 8: case 461: case 10009:
-                        showExitPopup();
-                        break;
+                    case 37: toggleSidebar(); break;
+                    case 39: showExitPopup(); break;
+                    case 13: showAndHideInfo(); break;
+                    case 8: case 461: case 10009: showExitPopup(); break;
                 }
             }
         }
@@ -285,16 +285,22 @@ let channelList = [];
         function showExitPopup() {
             isExitPopupActive = true;
             exitPopupOverlay.classList.add('show');
+            remoteControl.classList.add('on-top');
             exitCancelBtn.focus();
         }
 
         function hideExitPopup() {
             isExitPopupActive = false;
             exitPopupOverlay.classList.remove('show');
+            remoteControl.classList.remove('on-top');
         }
 
-        function handleExitConfirm() { window.close(); }
-        function handleExitCancel() { hideExitPopup(); }
+        function handleExitConfirm() { 
+            window.location.href = 'about:blank'; 
+        }
+        function handleExitCancel() { 
+            hideExitPopup(); 
+        }
         function onErrorEvent(event) { onError(event.detail); }
         function onError(error) { console.error('Shaka Player Error:', error.code, 'object', error); }
 
