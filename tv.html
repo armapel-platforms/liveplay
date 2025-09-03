@@ -41,14 +41,16 @@
             position: absolute;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
-            z-index: 3;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
         }
-        #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 800; }
+        #liveplay-logo, #channel-info, #live-indicator-corner {
+            z-index: 3;
+        }
+        #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 600; }
         #channel-info { left: 50px; bottom: 40px; }
         #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show, #remote-control.show { opacity: 1; }
-        #channel-name { font-size: 3em; margin: 0; }
-        #channel-category { font-size: 1.5em; margin: 5px 0 0 0; color: #ccc; }
+        #channel-name { font-size: 2.5em; margin: 0; }
+        #channel-category { font-size: 1.0em; margin: 3px 0 0 0; color: #ccc; }
         #sidebar {
             position: fixed; top: 0; left: 0; width: 420px; height: 100%;
             background-color: rgba(10, 10, 10, 0.9);  backdrop-filter: blur(20px);
@@ -78,12 +80,15 @@
             cursor: pointer;
         }
         #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
+        
         #remote-control {
             bottom: 120px; right: 50px; display: grid;
             grid-template-areas: ". up ." "left ok right" ". down .";
             gap: 6px; background-color: rgba(25, 25, 25, 0.7);
             padding: 8px; border-radius: 12px;
+            z-index: 5;
         }
+
         .remote-btn {
             width: 35px; height: 35px; display: flex; justify-content: center;
             align-items: center; background-color: rgba(80, 80, 80, 0.6);
@@ -94,9 +99,16 @@
         #btn-up { grid-area: up; } #btn-down { grid-area: down; }
         #btn-left { grid-area: left; } #btn-right { grid-area: right; }
         #btn-ok { grid-area: ok; background-color: rgba(120, 120, 120, 0.7); }
+        .remote-btn.material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
         #live-indicator-corner {
             display: flex; align-items: center; gap: 8px; color: #ff4d00;
-            font-weight: 400; font-size: 1.5rem; bottom: 40px; right: 50px;
+            font-weight: 400; font-size: 1.0rem; bottom: 40px; right: 50px;
         }
         .sidebar-live-icon { color: #ff4d00; }
         #channel-list-container li.focused .sidebar-live-icon { color: #fff; }
@@ -147,7 +159,7 @@
     <div id="remote-control">
         <span id="btn-up" class="remote-btn material-symbols-outlined">keyboard_arrow_up</span>
         <span id="btn-left" class="remote-btn material-symbols-outlined">keyboard_arrow_left</span>
-        <span id="btn-ok" class="remote-btn material-symbols-outlined">check</span>
+        <span id="btn-ok" class="remote-btn material-symbols-outlined">circle</span>
         <span id="btn-right" class="remote-btn material-symbols-outlined">keyboard_arrow_right</span>
         <span id="btn-down" class="remote-btn material-symbols-outlined">keyboard_arrow_down</span>
     </div>
@@ -174,7 +186,6 @@
         let isSidebarActive = false;
         let currentFocusIndex = 0;
         let isChannelKeyDown = false;
-        
         const video = document.getElementById('video');
         const clickOverlay = document.getElementById('click-overlay');
         const fadeOverlay = document.getElementById('fade-overlay');
@@ -251,6 +262,7 @@
 
                 player.configure('drm.clearKeys', streamData.clearKey || {});
                 await player.load(streamData.manifestUri);
+                video.play();
 
             } catch (error) {
                 console.error(`Failed to load stream for ${channel.name}:`, error);
