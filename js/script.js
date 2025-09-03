@@ -245,86 +245,125 @@ document.addEventListener('DOMContentLoaded', async () => {
             stretching: "uniform",
         });
         playerInstance.on('error', (event) => {
-            console.error('Player Error', event);
+            console.error('--- FATAL PLAYER ERROR [RUNTIME] ---', event);
         });
     };
 
     const openPlayer = async (stream) => {
-    console.log("INFO: Attempting to play stream:", stream); // Log the initial stream object
+        console.log("INFO: Attempting to play stream:", stream);
 
-    const youtubePlayer = document.getElementById('youtube-player');
-    const jwPlayerContainer = document.getElementById('video-player');
-    activeStream = stream;
+        const youtubePlayer = document.getElementById('youtube-player');
+        const jwPlayerContainer = document.getElementById('video-player');
+        activeStream = stream;
 
-    if (stream.type === 'youtube') {
-        console.log("INFO: Stream type is YouTube. Stopping JW Player and showing YouTube iframe.");
-        jwplayer('video-player').stop();
-        jwPlayerContainer.style.display = 'none';
-        youtubePlayer.src = stream.embedUrl;
-        youtubePlayer.style.display = 'block';
-    } else {
-        console.log("INFO: Stream type is not YouTube. Preparing JW Player.");
-        youtubePlayer.style.display = 'none';
-        youtubePlayer.src = '';
-        jwPlayerContainer.style.display = 'block';
-        
-        try {
-            console.log(`INFO: Fetching stream data from API for: ${stream.name}`);
-            const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
+        if (stream.type === 'youtube') {
+            console.log("INFO: Stream type is YouTube. Stopping JW Player and showing YouTube iframe.");
+            jwplayer('video-player').stop();
+            jwPlayerContainer.style.display = 'none';
+            youtubePlayer.src = stream.embedUrl;
+            youtubePlayer.style.display = 'block';
+        } else {
+            console.log("INFO: Stream type is not YouTube. Preparing JW Player.");
+            youtubePlayer.style.display = 'none';
+            youtubePlayer.src = '';
+            jwPlayerContainer.style.display = 'block';
             
-            console.log("INFO: API Response Status:", response.status);
-            if (!response.ok) {
-                throw new Error(`API call failed for ${stream.name}. Status: ${response.status}`);
+            try {
+                console.log(`INFO: Fetching stream data from API for: ${stream.name}`);
+                const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
+                
+                console.log("INFO: API Response Status:", response.status);
+                if (!response.ok) {
+                    throw new Error(`API call failed for ${stream.name}. Status: ${response.status}`);
+                }
+
+                const secureData = await response.json();
+                console.log("INFO: Received secure data from API:", secureData);
+
+                if (!secureData || !secureData.manifestUri) {
+                    throw new Error("API response is missing the 'manifestUri' property.");
+                }
+                
+                const playlistItem = {
+                    file: secureData.manifestUri,
+                    image: stream.logo,
+                    type: stream.type === 'mpegdash' ? 'dash' : 'hls'
+                };
+                
+                console.log("INFO: Constructed this playlist item for JW Player:", playlistItem);
+
+                if (secureData.clearKey && Object.keys(secureData.clearKey).length > 0) {
+                    console.log("INFO: DRM ClearKey found. Adding to playlist item.");
+                    playlistItem.drm = { "widevine": { "clearkeys": secureData.clearKey } };
+                }
+                
+                console.log("INFO: Loading playlist into JW Player...");
+                jwplayer('video-player').load([playlistItem]);
+                jwplayer('video-player').play(true);
+                console.log("SUCCESS: Play command issued to JW Player.");
+
+            } catch (e) {
+                console.error('--- FATAL PLAYER ERROR [SETUP] ---', e);
             }
-
-            const secureData = await response.json();
-            console.log("INFO: Received secure data from API:", secureData); // Log the data from the API
-
-            if (!secureData || !secureData.manifestUri) {
-                throw new Error("API response is missing the 'manifestUri' property.");
-            }
-            
-            const playlistItem = {
-                file: secureData.manifestUri,
-                image: stream.logo,
-                type: stream.type === 'mpegdash' ? 'dash' : 'hls' // The fix from before
-            };
-            
-            console.log("INFO: Constructed this playlist item for JW Player:", playlistItem);
-
-            if (secureData.clearKey && Object.keys(secureData.clearKey).length > 0) {
-                console.log("INFO: DRM ClearKey found. Adding to playlist item.");
-                playlistItem.drm = { "widevine": { "clearkeys": secureData.clearKey } };
-            }
-            
-            console.log("INFO: Loading playlist into JW Player...");
-            jwplayer('video-player').load([playlistItem]);
-            jwplayer('video-player').play(true);
-            console.log("SUCCESS: Play command issued to JW Player.");
-
-        } catch (e) {
-            // This will catch errors from the API call or from constructing the player item
-            console.error('--- FATAL PLAYER ERROR [SETUP] ---', e);
         }
-    }
 
-    // This part runs regardless of success or failure
-    document.getElementById('player-channel-name').textContent = stream.name;
-    document.getElementById('player-channel-category').textContent = stream.category;
+        document.getElementById('player-channel-name').textContent = stream.name;
+        document.getElementById('player-channel-category').textContent = stream.category;
+        
+        if (!isDesktop()) {
+            document.getElementById('minimized-player-logo').src = stream.logo;
+            document.getElementById('minimized-player-name').textContent = stream.name;
+            document.getElementById('minimized-player-category').textContent = stream.category;
+            if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+            if (playerView) playerView.classList.add('active');
+        }
+    };
     
-    if (!isDesktop()) {
-        document.getElementById('minimized-player-logo').src = stream.logo;
-        document.getElementById('minimized-player-name').textContent = stream.name;
-        document.getElementById('minimized-player-category').textContent = stream.category;
-        if (minimizedPlayer) minimizedPlayer.classList.remove('active');
-        if (playerView) playerView.classList.add('active');
-    }
-};
+    // --- THIS SECTION WAS LIKELY DELETED ---
+    const minimizePlayer = () => {
+        if (isDesktop()) return;
+        if (playerView && playerView.classList.contains('active')) {
+            playerView.classList.remove('active');
+            setTimeout(() => {
+                if (minimizedPlayer) minimizedPlayer.classList.add('active');
+            }, 250);
+        }
+    };
 
-// Add an error listener to the player itself to catch runtime errors
-jwplayer('video-player').on('error', (event) => {
-    console.error('--- FATAL PLAYER ERROR [RUNTIME] ---', event);
-});
+    const restorePlayer = (e) => {
+        if (isDesktop() || e.target.closest('#exit-player-btn')) return;
+        if (minimizedPlayer && minimizedPlayer.classList.contains('active')) {
+            minimizedPlayer.classList.remove('active');
+            if (playerView) playerView.classList.add('active');
+            if (activeStream && activeStream.type !== 'youtube') {
+                 jwplayer('video-player').play();
+            }
+        }
+    };
+
+    const closePlayer = (e) => {
+        e.stopPropagation();
+        
+        const youtubePlayer = document.getElementById('youtube-player');
+        youtubePlayer.src = '';
+        youtubePlayer.style.display = 'none';
+        
+        document.getElementById('video-player').style.display = 'block';
+        jwplayer('video-player').stop();
+        initPlayer();
+
+        activeStream = null;
+        history.pushState({}, '', '/home');
+
+        if (isDesktop()) {
+            document.getElementById('player-channel-name').textContent = 'Channel Name';
+            document.getElementById('player-channel-category').textContent = 'Category';
+        } else {
+            if (playerView) playerView.classList.remove('active');
+            if (minimizedPlayer) minimizedPlayer.classList.remove('active');
+        }
+    };
+    // --- END OF MISSING SECTION ---
     
     if(minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
     if(minimizedPlayer) minimizedPlayer.addEventListener('click', restorePlayer);
