@@ -1,9 +1,10 @@
-       let channelList = [];
+let channelList = [];
         let currentChannelIndex = 0;
         let infoTimeout;
         let isExitPopupActive = false;
         let isSidebarActive = false;
         let currentFocusIndex = 0;
+        
         const video = document.getElementById('video');
         const clickOverlay = document.getElementById('click-overlay');
         const fadeOverlay = document.getElementById('fade-overlay');
@@ -62,7 +63,7 @@
         }
         
         function moveFocus(direction) {
-            if (direction === 1) { 
+            if (direction === 1) {
                 currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1);
             } else {
                 currentFocusIndex = Math.max(0, currentFocusIndex - 1);
@@ -86,9 +87,18 @@
             clearInterval(scrollInterval);
         }
 
+        function toggleSidebar() {
+            if (isSidebarActive) {
+                hideSidebar();
+            } else {
+                showSidebar();
+            }
+        }
+
         function setupRemoteClickListeners() {
             const btnUp = document.getElementById('btn-up');
             const btnDown = document.getElementById('btn-down');
+
             btnUp.addEventListener('mousedown', () => {
                 if (isSidebarActive) {
                     startScrolling(-1);
@@ -109,8 +119,9 @@
             btnUp.addEventListener('mouseleave', stopScrolling);
             btnDown.addEventListener('mouseup', stopScrolling);
             btnDown.addEventListener('mouseleave', stopScrolling);
-            document.getElementById('btn-left').addEventListener('click', showSidebar);
-            document.getElementById('btn-left').addEventListener('click', hideSidebar);
+            document.getElementById('btn-left').addEventListener('click', toggleSidebar);
+            document.getElementById('btn-right').addEventListener('click', showExitPopup);
+
             document.getElementById('btn-ok').addEventListener('click', () => {
                 if (isSidebarActive) {
                     selectChannelFromList();
@@ -176,16 +187,38 @@
                 else if (event.keyCode === 8 || event.keyCode === 461 || event.keyCode === 10009) { handleExitCancel(); }
             } else if (isSidebarActive) {
                 switch (event.keyCode) {
-                    case 38: currentFocusIndex = Math.max(0, currentFocusIndex - 1); updateFocus(); break;
-                    case 40: currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1); updateFocus(); break;
-                    case 13: selectChannelFromList(); break;
-                    case 39: case 8: case 461: case 10009: hideSidebar(); break;
+                    case 37:
+                        hideSidebar();
+                        break;
+                    case 38: 
+                        currentFocusIndex = Math.max(0, currentFocusIndex - 1);
+                        updateFocus();
+                        break;
+                    case 40: 
+                        currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1);
+                        updateFocus();
+                        break;
+                    case 13:
+                        selectChannelFromList();
+                        break;
+                    case 8: case 461: case 10009:
+                         hideSidebar();
+                         break;
                 }
             } else {
                 switch (event.keyCode) {
-                    case 37: showSidebar(); break;
-                    case 13: showAndHideInfo(); break;
-                    case 8: case 461: case 10009: showExitPopup(); break;
+                    case 37:
+                        showSidebar();
+                        break;
+                    case 39:
+                        showExitPopup();
+                        break;
+                    case 13:
+                        showAndHideInfo();
+                        break;
+                    case 8: case 461: case 10009:
+                        showExitPopup();
+                        break;
                 }
             }
         }
