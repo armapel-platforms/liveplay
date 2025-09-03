@@ -123,14 +123,12 @@
             liveplayLogo.classList.add('show');
             channelInfo.classList.add('show');
             liveIndicatorCorner.classList.add('show');
-            remoteControl.classList.add('show');
             clearTimeout(infoTimeout);
             infoTimeout = setTimeout(() => {
                 fadeOverlay.classList.remove('show');
                 liveplayLogo.classList.remove('show');
                 channelInfo.classList.remove('show');
                 liveIndicatorCorner.classList.remove('show');
-                remoteControl.classList.remove('show');
             }, 4000);
         }
 
