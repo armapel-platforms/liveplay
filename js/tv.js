@@ -110,7 +110,7 @@
             btnDown.addEventListener('mouseup', stopScrolling);
             btnDown.addEventListener('mouseleave', stopScrolling);
             document.getElementById('btn-left').addEventListener('click', showSidebar);
-            document.getElementById('btn-right').addEventListener('click', hideSidebar);
+            document.getElementById('btn-left').addEventListener('click', hideSidebar);
             document.getElementById('btn-ok').addEventListener('click', () => {
                 if (isSidebarActive) {
                     selectChannelFromList();
