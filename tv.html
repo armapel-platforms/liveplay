@@ -10,7 +10,7 @@
             const isTvDevice = /TV|Tizen|Web0S|Bravia|Viera|SMART-TV|SmartTV|AppleTV|GoogleTV|Roku|CrKey|AFT/i.test(userAgent);
 
             if (!isTvDevice) {
-                // window.location.href = '/404';
+                window.location.href = '/404';
             }
         })();
     </script>
@@ -42,7 +42,8 @@
     }
     #fade-overlay.show { opacity: 1; }
 
-    #liveplay-logo, #channel-info, #live-indicator-corner, #remote-control {
+    /* --- MODIFIED: Removed #remote-control from this rule --- */
+    #liveplay-logo, #channel-info, #live-indicator-corner {
         position: absolute;
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
@@ -51,7 +52,8 @@
     }
     #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 600; }
     #channel-info { left: 50px; bottom: 40px; }
-    #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show, #remote-control.show { opacity: 1; }
+    /* --- MODIFIED: Removed #remote-control.show from this rule --- */
+    #liveplay-logo.show, #channel-info.show, #live-indicator-corner.show { opacity: 1; }
 
     #channel-name { font-size: 3em; margin: 0; }
     #channel-category { font-size: 1.5em; margin: 5px 0 0 0; color: #ccc; }
@@ -92,6 +94,8 @@
     #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
 
     #remote-control {
+        position: absolute;
+        z-index: 3;
         top: 40px;
         right: 50px;
         display: grid;
@@ -114,7 +118,7 @@
         align-items: center;
         background-color: rgba(80, 80, 80, 0.6);
         border-radius: 50%;
-        font-size: 24px; /* Default size for all icons */
+        font-size: 24px;
     }
         
     .remote-btn .material-symbols-outlined {
@@ -235,7 +239,6 @@
         const channelName = document.getElementById('channel-name');
         const channelCategory = document.getElementById('channel-category');
         const liveIndicatorCorner = document.getElementById('live-indicator-corner');
-        const remoteControl = document.getElementById('remote-control');
         const exitPopupOverlay = document.getElementById('exit-popup-overlay');
         const exitConfirmBtn = document.getElementById('exit-confirm-btn');
         const exitCancelBtn = document.getElementById('exit-cancel-btn');
@@ -303,14 +306,13 @@
             liveplayLogo.classList.add('show');
             channelInfo.classList.add('show');
             liveIndicatorCorner.classList.add('show');
-            remoteControl.classList.add('show');
+            // --- MODIFIED: Removed remoteControl from the fade logic ---
             clearTimeout(infoTimeout);
             infoTimeout = setTimeout(() => {
                 fadeOverlay.classList.remove('show');
                 liveplayLogo.classList.remove('show');
                 channelInfo.classList.remove('show');
                 liveIndicatorCorner.classList.remove('show');
-                remoteControl.classList.remove('show');
             }, 4000);
         }
 
@@ -329,9 +331,9 @@
                     case 38: currentFocusIndex = Math.max(0, currentFocusIndex - 1); updateFocus(); break;
                     case 40: currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1); updateFocus(); break;
                     case 13: selectChannelFromList(); break;
-                    case 39: // Arrow Right
-                    case 37: // Arrow Left
-                    case 8:  // Back
+                    case 39:
+                    case 37:
+                    case 8:
                     case 461:
                     case 10009:
                          hideSidebar();
@@ -425,6 +427,8 @@
             const date = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
             timeDateElement.textContent = `${date}, ${time}`;
         }
+
+
 
         function showExitPopup() {
             isExitPopupActive = true;
