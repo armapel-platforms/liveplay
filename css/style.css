@@ -271,8 +271,8 @@ header.subpage-header h1 {
     inset: 0;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    mask-image: radial-gradient(circle at top right, transparent, black 50%);
-    -webkit-mask-image: radial-gradient(circle at top right, transparent, black 50%);
+    mask-image: radial-gradient(circle at top right, transparent, transparent 50%, rgba(25, 25, 25, 0.5);
+    -webkit-mask-image: radial-gradient(circle at top right, transparent, transparent 50%, rgba(25, 25, 25, 0.5);
 }
 
 .slide-content { 
