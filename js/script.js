@@ -22,12 +22,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
     let streamsData = [];
-    const videoElement = document.getElementById('video-player');
     const playerWrapper = document.getElementById('video-player-wrapper');
     const authPopup = document.getElementById('auth-popup-overlay');
     const closePopupBtn = document.getElementById('close-popup');
-    let player = null;
-    let ui = null;
+    let playerInstance = null; // Variable to hold the JW Player instance
     let currentUser = null;
 
     const playerView = document.getElementById('player-view');
@@ -38,12 +36,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const isDesktop = () => window.innerWidth >= 1024;
 
-    const setVideoPoster = () => {
-        if (!videoElement) return;
-        if (isDesktop()) {
-            videoElement.poster = '/logo/desktop-poster.png';
+    const setPlayerPoster = (posterUrl) => {
+        const playerContainer = document.getElementById('video-player');
+        if (!playerContainer) return;
+        const poster = posterUrl || (isDesktop() ? '/logo/desktop-poster.png' : '/logo/attention.png');
+        if (playerInstance) {
+            playerInstance.setup({ ...playerInstance.getConfig(), image: poster });
         } else {
-            videoElement.poster = '/logo/attention.png';
+            // If player not initialized, set it up with the poster
+            initPlayer(poster);
         }
     };
 
@@ -60,11 +61,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     };
-
-    setVideoPoster();
+    
+    // Initial setup
     setupLayout(); 
     window.addEventListener('resize', () => {
-        setVideoPoster();
+        setPlayerPoster();
         setupLayout();
     });
 
@@ -254,53 +255,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    const initPlayer = async () => {
-        shaka.polyfill.installAll();
-        if (shaka.Player.isBrowserSupported()) {
-            player = new shaka.Player(videoElement);
-            ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
-            ui.getControls();
-            player.addEventListener('error', onError);
-        } else { console.error('Browser not supported!'); }
+    const initPlayer = (poster) => {
+        const playerContainer = document.getElementById('video-player');
+        if (!playerContainer || typeof jwplayer === 'undefined') {
+            console.error('JW Player library is not loaded or player container not found.');
+            return;
+        }
+        playerInstance = jwplayer('video-player').setup({
+            'image': poster || (isDesktop() ? '/logo/desktop-poster.png' : '/logo/attention.png'),
+            'autostart': false,
+        });
+        playerInstance.on('error', (e) => console.error('JW Player Error', e));
     };
-
-    const onError = (event) => console.error('Player Error', event.detail);
-
+    
     const openPlayer = async (stream) => {
-        const youtubePlayer = document.getElementById('youtube-player');
         activeStream = stream;
+        const playerContainer = document.getElementById('video-player');
+        
+        // Hide iframe initially
+        const youtubePlayer = document.getElementById('youtube-player');
+        if (youtubePlayer) youtubePlayer.style.display = 'none';
+        if (playerContainer) playerContainer.style.display = 'block';
 
-        if (stream.type === 'youtube') {
-            if (player) await player.unload();
-            if (ui) ui.setEnabled(false);
-            if (videoElement) videoElement.style.display = 'none';
-            if (youtubePlayer) {
-                youtubePlayer.src = stream.embedUrl;
-                youtubePlayer.style.display = 'block';
-            }
-        } else {
-            if (youtubePlayer) {
-                youtubePlayer.style.display = 'none';
-                youtubePlayer.src = '';
-            }
-            if (videoElement) videoElement.style.display = 'block';
-            
-            if (!player) await initPlayer();
-            if (ui) ui.setEnabled(true);
-
-            try {
+        try {
+            if (stream.type === 'youtube') {
+                // JW Player can handle YouTube URLs directly
+                playerInstance = jwplayer('video-player').setup({
+                    file: stream.embedUrl,
+                    autostart: true,
+                    width: '100%',
+                    aspectratio: '16:9'
+                });
+            } else {
                 const response = await fetch(`/api/getStream?name=${encodeURIComponent(stream.name)}`);
                 if (!response.ok) throw new Error(`Stream data not found for ${stream.name}.`);
                 const secureData = await response.json();
 
-                player.configure({ drm: { clearKeys: secureData.clearKey || {} } });
-                await player.load(secureData.manifestUri);
-                videoElement.play();
-            } catch (e) {
-                console.error('Player Error', e);
-                onError(e);
+                playerInstance = jwplayer('video-player').setup({
+                    file: secureData.manifestUri,
+                    drm: {
+                        clearkey: secureData.clearKey
+                    },
+                    autostart: true,
+                    width: '100%',
+                    aspectratio: '16:9'
+                });
             }
+        } catch (e) {
+            console.error('Player Setup Error', e);
         }
+
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
         
@@ -328,26 +332,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (minimizedPlayer && minimizedPlayer.classList.contains('active')) {
             minimizedPlayer.classList.remove('active');
             if (playerView) playerView.classList.add('active');
-            if (activeStream && activeStream.type !== 'youtube') {
-                 if (videoElement) videoElement.play();
+            if (playerInstance) {
+                playerInstance.play();
             }
         }
     };
 
     const closePlayer = async (e) => {
         e.stopPropagation();
+        
+        if (playerInstance) {
+            playerInstance.remove(); // This stops, unloads, and removes the player
+            playerInstance = null;
+        }
 
-        const youtubePlayer = document.getElementById('youtube-player');
-        if (youtubePlayer) {
-            youtubePlayer.src = '';
-            youtubePlayer.style.display = 'none';
-        }
-        if (videoElement) videoElement.style.display = 'block';
-        if (ui) ui.setEnabled(false);
-        if (player) {
-            await player.unload();
-            setVideoPoster();
-        }
+        // Re-initialize a placeholder player with a poster
+        initPlayer();
+
         activeStream = null;
         history.pushState({}, '', '/home');
 
@@ -365,4 +366,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(exitBtn) exitBtn.addEventListener('click', closePlayer);
     
     await initializePage();
+    // Initialize the player with a poster on page load
+    initPlayer();
 });
