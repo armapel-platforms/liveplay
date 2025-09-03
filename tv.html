@@ -51,6 +51,7 @@
         transition: opacity 0.5s ease-in-out;
         z-index: 3;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        /* --- FIX: All UI containers are now transparent to clicks by default --- */
         pointer-events: none;
     }
     #liveplay-logo { left: 50px; top: 40px; font-size: 2.5em; font-weight: 600; }
@@ -108,9 +109,7 @@
         padding: 8px;
         border-radius: 12px;
     }
-    #remote-control.show {
-        pointer-events: auto;
-    }
+    /* --- REMOVED: No longer need to toggle pointer-events on the container --- */
 
     .remote-btn {
         width: 35px;
@@ -123,6 +122,8 @@
         font-size: 24px;
         cursor: pointer;
         transition: background-color 0.2s ease;
+        /* --- FIX: Only the buttons themselves are clickable --- */
+        pointer-events: auto;
     }
     .remote-btn:hover {
         background-color: rgba(120, 120, 120, 0.9);
@@ -258,8 +259,6 @@
                 document.addEventListener('keydown', handleKeyDown);
                 document.addEventListener('keyup', handleKeyUp);
                 
-                // --- THIS IS THE KEY LINE FOR YOUR REQUEST ---
-                // It makes the entire video screen clickable to show the controls.
                 videoContainer.addEventListener('click', showAndHideInfo);
                 
                 setupRemoteClickListeners();
@@ -288,6 +287,9 @@
         }
 
         function setupRemoteClickListeners() {
+            // Clicks on buttons will perform their action AND the click will bubble up...
+            // ...to the videoContainer, which correctly resets the fade-out timer.
+            // This is the desired behavior, so no event.stopPropagation() is needed.
             document.getElementById('btn-up').addEventListener('click', () => simulateKeyPress(38));
             document.getElementById('btn-down').addEventListener('click', () => simulateKeyPress(40));
             document.getElementById('btn-left').addEventListener('click', () => simulateKeyPress(37));
