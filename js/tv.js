@@ -1,5 +1,15 @@
 // tv.js
 
+// --- 1. CONFIGURE SUPERBASE ---
+// Paste your Project URL and anon public key from your Supabase project settings.
+const SUPABASE_URL = 'https://indaanmxftowbkoxetvc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImluZGFhbm14ZnRvd2Jrb3hldHZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NTY3OTcsImV4cCI6MjA3MjUzMjc5N30.cGONWqDNo5ujeVZIbaAf2XVWHDvn2YUXFw_lgHErxXM';
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let pairingCode;
+let roomSubscription;
+
+// --- DOM ELEMENT AND PLAYER STATE VARIABLES ---
 let channelList = [];
 let currentChannelIndex = 0;
 let infoTimeout;
@@ -25,36 +35,41 @@ const remoteCodePopup = document.getElementById('remote-code-popup');
 const remoteCodeDisplay = document.getElementById('remote-code-display');
 let player;
 
-// In a real application, you would initialize a WebSocket connection here
-// const socket = new WebSocket('ws://your-backend-url');
-// socket.onmessage = handleRemoteCommand;
+let scrollTimeout;
+let scrollInterval;
+const scrollDelay = 400;
+const scrollSpeed = 100;
 
+/**
+ * Main initialization function.
+ */
 async function init() {
-    const pairingCode = Math.floor(1000 + Math.random() * 9000).toString();
-    remoteCodeDisplay.textContent = pairingCode;
-
-    // The remote pairing pop-up remains visible until the WebSocket confirms a connection.
-    // For this example, we will hide it after a long delay. In a real app,
-    // the backend would signal when to hide this.
-    // setTimeout(() => {
-    //     remoteCodePopup.style.display = 'none';
-    // }, 60000); // Hide after 1 minute for demonstration
-
     try {
+        channelName.textContent = "Generating secure code...";
+        channelCategory.textContent = "Please wait...";
+
+        // Create a unique room in the database for the remote to find
+        pairingCode = await createUniqueRoom();
+        remoteCodeDisplay.textContent = pairingCode;
+        channelName.textContent = "Loading..."; // Revert to original loading text
+        channelCategory.textContent = "";
+
+        // Listen for commands and status changes from the remote
+        listenForRemote();
+
+        // Ensure the room is deleted from the database when the tab is closed
+        window.addEventListener('beforeunload', cleanupRoom);
+
+        // Fetch channel list and initialize the player
         const response = await fetch('/api/getChannels.js');
         if (!response.ok) throw new Error('Network response was not ok');
         channelList = await response.json();
 
-        if (channelList.length === 0) {
-            throw new Error("Channel list is empty.");
-        }
+        if (channelList.length === 0) throw new Error("Channel list is empty.");
 
         shaka.polyfill.installAll();
-        if (shaka.Player.isBrowserSupported()) {
-            await initPlayer();
-        } else {
-            console.error('Browser not supported!');
-        }
+        if (shaka.Player.isBrowserSupported()) await initPlayer();
+        else console.error('Browser not supported!');
 
         document.addEventListener('keydown', handleKeyDown);
         clickOverlay.addEventListener('click', showAndHideInfo);
@@ -65,46 +80,89 @@ async function init() {
         exitConfirmBtn.addEventListener('click', handleExitConfirm);
         exitCancelBtn.addEventListener('click', handleExitCancel);
 
-    } catch (error)
-    {
-        console.error("Failed to initialize app:", error);
-        channelName.textContent = "Error";
-        channelCategory.textContent = "Could not load channels.";
-    }
-}
-
-// Function to handle commands received from the mobile remote via WebSocket
-function handleRemoteCommand(event) {
-    const command = JSON.parse(event.data);
-    
-    // Once the remote is paired, hide the code pop-up
-    if (command.action === 'paired') {
+    } catch (error) {
+        console.error("Critical initialization error:", error);
+        channelName.textContent = "Connection Error";
+        channelCategory.textContent = "Could not connect to remote service. Please refresh.";
         remoteCodePopup.style.display = 'none';
-        return;
     }
+}
 
-    if (command.action !== 'remote-press') return;
+/**
+ * Creates a new row in the 'rooms' table with a guaranteed unique 4-digit code.
+ */
+async function createUniqueRoom() {
+    let attempts = 0;
+    while (attempts < 5) {
+        const code = Math.floor(1000 + Math.random() * 9000);
+        const { error } = await supabase.from('rooms').insert({ id: code });
 
-    // Translate remote command to an action
-    switch (command.key) {
-        case 'up':
-            if (isSidebarActive) moveFocus(-1); else changeChannel(1);
-            break;
-        case 'down':
-            if (isSidebarActive) moveFocus(1); else changeChannel(-1);
-            break;
-        case 'left':
-            toggleSidebar();
-            break;
-        case 'right':
-            showExitPopup();
-            break;
+        if (!error) {
+            console.log(`Room created successfully with code: ${code}`);
+            return code;
+        }
+        if (error.code === '23505') { // PostgreSQL code for unique violation
+            console.warn(`Code collision for ${code}. Retrying...`);
+            attempts++;
+        } else {
+            throw error;
+        }
+    }
+    throw new Error('Failed to generate a unique room code.');
+}
+
+/**
+ * Subscribes to database changes for the current room to listen for the remote.
+ */
+function listenForRemote() {
+    roomSubscription = supabase.channel(`room-${pairingCode}`)
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${pairingCode}` },
+            (payload) => {
+                const { status, command } = payload.new;
+                if (status === 'remote_connected') {
+                    console.log("Remote has connected!");
+                    remoteCodePopup.style.display = 'none';
+                }
+                if (command?.key) {
+                    handleRemoteCommand(command.key);
+                }
+            }
+        )
+        .subscribe();
+}
+
+/**
+ * Executes player actions based on commands from the remote.
+ */
+function handleRemoteCommand(key) {
+    console.log(`Executing remote command: ${key}`);
+    switch (key) {
+        case 'up': isSidebarActive ? moveFocus(-1) : changeChannel(1); break;
+        case 'down': isSidebarActive ? moveFocus(1) : changeChannel(-1); break;
+        case 'left': isSidebarActive ? hideSidebar() : (isExitPopupActive ? exitCancelBtn.focus() : toggleSidebar()); break;
+        case 'right': isSidebarActive ? selectChannelFromList() : (isExitPopupActive ? exitConfirmBtn.focus() : showExitPopup()); break;
         case 'ok':
-            if (isSidebarActive) selectChannelFromList(); else showAndHideInfo();
+            if (isExitPopupActive) document.activeElement.click();
+            else if (isSidebarActive) selectChannelFromList();
+            else showAndHideInfo();
             break;
     }
 }
 
+/**
+ * Deletes the room from the database upon closing the page.
+ */
+async function cleanupRoom() {
+    if (roomSubscription) {
+        supabase.removeChannel(roomSubscription);
+    }
+    if (pairingCode) {
+        await supabase.from('rooms').delete().eq('id', pairingCode);
+        console.log(`Room ${pairingCode} has been cleaned up.`);
+    }
+}
+
+// --- ALL ORIGINAL PLAYER AND UI FUNCTIONS ---
 
 async function initPlayer() {
     player = new shaka.Player(video);
@@ -114,40 +172,40 @@ async function initPlayer() {
 }
 
 function moveFocus(direction) {
-    if (direction === 1) {
-        currentFocusIndex = Math.min(channelList.length - 1, currentFocusIndex + 1);
-    } else {
-        currentFocusIndex = Math.max(0, currentFocusIndex - 1);
-    }
+    currentFocusIndex = (currentFocusIndex + direction + channelList.length) % channelList.length;
     updateFocus();
 }
 
+function startScrolling(direction) {
+    stopScrolling();
+    moveFocus(direction);
+    scrollTimeout = setTimeout(() => {
+        scrollInterval = setInterval(() => moveFocus(direction), scrollSpeed);
+    }, scrollDelay);
+}
+
+function stopScrolling() {
+    clearTimeout(scrollTimeout);
+    clearInterval(scrollInterval);
+}
+
 function toggleSidebar() {
-    if (isSidebarActive) {
-        hideSidebar();
-    } else {
-        showSidebar();
-    }
+    isSidebarActive ? hideSidebar() : showSidebar();
 }
 
 async function loadChannel(channel) {
     if (!channel) return;
     updateChannelInfo(channel);
-
     try {
         const streamResponse = await fetch(`/api/getStream.js?name=${encodeURIComponent(channel.name)}`);
         if (!streamResponse.ok) throw new Error(`Stream for ${channel.name} not found`);
         const streamData = await streamResponse.json();
-
         if (player.getMediaElement()) {
             await player.unload();
         }
-
         player.configure('drm.clearKeys', streamData.clearKey || {});
         await player.load(streamData.manifestUri);
-
         video.play();
-
     } catch (error) {
         console.error(`Failed to load stream for ${channel.name}:`, error);
         channelName.textContent = `Error loading ${channel.name}`;
@@ -176,37 +234,28 @@ function showAndHideInfo() {
 
 function handleKeyDown(event) {
     event.preventDefault();
-
     if (isExitPopupActive) {
-        // Handle exit popup navigation
         const currentFocus = document.activeElement;
-        if (event.keyCode === 37) { // Left Arrow
-            if (currentFocus === exitConfirmBtn) exitCancelBtn.focus();
-        } else if (event.keyCode === 39) { // Right Arrow
-            if (currentFocus === exitCancelBtn) exitConfirmBtn.focus();
-        } else if (event.keyCode === 13) { // Enter
-            currentFocus.click();
-        } else if (event.keyCode === 8 || event.keyCode === 461 || event.keyCode === 10009) { // Back button
-            handleExitCancel();
-        }
+        if (event.keyCode === 37) { if (currentFocus === exitConfirmBtn) exitCancelBtn.focus(); }
+        else if (event.keyCode === 39) { if (currentFocus === exitCancelBtn) exitConfirmBtn.focus(); }
+        else if (event.keyCode === 13) { currentFocus.click(); }
+        else if ([8, 461, 10009].includes(event.keyCode)) { handleExitCancel(); }
     } else if (isSidebarActive) {
-        // Handle sidebar navigation
         switch (event.keyCode) {
-            case 37: hideSidebar(); break; // Left Arrow
-            case 38: moveFocus(-1); break; // Up Arrow
-            case 40: moveFocus(1); break; // Down Arrow
-            case 13: selectChannelFromList(); break; // Enter
-            case 8: case 461: case 10009: hideSidebar(); break; // Back button
+            case 37: hideSidebar(); break;
+            case 38: moveFocus(-1); break;
+            case 40: moveFocus(1); break;
+            case 13: selectChannelFromList(); break;
+            case 8: case 461: case 10009: hideSidebar(); break;
         }
     } else {
-        // Handle main video player navigation
         switch (event.keyCode) {
-            case 38: changeChannel(1); break; // Up Arrow
-            case 40: changeChannel(-1); break; // Down Arrow
-            case 37: toggleSidebar(); break; // Left Arrow
-            case 39: showExitPopup(); break; // Right Arrow
-            case 13: showAndHideInfo(); break; // Enter
-            case 8: case 461: case 10009: showExitPopup(); break; // Back button
+            case 38: changeChannel(1); break;
+            case 40: changeChannel(-1); break;
+            case 37: toggleSidebar(); break;
+            case 39: showExitPopup(); break;
+            case 13: showAndHideInfo(); break;
+            case 8: case 461: case 10009: showExitPopup(); break;
         }
     }
 }
@@ -281,13 +330,10 @@ function hideExitPopup() {
     exitPopupOverlay.classList.remove('show');
 }
 
-function handleExitConfirm() {
-    window.location.href = 'about:blank';
-}
-function handleExitCancel() {
-    hideExitPopup();
-}
+function handleExitConfirm() { window.location.href = 'about:blank'; }
+function handleExitCancel() { hideExitPopup(); }
 function onErrorEvent(event) { onError(event.detail); }
 function onError(error) { console.error('Shaka Player Error:', error.code, 'object', error); }
 
+// Start the application
 document.addEventListener('DOMContentLoaded', init);
