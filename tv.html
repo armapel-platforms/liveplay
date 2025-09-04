@@ -26,12 +26,17 @@
         .sidebar-logo { font-size: 2em; font-weight: 700; }
         #time-date { font-size: 1.2em; color: #ccc; }
         #channel-list-container { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow-y: auto; }
+        #channel-list-container::-webkit-scrollbar { display: none; }
+        #channel-list-container { -ms-overflow-style: none; scrollbar-width: none; }
         #channel-list-container li { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; font-size: 1.4em; border-bottom: 1px solid #222; transition: background-color 0.2s ease; }
+        #channel-list-container li .material-symbols-outlined { color: #ff4d00; }
         #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
+        #channel-list-container li.focused .material-symbols-outlined { color: #fff; }
         #remote-code-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); display: flex; justify-content: center; align-items: center; z-index: 200; transition: opacity 0.5s ease; }
         #remote-code-popup.hidden { opacity: 0; pointer-events: none; }
         .remote-code-container { background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); padding: 4rem 5rem; border-radius: 1rem; text-align: center; border: 1px solid #444; }
         #remote-code-display { font-size: 6rem; font-weight: bold; letter-spacing: 1.5rem; margin: 2rem 0; color: #ff4d00; }
+        .remote-instructions { margin-top: 1rem; color: #ccc; }
         #exit-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         #exit-popup-overlay.show { opacity: 1; pointer-events: auto; }
         .exit-popup { background-color: #111; padding: 40px 60px; border-radius: 10px; text-align: center; border: 1px solid #444; }
@@ -43,12 +48,21 @@
     <div id="video-container"><video id="video" autoplay poster="https://i.imgur.com/3v3L1g4.png"></video></div>
     <div id="ui-overlay"><div id="fade-overlay"></div><div id="channel-info"><h1 id="channel-name"></h1><p id="channel-category"></p></div><div id="live-indicator-corner"><span class="material-symbols-outlined">sensors</span> LIVE</div></div>
     <div id="sidebar"><div class="sidebar-header"><strong class="sidebar-logo">liveplay</strong><span id="time-date"></span></div><ul id="channel-list-container"></ul></div>
-    <div id="remote-code-popup"><div class="remote-code-container"><h1>Pair Your Remote</h1><p>Enter the 4-digit code displayed on your TV screen.</p><div id="remote-code-display">----</div></div></div>
+    <div id="remote-code-popup">
+        <div class="remote-code-container">
+            <h1>Pair Your Remote</h1>
+            <p>Enter the 4-digit code displayed on your TV screen.</p>
+            <div id="remote-code-display">----</div>
+            <p class="remote-instructions">
+                Turn your phone into a remote, visit:<br>
+                liveplay.vercel.app/home/remote<br>
+                then enter this code on your phone to access this website.
+            </p>
+        </div>
+    </div>
     <div id="exit-popup-overlay"><div class="exit-popup"><h2>Exit Liveplay?</h2><div class="exit-buttons"><button id="exit-cancel-btn">Cancel</button><button id="exit-confirm-btn">Exit</button></div></div></div>
-
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    
     <script src="/js/tv.js"></script>
 </body>
 </html>
