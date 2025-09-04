@@ -100,11 +100,70 @@
         #channel-list-container li .material-symbols-outlined { color: #ff4d00; }
         #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
         #channel-list-container li.focused .material-symbols-outlined { color: #fff; }
-        #remote-code-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); display: flex; justify-content: center; align-items: center; z-index: 200; transition: opacity 0.5s ease; }
-        #remote-code-popup.hidden { opacity: 0; pointer-events: none; }
-        .remote-code-container { background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); padding: 4rem 5rem; border-radius: 3rem; text-align: center; border: 1px solid #444; }
-        #remote-code-display { font-size: 6rem; font-weight: bold; letter-spacing: 1.5rem; margin: 2rem 0; color: #ff4d00; }
-        .remote-instructions { margin-top: 1rem; color: #ccc; }
+        #remote-code-popup { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.95); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 200; 
+            transition: opacity 0.5s ease; 
+        }
+        
+        #remote-code-popup.hidden { 
+            opacity: 0; 
+            pointer-events: none; 
+        }
+
+        .remote-code-container {
+            background-color: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 2.5rem 3.5rem;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid #444;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .remote-code-container h1 {
+            font-size: 2.2em;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .remote-instructions {
+            color: #ccc;
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin: 0 auto 1.5rem auto;
+            max-width: 350px;
+        }
+
+        .remote-url {
+            color: #ff4d00;
+            font-weight: 500;
+            font-size: 1.2em;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            border: 1px solid #333;
+        }
+
+        #remote-code-display {
+            font-size: 4.5rem;
+            font-weight: bold;
+            letter-spacing: 1.2rem;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 77, 0, 0.5);
+        }
         #exit-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         #exit-popup-overlay.show { opacity: 1; pointer-events: auto; }
         .exit-popup { background-color: #111; padding: 40px 60px; border-radius: 10px; text-align: center; border: 1px solid #444; }
@@ -131,13 +190,11 @@
     <div id="remote-code-popup">
         <div class="remote-code-container">
             <h1>Pair Your Remote</h1>
-            <p>Enter the 4-digit code displayed on your TV screen.</p>
-            <div id="remote-code-display">----</div>
             <p class="remote-instructions">
-                Turn your phone into a remote, visit <br>
-                <span style="color: #ff4d00; font-weight: 500;">liveplay.vercel.app/home/remote</span><br>
-                then enter this code on your phone to access this website.
+                To use your phone as a remote, visit the address below and enter the pairing code.
             </p>
+            <div class="remote-url">liveplay.vercel.app/home/remote</div>
+            <div id="remote-code-display">----</div>
         </div>
     </div>
     <div id="exit-popup-overlay"><div class="exit-popup"><h2>Exit Liveplay?</h2><div class="exit-buttons"><button id="exit-cancel-btn">Cancel</button><button id="exit-confirm-btn">Exit</button></div></div></div>
