@@ -18,6 +18,9 @@ const remoteControlContainer = document.getElementById('remote-control-container
 const connectButton = document.getElementById('connect-btn');
 const codeInput = document.getElementById('code-input');
 const remoteButtons = document.querySelectorAll('.remote-btn');
+const muteBtn = document.getElementById('btn-mute');
+const playPauseBtn = document.getElementById('btn-playpause');
+
 
 const handleConnect = async () => {
     const enteredCode = codeInput.value;
@@ -46,6 +49,14 @@ const handleConnect = async () => {
 const handleRemotePress = async (event) => {
     if (!roomRef) return;
     const commandKey = event.currentTarget.id.replace('btn-', '');
+
+    if (commandKey === 'mute') {
+        muteBtn.textContent = muteBtn.textContent === 'volume_up' ? 'volume_off' : 'volume_up';
+    }
+    if (commandKey === 'playpause') {
+        playPauseBtn.textContent = playPauseBtn.textContent === 'pause' ? 'play_arrow' : 'pause';
+    }
+
     const commandData = {
         key: commandKey,
         timestamp: firebase.database.ServerValue.TIMESTAMP
