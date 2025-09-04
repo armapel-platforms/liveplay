@@ -1,14 +1,14 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyCU_G7QYIBVtb2kdEsQY6SF9skTuka-nfk",
-  authDomain: "liveplay-remote-project.firebaseapp.com",
-  databaseURL: "https://liveplay-remote-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "liveplay-remote-project",
-  storageBucket: "liveplay-remote-project.firebasestorage.app",
-  messagingSenderId: "135496487558",
-  appId: "1:135496487558:web:c2aad6f56157d245917707",
-  measurementId: "G-G9JXGMV4B8"
-};
-
 export default function handler(req, res) {
+  const firebaseConfig = {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  };
+
   res.status(200).json(firebaseConfig);
 }
