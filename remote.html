@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Liveplay Remote</title>
+    <title>Liveplay for TV Remote</title>
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,1,0" />
     <style>
@@ -14,11 +14,14 @@
         p { font-size: 1em; color: #ccc; max-width: 300px; }
         #code-input { width: 80%; max-width: 300px; font-size: 2.5rem; text-align: center; letter-spacing: 1rem; padding: 10px; margin: 20px 0; background-color: #333; border: 1px solid #555; border-radius: 8px; color: #fff; }
         #connect-btn { padding: 15px 30px; font-size: 1.2rem; background-color: #ff4d00; border: none; border-radius: 8px; color: #fff; cursor: pointer; width: 80%; max-width: 300px; }
-        #remote-grid { display: grid; grid-template-areas: ". up ." "left ok right" ". down ."; gap: 20px; padding: 20px; border-radius: 30px; background-color: rgba(25, 25, 25, 0.7); border: 1px solid #333; }
+        #remote-grid { display: grid; grid-template-areas: "mute . playpause" ". up ." "left ok right" ". down ."; gap: 20px; padding: 20px; border-radius: 30px; background-color: rgba(25, 25, 25, 0.7); border: 1px solid #333; }
         .remote-btn { width: 75px; height: 75px; display: flex; justify-content: center; align-items: center; background-color: rgba(80, 80, 80, 0.6); border-radius: 50%; font-size: 45px; cursor: pointer; user-select: none; }
         .remote-btn:active { background-color: rgba(120, 120, 120, 0.9); transform: scale(0.95); }
         #btn-up { grid-area: up; } #btn-down { grid-area: down; } #btn-left { grid-area: left; } #btn-right { grid-area: right; }
+        #btn-mute { grid-area: mute; font-size: 35px; } #btn-playpause { grid-area: playpause; font-size: 35px; }
         #btn-ok { grid-area: ok; background-color: rgba(120, 120, 120, 0.7); transform: scale(1.1); }
+        .header { position: absolute; top: 20px; font-size: 1.2em; }
+        .tutorial { position: absolute; bottom: 20px; font-size: 0.8em; color: #888; }
     </style>
 </head>
 <body>
@@ -29,12 +32,24 @@
         <button id="connect-btn">Connect</button>
     </div>
     <div class="container hidden" id="remote-control-container">
+        <div class="header"><strong>liveplay> for TV Remote</strong></div>
         <div id="remote-grid">
+             <span id="btn-mute" class="remote-btn material-symbols-outlined">volume_up</span>
+             <span id="btn-playpause" class="remote-btn material-symbols-outlined">pause</span>
              <span id="btn-up" class="remote-btn material-symbols-outlined">keyboard_arrow_up</span>
              <span id="btn-left" class="remote-btn material-symbols-outlined">keyboard_arrow_left</span>
              <span id="btn-ok" class="remote-btn material-symbols-outlined">circle</span>
              <span id="btn-right" class="remote-btn material-symbols-outlined">keyboard_arrow_right</span>
              <span id="btn-down" class="remote-btn material-symbols-outlined">keyboard_arrow_down</span>
+        </div>
+        <div class="tutorial">
+            <p>
+                <strong>STEP 1:</strong> Use arrow keys to navigate.<br>
+                <strong>STEP 2:</strong> Press OK to show channel info.<br>
+                <strong>STEP 3:</strong> Left arrow opens the channel list.<br>
+                <strong>STEP 4:</strong> Use mute and play/pause for playback control.<br>
+                <strong>STEP 5:</strong> Press 'back' button on your device to exit.
+            </p>
         </div>
     </div>
 
