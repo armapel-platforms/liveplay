@@ -1,17 +1,3 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyCU_G7QYIBVtb2kdEsQY6SF9skTuka-nfk",
-  authDomain: "liveplay-remote-project.firebaseapp.com",
-  databaseURL: "https://liveplay-remote-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "liveplay-remote-project",
-  storageBucket: "liveplay-remote-project.firebasestorage.app",
-  messagingSenderId: "135496487558",
-  appId: "1:135496487558:web:c2aad6f56157d245917707",
-  measurementId: "G-G9JXGMV4B8"
-};
-
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
 let roomRef;
 const codeEntryContainer = document.getElementById('code-entry-container');
 const remoteControlContainer = document.getElementById('remote-control-container');
@@ -21,8 +7,29 @@ const remoteButtons = document.querySelectorAll('.remote-btn');
 const muteBtn = document.getElementById('btn-mute');
 const playPauseBtn = document.getElementById('btn-playpause');
 
+async function initializeRemote() {
+    try {
+        const response = await fetch('/api/firebase.js');
+        if (!response.ok) {
+            throw new Error('Failed to fetch Firebase config');
+        }
+        const firebaseConfig = await response.json();
 
-const handleConnect = async () => {
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+      
+        connectButton.addEventListener('click', () => handleConnect(database));
+        remoteButtons.forEach(button => {
+            button.addEventListener('click', handleRemotePress);
+        });
+
+    } catch (error) {
+        console.error("Initialization failed:", error);
+        alert("Could not connect to the server. Please refresh the page.");
+    }
+}
+
+const handleConnect = async (database) => {
     const enteredCode = codeInput.value;
     if (!/^\d{4}$/.test(enteredCode)) return alert('Please enter a valid 4-digit code.');
     
@@ -65,7 +72,4 @@ const handleRemotePress = async (event) => {
     if (navigator.vibrate) navigator.vibrate(50);
 };
 
-connectButton.addEventListener('click', handleConnect);
-remoteButtons.forEach(button => {
-    button.addEventListener('click', handleRemotePress);
-});
+document.addEventListener('DOMContentLoaded', initializeRemote);
