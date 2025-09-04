@@ -1,11 +1,19 @@
-const SUPABASE_URL = 'https://efqaangjtclacltygaqr.supabase.co'; // Paste your URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmcWFhbmdqdGNsYWNsdHlnYXFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NjEwNzQsImV4cCI6MjA3MjUzNzA3NH0.Q3-UEvj23cnqUhBBGs7KZhsgN3y65bbGfUdZelDrubw'; // Paste your anon public key
-
+const firebaseConfig = {
+  apiKey: "AIzaSyCU_G7QYIBVtb2kdEsQY6SF9skTuka-nfk",
+  authDomain: "liveplay-remote-project.firebaseapp.com",
+  databaseURL: "https://liveplay-remote-project-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "liveplay-remote-project",
+  storageBucket: "liveplay-remote-project.firebasestorage.app",
+  messagingSenderId: "135496487558",
+  appId: "1:135496487558:web:c2aad6f56157d245917707",
+  measurementId: "G-G9JXGMV4B8"
+};
 // --- 2. APPLICATION LOGIC ---
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-let pairingCode;
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const database = firebase.getDatabase(firebaseApp);
+let roomRef;
 
-// DOM Element Variables
+// DOM Elements
 const codeEntryContainer = document.getElementById('code-entry-container');
 const remoteControlContainer = document.getElementById('remote-control-container');
 const connectButton = document.getElementById('connect-btn');
@@ -15,31 +23,18 @@ const remoteButtons = document.querySelectorAll('.remote-btn');
 /** Handles the click on the "Connect" button */
 const handleConnect = async () => {
     const enteredCode = codeInput.value;
-    if (!/^\d{4}$/.test(enteredCode)) {
-        alert('Please enter a valid 4-digit code.');
-        return;
-    }
-    pairingCode = parseInt(enteredCode);
+    if (!/^\d{4}$/.test(enteredCode)) return alert('Please enter a valid 4-digit code.');
     
     connectButton.disabled = true;
     connectButton.textContent = 'Connecting...';
 
     try {
-        const { data, error } = await supabaseClient
-            .from('rooms')
-            .select('id')
-            .eq('id', pairingCode)
-            .single();
-
-        if (error || !data) throw new Error('Code is incorrect or the TV is disconnected.');
+        roomRef = firebase.ref(database, 'rooms/' + enteredCode);
+        const snapshot = await firebase.get(roomRef);
+        if (!snapshot.exists()) throw new Error('Code is incorrect or the TV is disconnected.');
         
-        const { error: updateError } = await supabaseClient
-            .from('rooms')
-            .update({ status: 'remote_connected' })
-            .eq('id', pairingCode);
+        await firebase.update(roomRef, { status: 'remote_connected' });
         
-        if (updateError) throw new Error('Could not connect to the TV. Please try again.');
-
         codeEntryContainer.classList.add('hidden');
         remoteControlContainer.classList.remove('hidden');
 
@@ -51,21 +46,18 @@ const handleConnect = async () => {
     }
 };
 
-/** Handles clicks on any of the remote control buttons and sends command to Supabase */
+/** Handles clicks on any of the remote control buttons */
 const handleRemotePress = async (event) => {
-    if (!pairingCode) return;
+    if (!roomRef) return;
     const commandKey = event.currentTarget.id.replace('btn-', '');
-    
-    await supabaseClient
-        .from('rooms')
-        .update({ command: { key: commandKey, timestamp: Date.now() } })
-        .eq('id', pairingCode);
-
+    const commandData = {
+        key: commandKey,
+        timestamp: firebase.serverTimestamp()
+    };
+    await firebase.update(roomRef, { command: commandData });
     if (navigator.vibrate) navigator.vibrate(50);
 };
 
 // Attach Event Listeners
 connectButton.addEventListener('click', handleConnect);
-remoteButtons.forEach(button => {
-    button.addEventListener('click', handleRemotePress);
-});
+remoteButtons.forEach(button => button.addEventListener('click', handleRemotePress);
