@@ -1,7 +1,8 @@
 const SUPABASE_URL = 'https://sstlszevsvtxghumzujx.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzdGxzemV2c3Z0eGdodW16dWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NTc2MzcsImV4cCI6MjA3MjUzMzYzN30.cJ68NKB1Oh2DMuazoXV36tKyIjXmTDojTy_gnLXLzsA';
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Correctly initialize the Supabase client
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let pairingCode;
 let roomSubscription;
 let channelList = [];
@@ -89,7 +90,8 @@ async function createUniqueRoom() {
     let attempts = 0;
     while (attempts < 5) {
         const code = Math.floor(1000 + Math.random() * 9000);
-        const { error } = await supabase.from('rooms').insert({ id: code });
+        // Use the corrected supabaseClient variable
+        const { error } = await supabaseClient.from('rooms').insert({ id: code });
 
         if (!error) {
             console.log(`Room created successfully with code: ${code}`);
@@ -109,7 +111,8 @@ async function createUniqueRoom() {
  * Subscribes to database changes for the current room to listen for the remote.
  */
 function listenForRemote() {
-    roomSubscription = supabase.channel(`room-${pairingCode}`)
+    // Use the corrected supabaseClient variable
+    roomSubscription = supabaseClient.channel(`room-${pairingCode}`)
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${pairingCode}` },
             (payload) => {
                 const { status, command } = payload.new;
@@ -148,10 +151,12 @@ function handleRemoteCommand(key) {
  */
 async function cleanupRoom() {
     if (roomSubscription) {
-        supabase.removeChannel(roomSubscription);
+        // Use the corrected supabaseClient variable
+        supabaseClient.removeChannel(roomSubscription);
     }
     if (pairingCode) {
-        await supabase.from('rooms').delete().eq('id', pairingCode);
+        // Use the corrected supabaseClient variable
+        await supabaseClient.from('rooms').delete().eq('id', pairingCode);
         console.log(`Room ${pairingCode} has been cleaned up.`);
     }
 }
@@ -329,5 +334,4 @@ function handleExitCancel() { hideExitPopup(); }
 function onErrorEvent(event) { onError(event.detail); }
 function onError(error) { console.error('Shaka Player Error:', error.code, 'object', error); }
 
-// Start the application
 document.addEventListener('DOMContentLoaded', init);
