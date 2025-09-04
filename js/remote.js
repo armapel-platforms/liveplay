@@ -1,57 +1,112 @@
+// remote.js
+
 document.addEventListener('DOMContentLoaded', () => {
+    // --- 1. CONFIGURE SUPERBASE ---
+    // Paste the SAME Project URL and anon public key you used in tv.js
+    const SUPABASE_URL = 'https://indaanmxftowbkoxetvc.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImluZGFhbm14ZnRvd2Jrb3hldHZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NTY3OTcsImV4cCI6MjA3MjUzMjc5N30.cGONWqDNo5ujeVZIbaAf2XVWHDvn2YUXFw_lgHErxXM';
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let pairingCode;
+
+    // --- DOM ELEMENT VARIABLES ---
     const codeEntryContainer = document.getElementById('code-entry-container');
     const remoteControlContainer = document.getElementById('remote-control-container');
     const connectButton = document.getElementById('connect-btn');
     const codeInput = document.getElementById('code-input');
-
-    // This script will only run on mobile/tablet devices due to the redirect script in remote.html.
-    // In a real application, you would initialize a WebSocket connection here.
-    // const socket = new WebSocket('ws://your-backend-url');
-
-    connectButton.addEventListener('click', () => {
-        const enteredCode = codeInput.value;
-        if (enteredCode.length === 4 && /^\d{4}$/.test(enteredCode)) {
-            // In a real app, you would send this code to your backend to verify.
-            // For example:
-            // socket.send(JSON.stringify({ type: 'pair', code: enteredCode }));
-
-            // For this example, we'll simulate a successful connection and show the remote.
-            console.log(`Attempting to connect with code: ${enteredCode}`);
-            codeEntryContainer.style.display = 'none';
-            remoteControlContainer.style.display = 'flex';
-        } else {
-            alert('Please enter a valid 4-digit code.');
-            codeInput.value = ''; // Clear the input for re-entry
-        }
-    });
-
-    // --- Remote Control Button Logic ---
-    // This adds a click event listener to each button in the remote grid.
     const remoteButtons = document.querySelectorAll('.remote-btn');
 
-    remoteButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const command = button.id.replace('btn-', ''); // Extracts 'up', 'down', 'ok', etc.
+    /**
+     * Handles the click on the "Connect" button. It validates the code,
+     * checks for stale rooms, and establishes the connection.
+     */
+    const handleConnect = async () => {
+        const enteredCode = codeInput.value;
+        if (!/^\d{4}$/.test(enteredCode)) {
+            alert('Please enter a valid 4-digit code.');
+            return;
+        }
 
-            // In a real app, you would send the command over the WebSocket connection.
-            // For example:
-            // socket.send(JSON.stringify({ action: 'remote-press', key: command }));
+        pairingCode = parseInt(enteredCode);
+        
+        // Provide user feedback during connection attempt
+        connectButton.disabled = true;
+        connectButton.textContent = 'Connecting...';
 
-            console.log(`Sending command: ${command}`);
+        try {
+            // Check if the room exists in the database
+            const { data, error } = await supabase
+                .from('rooms')
+                .select('id, created_at')
+                .eq('id', pairingCode)
+                .single(); // Expect only one result
 
-            // Provides haptic feedback on supported mobile devices for a better user experience.
-            if (navigator.vibrate) {
-                navigator.vibrate(50); // Vibrate for 50 milliseconds
+            if (error || !data) {
+                throw new Error('Code is incorrect or the TV is disconnected.');
             }
-        });
-    });
 
-    // In a real app, you might also listen for messages from the server,
-    // for example, to know if the TV disconnects.
-    // socket.onclose = () => {
-    //     alert("Connection to the TV was lost. Please reconnect.");
-    //     remoteControlContainer.style.display = 'none';
-    //     codeEntryContainer.style.display = 'flex';
-    //     codeInput.value = '';
-    // };
+            // Prevent connecting to old, "ghost" rooms (e.g., from a closed tab)
+            const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
+            const roomAge = Date.now() - new Date(data.created_at).getTime();
+            if (roomAge > FIVE_MINUTES_IN_MS) {
+                // Clean up the stale room
+                await supabase.from('rooms').delete().eq('id', pairingCode);
+                throw new Error('This TV code has expired. Please refresh your TV.');
+            }
+            
+            // Room is valid. Update its status to notify the TV.
+            const { error: updateError } = await supabase
+                .from('rooms')
+                .update({ status: 'remote_connected' })
+                .eq('id', pairingCode);
+            
+            if (updateError) {
+                throw new Error('Could not connect to the TV. Please try again.');
+            }
+
+            console.log('Successfully connected to TV room.');
+            codeEntryContainer.style.display = 'none';
+            remoteControlContainer.style.display = 'flex';
+
+        } catch (err) {
+            alert(`Pairing Failed: ${err.message}`);
+        } finally {
+            // Always re-enable the button after the attempt is finished
+            connectButton.disabled = false;
+            connectButton.textContent = 'Connect';
+        }
+    };
+
+    /**
+     * Handles clicks on any of the remote control buttons and sends the
+     * command to the Supabase database.
+     */
+    const handleRemotePress = async (event) => {
+        if (!pairingCode) return; // Guard against sending commands before connecting
+
+        const button = event.currentTarget;
+        const commandKey = button.id.replace('btn-', '');
+        
+        // Update the 'command' field in the database. The TV is listening for this.
+        const { error } = await supabase
+            .from('rooms')
+            .update({ command: { key: commandKey, timestamp: Date.now() } })
+            .eq('id', pairingCode);
+
+        if (error) {
+            console.error('Failed to send command:', error);
+            // Optionally, you could show an error to the user here
+        }
+        
+        // Provide haptic feedback on mobile
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+    };
+
+    // --- ATTACH EVENT LISTENERS ---
+    connectButton.addEventListener('click', handleConnect);
+    remoteButtons.forEach(button => {
+        button.addEventListener('click', handleRemotePress);
+    });
 });
