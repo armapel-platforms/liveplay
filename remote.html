@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Liveplay Remote (Firebase)</title>
+    <title>Liveplay Remote</title>
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,1,0" />
     <style>
@@ -19,7 +19,6 @@
         .remote-btn:active { background-color: rgba(120, 120, 120, 0.9); transform: scale(0.95); }
         #btn-up { grid-area: up; } #btn-down { grid-area: down; } #btn-left { grid-area: left; } #btn-right { grid-area: right; }
         #btn-ok { grid-area: ok; background-color: rgba(120, 120, 120, 0.7); transform: scale(1.1); }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
     </style>
 </head>
 <body>
@@ -38,8 +37,10 @@
              <span id="btn-down" class="remote-btn material-symbols-outlined">keyboard_arrow_down</span>
         </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
     <script src="/js/remote.js"></script>
 </body>
 </html>
