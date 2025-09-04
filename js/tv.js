@@ -15,6 +15,7 @@ const database = firebase.database();
 let pairingCode, roomRef, player, uiTimeout;
 let channelList = [];
 let currentChannelIndex = 0, isSidebarActive = false, currentFocusIndex = 0, isExitPopupActive = false;
+let lastCommandTime = 0;
 
 const remoteCodePopup = document.getElementById('remote-code-popup');
 const remoteCodeDisplay = document.getElementById('remote-code-display');
@@ -83,6 +84,10 @@ async function initializePlayerAndUI() {
 function handleRemoteCommand(key) {
     if (!player) return;
 
+    const now = Date.now();
+    const timeSinceLast = now - lastCommandTime;
+    lastCommandTime = now;
+
     if (isExitPopupActive) {
         if (key === 'left') exitCancelBtn.focus();
         else if (key === 'right') exitConfirmBtn.focus();
@@ -92,10 +97,14 @@ function handleRemoteCommand(key) {
     }
 
     if (isSidebarActive) {
+        let moveStep = 1;
+        if ((key === 'up' || key === 'down') && timeSinceLast < 250) {
+            moveStep = 5;
+        }
         switch (key) {
             case 'left': hideSidebar(); break;
-            case 'up': moveFocus(-1); break;
-            case 'down': moveFocus(1); break;
+            case 'up': moveFocus(-moveStep); break;
+            case 'down': moveFocus(moveStep); break;
             case 'ok': selectChannelFromList(); break;
             case 'back': hideSidebar(); break;
         }
@@ -106,9 +115,10 @@ function handleRemoteCommand(key) {
         case 'up': changeChannel(1); break;
         case 'down': changeChannel(-1); break;
         case 'left': showSidebar(); break;
-        case 'right': showExitPopup(); break;
         case 'ok': showAndHideUi(); break;
         case 'back': showExitPopup(); break;
+        case 'mute': video.muted = !video.muted; break;
+        case 'playpause': video.paused ? video.play() : video.pause(); break;
     }
 }
 
@@ -134,8 +144,30 @@ function showAndHideUi() { uiOverlay.classList.add('visible'); clearTimeout(uiTi
 function toggleSidebar() { isSidebarActive ? hideSidebar() : showSidebar(); }
 function showSidebar() { isSidebarActive = true; currentFocusIndex = currentChannelIndex; sidebar.classList.add('show'); updateFocus(); }
 function hideSidebar() { isSidebarActive = false; sidebar.classList.remove('show'); }
-function populateChannelList() { channelListContainer.innerHTML = ''; channelList.forEach((channel, index) => { const li = document.createElement('li'); li.dataset.index = index; li.textContent = channel.name; channelListContainer.appendChild(li); }); }
-function moveFocus(direction) { currentFocusIndex = (currentFocusIndex + direction + channelList.length) % channelList.length; updateFocus(); }
+function populateChannelList() { 
+    channelListContainer.innerHTML = ''; 
+    channelList.forEach((channel, index) => { 
+        const li = document.createElement('li'); 
+        li.dataset.index = index; 
+        
+        const channelNameSpan = document.createElement('span');
+        channelNameSpan.textContent = channel.name;
+        
+        const sensorIcon = document.createElement('span');
+        sensorIcon.className = 'material-symbols-outlined';
+        sensorIcon.textContent = 'sensors';
+
+        li.appendChild(channelNameSpan);
+        li.appendChild(sensorIcon);
+        channelListContainer.appendChild(li); 
+    }); 
+}
+function moveFocus(direction) { 
+    currentFocusIndex = (currentFocusIndex + direction + channelList.length) % channelList.length; 
+    if (currentFocusIndex < 0) currentFocusIndex = 0;
+    if (currentFocusIndex >= channelList.length) currentFocusIndex = channelList.length -1;
+    updateFocus(); 
+}
 function updateFocus() { const items = channelListContainer.getElementsByTagName('li'); Array.from(items).forEach(item => item.classList.remove('focused')); const focusedElement = items[currentFocusIndex]; if (focusedElement) { focusedElement.classList.add('focused'); focusedElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
 function selectChannelFromList() { if (currentChannelIndex !== currentFocusIndex) { currentChannelIndex = currentFocusIndex; loadChannel(channelList[currentChannelIndex]); } hideSidebar(); }
 function updateTimeDate() { const now = new Date(); timeDateElement.textContent = now.toLocaleTimeString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
