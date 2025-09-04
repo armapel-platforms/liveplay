@@ -8,19 +8,17 @@ const firebaseConfig = {
   appId: "1:135496487558:web:c2aad6f56157d245917707",
   measurementId: "G-G9JXGMV4B8"
 };
-// --- 2. APPLICATION LOGIC ---
+
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const database = firebase.getDatabase(firebaseApp);
 let roomRef;
 
-// DOM Elements
 const codeEntryContainer = document.getElementById('code-entry-container');
 const remoteControlContainer = document.getElementById('remote-control-container');
 const connectButton = document.getElementById('connect-btn');
 const codeInput = document.getElementById('code-input');
 const remoteButtons = document.querySelectorAll('.remote-btn');
 
-/** Handles the click on the "Connect" button */
 const handleConnect = async () => {
     const enteredCode = codeInput.value;
     if (!/^\d{4}$/.test(enteredCode)) return alert('Please enter a valid 4-digit code.');
@@ -46,7 +44,6 @@ const handleConnect = async () => {
     }
 };
 
-/** Handles clicks on any of the remote control buttons */
 const handleRemotePress = async (event) => {
     if (!roomRef) return;
     const commandKey = event.currentTarget.id.replace('btn-', '');
@@ -58,6 +55,7 @@ const handleRemotePress = async (event) => {
     if (navigator.vibrate) navigator.vibrate(50);
 };
 
-// Attach Event Listeners
 connectButton.addEventListener('click', handleConnect);
-remoteButtons.forEach(button => button.addEventListener('click', handleRemotePress);
+remoteButtons.forEach(button => {
+    button.addEventListener('click', handleRemotePress);
+});
