@@ -8,7 +8,7 @@
         const userAgent = navigator.userAgent;
         const tvKeywords = /TV|Tizen|WebOS|Roku|Apple TV|GoogleTV|Android TV|Fire TV|SMART-TV|Bravia|Viera|AFT/i;
         const isTv = tvKeywords.test(userAgent);
-        if (!isTv) { //window.location.href = '/404'; }
+        if (!isTv) { window.location.href = '/404'; }
     </script>
     <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
