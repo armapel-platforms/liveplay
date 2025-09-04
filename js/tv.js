@@ -1,19 +1,35 @@
-// --- 1. PASTE YOUR SUPABASE PROJECT DETAILS HERE ---
-const SUPABASE_URL = 'https://efqaangjtclacltygaqr.supabase.co'; // Paste your URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmcWFhbmdqdGNsYWNsdHlnYXFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NjEwNzQsImV4cCI6MjA3MjUzNzA3NH0.Q3-UEvj23cnqUhBBGs7KZhsgN3y65bbGfUdZelDrubw'; // Paste your anon public key
+const firebaseConfig = {
+  apiKey: "AIzaSyCU_G7QYIBVtb2kdEsQY6SF9skTuka-nfk",
+  authDomain: "liveplay-remote-project.firebaseapp.com",
+  databaseURL: "https://liveplay-remote-project-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "liveplay-remote-project",
+  storageBucket: "liveplay-remote-project.firebasestorage.app",
+  messagingSenderId: "135496487558",
+  appId: "1:135496487558:web:c2aad6f56157d245917707",
+  measurementId: "G-G9JXGMV4B8"
+};
 
-// --- 2. APPLICATION LOGIC ---
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// --- 2. CHANNEL DATA (FROM YOUR API FILES) ---
+// For simplicity, we are including the channel data directly here.
+// In a production app, you would fetch this from your own secure server.
+const streams = [
+    { name: 'Kapamilya Channel', manifestUri: 'https://cdn-ue1-prod.tsv2.amagi.tv/linear/amg01006-abs-cbn-kapcha-dash-abscbnono/index.mpd', clearKey: { 'bd17afb5dc9648a39be79ee3634dd4b8': '3ecf305d54a7729299b93a3d69c02ea5' }, category: "General" },
+    { name: 'GMA', manifestUri: 'https://ott.m3u8.nathcreqtives.com/gma/stream/manifest.m3u8', category: "General" },
+    { name: 'ANC', manifestUri: 'https://cdn-ue1-prod.tsv2.amagi.tv/linear/amg01006-abs-cbn-anc-global-dash-abscbnono/index.mpd', clearKey: { '4bbdc78024a54662854b412d01fafa16': '6039ec9b213aca913821677a28bd78ae' }, category: "News" },
+    { name: 'Cinema One', manifestUri: 'https://d9rpesrrg1bdi.cloudfront.net/out/v1/93b9db7b231d45f28f64f29b86dc6c65/index.mpd', clearKey: { '58d0e56991194043b8fb82feb4db7276': 'd68f41b59649676788889e19fb10d22c' }, category: "Movies" },
+    { name: 'NBA TV Philippines', manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/pl_nba.mpd', clearKey: { 'f36eed9e95f140fabbc88a08abbeafff': '0125600d0eb13359c28bdab4a2ebe75a' }, category: "Sports" },
+    { name: 'Cartoon Network', manifestUri: 'https://linearjitp-playback.astro.com.my/dash-wv/linear/509/default_ott.mpd', clearKey: { '1a05bebf706408431a390c3f9f40f410': '89c5ff9f8e65c7fe966afbd2f9128e5f' }, category: "Kids" },
+];
 
-// Global state variables
-let pairingCode;
-let roomSubscription;
-let player;
-let channelList = []; // This will be filled by your API
+// --- 3. APPLICATION LOGIC ---
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const database = firebase.getDatabase(firebaseApp);
+
+let pairingCode, roomRef, player, uiTimeout;
+let channelList = streams; // Use the data from above
 let currentChannelIndex = 0;
 let isSidebarActive = false;
 let currentFocusIndex = 0;
-let uiTimeout;
 
 // DOM Elements
 const remoteCodePopup = document.getElementById('remote-code-popup');
@@ -29,49 +45,34 @@ const timeDateElement = document.getElementById('time-date');
 /** Main initialization function */
 async function init() {
     try {
-        pairingCode = await createUniqueRoom();
+        pairingCode = Math.floor(1000 + Math.random() * 9000);
+        roomRef = firebase.ref(database, 'rooms/' + pairingCode);
+        await firebase.set(roomRef, { createdAt: firebase.serverTimestamp(), status: 'waiting' });
+        firebase.onDisconnect(roomRef).remove(); // Auto-cleanup
         remoteCodeDisplay.textContent = pairingCode;
         listenForRemote();
-        window.addEventListener('beforeunload', cleanupRoom);
     } catch (error) {
         console.error("Pairing Error:", error);
         remoteCodeDisplay.textContent = "ERR!";
     }
 }
 
-/** Creates a unique 4-digit code in the Supabase 'rooms' table */
-async function createUniqueRoom() {
-    let attempts = 0;
-    while (attempts < 10) {
-        const code = Math.floor(1000 + Math.random() * 9000);
-        const { error } = await supabaseClient.from('rooms').insert({ id: code });
-        if (!error) return code;
-        if (error.code === '23505') attempts++;
-        else throw error;
-    }
-    throw new Error('Failed to generate a unique room code.');
-}
-
-/** Subscribes to database changes to listen for the remote */
+/** Listens for changes in our Firebase room */
 function listenForRemote() {
-    roomSubscription = supabaseClient.channel(`room-${pairingCode}`)
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${pairingCode}` },
-            (payload) => {
-                const { status, command } = payload.new;
-                if (status === 'remote_connected' && !player) { // Check if player is already started
-                    console.log("Remote Connected! Starting Player...");
-                    remoteCodePopup.classList.add('hidden');
-                    startPlayer();
-                }
-                if (command?.key) handleRemoteCommand(command.key);
-            }
-        )
-        .subscribe();
+    firebase.onValue(roomRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+        if (data.status === 'remote_connected' && !player) {
+            remoteCodePopup.classList.add('hidden');
+            startPlayer();
+        }
+        if (data.command) handleRemoteCommand(data.command.key);
+    });
 }
 
 /** Handles incoming commands from the remote */
 function handleRemoteCommand(key) {
-    console.log(`Remote command received: ${key}`);
+    console.log(`Command: ${key}`);
     switch (key) {
         case 'up': isSidebarActive ? moveFocus(-1) : changeChannel(1); break;
         case 'down': isSidebarActive ? moveFocus(1) : changeChannel(-1); break;
@@ -83,29 +84,13 @@ function handleRemoteCommand(key) {
 
 /** Initializes Shaka Player and loads the first channel */
 async function startPlayer() {
-    try {
-        // Fetch the channel list from your API
-        const response = await fetch('/api/getChannels.js');
-        if (!response.ok) throw new Error('Failed to fetch channel list');
-        channelList = await response.json();
-        if (channelList.length === 0) throw new Error('Channel list is empty.');
-
-        shaka.polyfill.installAll();
-        if (!shaka.Player.isBrowserSupported()) throw new Error('Browser not supported for Shaka Player');
-
-        player = new shaka.Player(video);
-        player.addEventListener('error', onErrorEvent);
-
-        populateChannelList();
-        updateTimeDate();
-        setInterval(updateTimeDate, 1000 * 30);
-        
-        await loadChannel(channelList[currentChannelIndex]);
-    } catch (error) {
-        console.error("Player failed to start:", error);
-        channelName.textContent = "Error";
-        channelCategory.textContent = "Could not start the player.";
-    }
+    shaka.polyfill.installAll();
+    player = new shaka.Player(video);
+    player.addEventListener('error', (e) => console.error('Shaka Player Error:', e.detail));
+    populateChannelList();
+    updateTimeDate();
+    setInterval(updateTimeDate, 30000);
+    await loadChannel(channelList[currentChannelIndex]);
 }
 
 /** Loads a specified channel into the player */
@@ -113,28 +98,15 @@ async function loadChannel(channel) {
     if (!channel) return;
     updateChannelInfo(channel);
     try {
-        // Fetch the specific stream data (manifest + key) from your API
-        const streamResponse = await fetch(`/api/getStream.js?name=${encodeURIComponent(channel.name)}`);
-        if (!streamResponse.ok) throw new Error(`Stream data for ${channel.name} not found`);
-        const streamData = await streamResponse.json();
-
-        // Configure Shaka Player with the fetched DRM keys
-        if (streamData.clearKey) {
-            player.configure('drm.clearKeys', streamData.clearKey);
+        if (channel.clearKey) {
+            player.configure('drm.clearKeys', channel.clearKey);
         }
-
-        await player.load(streamData.manifestUri);
+        await player.load(channel.manifestUri);
         showAndHideUi();
     } catch (error) {
-        console.error(`Error loading channel ${channel.name}:`, error);
-        channelName.textContent = `Error loading ${channel.name}`;
-        channelCategory.textContent = "Cannot play this stream.";
+        console.error(`Error loading ${channel.name}:`, error);
     }
 }
-
-// All other UI functions (changeChannel, updateChannelInfo, showAndHideUi, sidebar logic, etc.)
-// remain the same as in the previous version. They will now use the `channelList`
-// that was populated from your API.
 
 function changeChannel(direction) {
     currentChannelIndex = (currentChannelIndex - direction + channelList.length) % channelList.length;
@@ -201,18 +173,7 @@ function selectChannelFromList() {
 
 function updateTimeDate() {
     const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const date = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
-    timeDateElement.textContent = `${date}, ${time}`;
-}
-
-async function cleanupRoom() {
-    if (roomSubscription) supabaseClient.removeChannel(roomSubscription);
-    if (pairingCode) await supabaseClient.from('rooms').delete().eq('id', pairingCode);
-}
-
-function onErrorEvent(event) {
-    console.error('Shaka Player Error:', event.detail);
+    timeDateElement.textContent = now.toLocaleTimeString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
 document.addEventListener('DOMContentLoaded', init);
