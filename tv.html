@@ -19,7 +19,7 @@
         #channel-info { position: absolute; left: 50px; bottom: 40px; }
         #channel-name { font-size: 2.5em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
         #channel-category { font-size: 1.0em; margin: 3px 0 0 0; color: #ccc; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
-        #live-indicator-corner { display: flex; align-items: center; gap: 8px; color: #ff4d00; font-weight: 400; font-size: 1.0rem; position: absolute; bottom: 40px; right: 50px; }
+        #live-indicator-corner { display: flex; align-items: center; gap: 8px; color: #ff4d00; position: absolute; bottom: 40px; right: 50px; text-shadow: 1px 1px 2px #000; }
         #sidebar { position: fixed; top: 0; left: 0; width: 420px; height: 100%; background-color: rgba(10, 10, 10, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 2px solid #333; z-index: 50; display: flex; flex-direction: column; transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
         #sidebar.show { transform: translateX(0); }
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 30px; border-bottom: 2px solid #333; background-color: #000; }
@@ -31,45 +31,24 @@
         #remote-code-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); display: flex; justify-content: center; align-items: center; z-index: 200; transition: opacity 0.5s ease; }
         #remote-code-popup.hidden { opacity: 0; pointer-events: none; }
         .remote-code-container { background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); padding: 4rem 5rem; border-radius: 1rem; text-align: center; border: 1px solid #444; }
-        .remote-code-container h1 { font-size: 2.5em; margin-bottom: 1rem; }
-        .remote-code-container p { font-size: 1.2em; color: #ccc; max-width: 40ch; }
         #remote-code-display { font-size: 6rem; font-weight: bold; letter-spacing: 1.5rem; margin: 2rem 0; color: #ff4d00; }
+        #exit-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        #exit-popup-overlay.show { opacity: 1; pointer-events: auto; }
+        .exit-popup { background-color: #111; padding: 40px 60px; border-radius: 10px; text-align: center; border: 1px solid #444; }
+        .exit-buttons button { background-color: #333; color: white; border: 2px solid #555; padding: 15px 40px; font-size: 1.5em; border-radius: 5px; margin: 0 20px; cursor: pointer; }
+        .exit-buttons button:focus { background-color: #ff4d00; outline: none; }
     </style>
 </head>
 <body>
-    <div id="video-container">
-        <video id="video" autoplay poster="https://i.imgur.com/3v3L1g4.png"></video>
-    </div>
+    <div id="video-container"><video id="video" autoplay poster="https://i.imgur.com/3v3L1g4.png"></video></div>
+    <div id="ui-overlay"><div id="fade-overlay"></div><div id="channel-info"><h1 id="channel-name"></h1><p id="channel-category"></p></div><div id="live-indicator-corner"><span class="material-symbols-outlined">sensors</span> LIVE</div></div>
+    <div id="sidebar"><div class="sidebar-header"><strong class="sidebar-logo">liveplay</strong><span id="time-date"></span></div><ul id="channel-list-container"></ul></div>
+    <div id="remote-code-popup"><div class="remote-code-container"><h1>Pair Your Remote</h1><p>Enter the 4-digit code displayed on your TV screen.</p><div id="remote-code-display">----</div></div></div>
+    <div id="exit-popup-overlay"><div class="exit-popup"><h2>Exit Liveplay?</h2><div class="exit-buttons"><button id="exit-cancel-btn">Cancel</button><button id="exit-confirm-btn">Exit</button></div></div></div>
 
-    <div id="ui-overlay">
-        <div id="fade-overlay"></div>
-        <div id="channel-info">
-            <h1 id="channel-name"></h1>
-            <p id="channel-category"></p>
-        </div>
-        <div id="live-indicator-corner">
-            <span class="material-symbols-outlined">sensors</span> LIVE
-        </div>
-    </div>
-
-    <div id="sidebar">
-        <div class="sidebar-header">
-            <strong class="sidebar-logo">liveplay</strong>
-            <span id="time-date"></span>
-        </div>
-        <ul id="channel-list-container"></ul>
-    </div>
-
-    <div id="remote-code-popup">
-        <div class="remote-code-container">
-            <h1>Pair Your Remote</h1>
-            <p>On your phone, visit this website and enter the code below.</p>
-            <div id="remote-code-display">----</div>
-        </div>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    <script src="/js/tv.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
+    <script src="tv.js"></script>
 </body>
 </html>
