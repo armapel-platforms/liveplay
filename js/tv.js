@@ -1,21 +1,8 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyCU_G7QYIBVtb2kdEsQY6SF9skTuka-nfk",
-  authDomain: "liveplay-remote-project.firebaseapp.com",
-  databaseURL: "https://liveplay-remote-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "liveplay-remote-project",
-  storageBucket: "liveplay-remote-project.firebasestorage.app",
-  messagingSenderId: "135496487558",
-  appId: "1:135496487558:web:c2aad6f56157d245917707",
-  measurementId: "G-G9JXGMV4B8"
-};
-
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
 let pairingCode, roomRef, player, uiTimeout;
 let channelList = [];
 let currentChannelIndex = 0, isSidebarActive = false, currentFocusIndex = 0, isExitPopupActive = false;
 let lastCommandTime = 0;
+let database;
 
 const remoteCodePopup = document.getElementById('remote-code-popup');
 const remoteCodeDisplay = document.getElementById('remote-code-display');
@@ -30,7 +17,24 @@ const exitPopupOverlay = document.getElementById('exit-popup-overlay');
 const exitConfirmBtn = document.getElementById('exit-confirm-btn');
 const exitCancelBtn = document.getElementById('exit-cancel-btn');
 
-document.addEventListener('DOMContentLoaded', initFirebase);
+async function initializeApp() {
+    try {
+        const response = await fetch('/api/firebase.js');
+        if (!response.ok) {
+            throw new Error('Failed to fetch Firebase config');
+        }
+        const firebaseConfig = await response.json();
+
+        firebase.initializeApp(firebaseConfig);
+        database = firebase.database();
+        
+        initFirebase();
+
+    } catch (error) {
+        console.error("Initialization failed:", error);
+        remoteCodeDisplay.textContent = "ERR!";
+    }
+}
 
 async function initFirebase() {
     try {
@@ -54,7 +58,9 @@ function listenForRemote() {
             remoteCodePopup.classList.add('hidden');
             initializePlayerAndUI();
         }
-        if (data.command) handleRemoteCommand(data.command.key);
+        if (data.command && data.command.timestamp > lastCommandTime) {
+            handleRemoteCommand(data.command);
+        }
     });
 }
 
@@ -81,10 +87,11 @@ async function initializePlayerAndUI() {
     }
 }
 
-function handleRemoteCommand(key) {
+function handleRemoteCommand(command) {
     if (!player) return;
 
-    const now = Date.now();
+    const key = command.key;
+    const now = command.timestamp;
     const timeSinceLast = now - lastCommandTime;
     lastCommandTime = now;
 
@@ -98,7 +105,7 @@ function handleRemoteCommand(key) {
 
     if (isSidebarActive) {
         let moveStep = 1;
-        if ((key === 'up' || key === 'down') && timeSinceLast < 250) {
+        if ((key === 'up' || key === 'down') && timeSinceLast < 400) {
             moveStep = 5;
         }
         switch (key) {
@@ -173,3 +180,5 @@ function selectChannelFromList() { if (currentChannelIndex !== currentFocusIndex
 function updateTimeDate() { const now = new Date(); timeDateElement.textContent = now.toLocaleTimeString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
 function showExitPopup() { isExitPopupActive = true; exitPopupOverlay.classList.add('show'); exitCancelBtn.focus(); }
 function hideExitPopup() { isExitPopupActive = false; exitPopupOverlay.classList.remove('show'); }
+
+document.addEventListener('DOMContentLoaded', initializeApp);
