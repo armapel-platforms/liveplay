@@ -101,22 +101,14 @@
         #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
         #channel-list-container li.focused .material-symbols-outlined { color: #fff; }
         #remote-code-popup { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: rgba(0, 0, 0, 0.95); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 200; 
-            transition: opacity 0.5s ease; 
+            display: flex; justify-content: center; align-items: center; 
+            z-index: 200; transition: opacity 0.5s ease; 
         }
         
         #remote-code-popup.hidden { 
-            opacity: 0; 
-            pointer-events: none; 
+            opacity: 0; pointer-events: none; 
         }
 
         .remote-code-container {
@@ -126,7 +118,6 @@
             padding: 2.5rem 3.5rem;
             border-radius: 24px;
             text-align: center;
-            border: 1px solid #444;
             max-width: 500px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
@@ -150,10 +141,23 @@
             font-size: 1.2em;
             background-color: rgba(0, 0, 0, 0.3);
             padding: 12px 18px;
-            border-radius: 8px;
-            margin-bottom: 2rem;
+            border-radius: 10px;
             letter-spacing: 1px;
-            border: 1px solid #333;
+        }
+
+        .pairing-code-header {
+            font-size: 0.9em;
+            font-weight: 400;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 2rem 0 0.75rem 0;
+        }
+
+        .code-display-wrapper {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.75rem 0;
+            border-radius: 8px;
         }
 
         #remote-code-display {
@@ -161,8 +165,7 @@
             font-weight: bold;
             letter-spacing: 1.2rem;
             margin: 0;
-            color: #fff;
-            text-shadow: 0 0 15px rgba(255, 77, 0, 0.5);
+            color: #ff4d00;
         }
         #exit-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         #exit-popup-overlay.show { opacity: 1; pointer-events: auto; }
@@ -194,7 +197,11 @@
                 To use your phone as a remote, visit the address below and enter the pairing code.
             </p>
             <div class="remote-url">liveplay.vercel.app/home/remote</div>
-            <div id="remote-code-display">----</div>
+
+            <h3 class="pairing-code-header">Your Pairing Code</h3>
+            <div class="code-display-wrapper">
+                <div id="remote-code-display">----</div>
+            </div>
         </div>
     </div>
     <div id="exit-popup-overlay"><div class="exit-popup"><h2>Exit Liveplay?</h2><div class="exit-buttons"><button id="exit-cancel-btn">Cancel</button><button id="exit-confirm-btn">Exit</button></div></div></div>
