@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const SUPABASE_URL = 'https://sstlszevsvtxghumzujx.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzdGxzemV2c3Z0eGdodW16dWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NTc2MzcsImV4cCI6MjA3MjUzMzYzN30.cJ68NKB1Oh2DMuazoXV36tKyIjXmTDojTy_gnLXLzsA';
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Correctly initialize the Supabase client
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let pairingCode;
 
     // --- DOM ELEMENT VARIABLES ---
@@ -35,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Check if the room exists in the database
-            const { data, error } = await supabase
+            // Use the corrected supabaseClient variable
+            const { data, error } = await supabaseClient
                 .from('rooms')
                 .select('id, created_at')
                 .eq('id', pairingCode)
@@ -50,12 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const roomAge = Date.now() - new Date(data.created_at).getTime();
             if (roomAge > FIVE_MINUTES_IN_MS) {
                 // Clean up the stale room
-                await supabase.from('rooms').delete().eq('id', pairingCode);
+                // Use the corrected supabaseClient variable
+                await supabaseClient.from('rooms').delete().eq('id', pairingCode);
                 throw new Error('This TV code has expired. Please refresh your TV.');
             }
             
             // Room is valid. Update its status to notify the TV.
-            const { error: updateError } = await supabase
+            // Use the corrected supabaseClient variable
+            const { error: updateError } = await supabaseClient
                 .from('rooms')
                 .update({ status: 'remote_connected' })
                 .eq('id', pairingCode);
@@ -88,7 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const commandKey = button.id.replace('btn-', '');
         
         // Update the 'command' field in the database. The TV is listening for this.
-        const { error } = await supabase
+        // Use the corrected supabaseClient variable
+        const { error } = await supabaseClient
             .from('rooms')
             .update({ command: { key: commandKey, timestamp: Date.now() } })
             .eq('id', pairingCode);
