@@ -12,6 +12,6 @@
     { "source": "/home/privacy-policy", "destination": "/privacy.html" },
     { "source": "/home/faq", "destination": "/faq.html" },
     { "source": "/tv", "destination": "/tv.html" },
-    { "source": "/remote", "destination": "/remote.html" }
+    { "source": "/home/remote", "destination": "/remote.html" }
   ]
 }
