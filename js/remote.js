@@ -9,10 +9,10 @@ const firebaseConfig = {
   measurementId: "G-G9JXGMV4B8"
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-const database = firebase.getDatabase(firebaseApp);
-let roomRef;
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
+let roomRef;
 const codeEntryContainer = document.getElementById('code-entry-container');
 const remoteControlContainer = document.getElementById('remote-control-container');
 const connectButton = document.getElementById('connect-btn');
@@ -27,15 +27,14 @@ const handleConnect = async () => {
     connectButton.textContent = 'Connecting...';
 
     try {
-        roomRef = firebase.ref(database, 'rooms/' + enteredCode);
-        const snapshot = await firebase.get(roomRef);
+        roomRef = database.ref('rooms/' + enteredCode);
+        const snapshot = await roomRef.get();
         if (!snapshot.exists()) throw new Error('Code is incorrect or the TV is disconnected.');
         
-        await firebase.update(roomRef, { status: 'remote_connected' });
+        await roomRef.update({ status: 'remote_connected' });
         
         codeEntryContainer.classList.add('hidden');
         remoteControlContainer.classList.remove('hidden');
-
     } catch (err) {
         alert(`Pairing Failed: ${err.message}`);
     } finally {
@@ -49,9 +48,9 @@ const handleRemotePress = async (event) => {
     const commandKey = event.currentTarget.id.replace('btn-', '');
     const commandData = {
         key: commandKey,
-        timestamp: firebase.serverTimestamp()
+        timestamp: firebase.database.ServerValue.TIMESTAMP
     };
-    await firebase.update(roomRef, { command: commandData });
+    await roomRef.update({ command: commandData });
     if (navigator.vibrate) navigator.vibrate(50);
 };
 
