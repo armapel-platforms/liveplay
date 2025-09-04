@@ -3,8 +3,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. CONFIGURE SUPERBASE ---
     // Paste the SAME Project URL and anon public key you used in tv.js
-    const SUPABASE_URL = 'https://indaanmxftowbkoxetvc.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImluZGFhbm14ZnRvd2Jrb3hldHZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NTY3OTcsImV4cCI6MjA3MjUzMjc5N30.cGONWqDNo5ujeVZIbaAf2XVWHDvn2YUXFw_lgHErxXM';
+    const SUPABASE_URL = 'https://sstlszevsvtxghumzujx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzdGxzemV2c3Z0eGdodW16dWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NTc2MzcsImV4cCI6MjA3MjUzMzYzN30.cJ68NKB1Oh2DMuazoXV36tKyIjXmTDojTy_gnLXLzsA';
 
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let pairingCode;
