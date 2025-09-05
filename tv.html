@@ -27,11 +27,12 @@
         #ui-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 0.4s ease-in-out; pointer-events: none; }
         #ui-overlay.visible { opacity: 1; }
         #fade-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.9) 100%); }
-        #channel-info { display: flex; align-items: flex-start; gap: 20px; position: absolute; left: 50px; bottom: 40px; }
-        #channel-number { font-size: 2.5em; font-weight: bold; }
+        #channel-info { display: flex; align-items: center; gap: 20px; position: absolute; left: 50px; bottom: 40px; }
+        #channel-number { font-size: 5em; font-weight: 800; line-height: 1; }
         #channel-details { display: flex; flex-direction: column; }
-        #channel-name { font-size: 2.5em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
-        #channel-category { font-size: 1.0em; margin: 3px 0 0 0; color: #ccc; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+        #channel-name { font-size: 2.5em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); font-weight: bold; }
+        #channel-category { font-size: 1.2em; margin: 5px 0 0 0; color: #ccc; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+
         #live-indicator-corner { display: flex; align-items: center; gap: 8px; color: #ff4d00; position: absolute; bottom: 40px; right: 50px; text-shadow: 1px 1px 2px #000; }
         
         #sidebar { position: fixed; top: 0; left: 0; width: 420px; height: 100%; border-radius: 0 25px 25px 0; background-color: rgba(25, 25, 25, 0.5); backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); border-right: 1px solid #333; z-index: 50; display: flex; flex-direction: column; transform: translateX(-100%); transition: transform 0.3s ease-in-out; overflow: hidden; }
@@ -45,9 +46,11 @@
         #channel-list-container { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow-y: auto; }
         #channel-list-container::-webkit-scrollbar { display: none; }
         #channel-list-container { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Fixed Channel List Alignment */
         #channel-list-container li { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; font-size: 1.4em; border-bottom: 0.5px solid #222; transition: background-color 0.2s ease; }
-        #channel-list-container li > div { display: flex; align-items: center; gap: 15px; }
-        .channel-list-number { font-weight: bold; color: #888; }
+        #channel-list-container li > .channel-text-wrapper { display: flex; align-items: center; gap: 20px; }
+        .channel-list-number { font-weight: bold; color: #888; font-size: 1.1em; }
         #channel-list-container li .material-symbols-outlined { color: #ff4d00; }
         #channel-list-container li.focused { background-color: #ff4d00; color: #fff; }
         #channel-list-container li.focused .channel-list-number { color: #fff; }
@@ -116,8 +119,8 @@
     </div>
 
     <div id="direct-input-display">
-        <div id="direct-input-channel-name">Channel Name</div>
         <div id="direct-input-channel-number">000</div>
+        <div id="direct-input-channel-name">Channel Name</div>
     </div>
 
     <div id="exit-popup-overlay"><div class="exit-popup"><h2>Exit Liveplay?</h2><div class="exit-buttons"><button id="exit-cancel-btn">Cancel</button><button id="exit-confirm-btn">Exit</button></div></div></div>
