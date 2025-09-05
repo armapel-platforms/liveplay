@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const codeInput = document.getElementById('code-input');
   const clickableButtons = document.querySelectorAll('.control-area, #btn-ok, .num-btn');
   const tvCodeDisplay = document.getElementById('tv-code-display');
-
   const muteBtn = document.getElementById('btn-mute');
   const pauseBtn = document.getElementById('btn-pause');
   const muteIcon = muteBtn.querySelector('.material-symbols-outlined');
@@ -19,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/firebase.js');
       if (!response.ok) { throw new Error('Failed to fetch Firebase config'); }
       const firebaseConfig = await response.json();
-      if (!firebaseConfig ||.apiKey) { throw new Error('Invalid Firebase config received'); }
+      
+      if (!firebaseConfig || !firebaseConfig.apiKey) { throw new Error('Invalid Firebase config received'); }
       
       firebase.initializeApp(firebaseConfig);
       
