@@ -209,6 +209,9 @@ function populateChannelList() {
         const li = document.createElement('li'); 
         li.dataset.index = index;
         
+        const textWrapper = document.createElement('div');
+        textWrapper.className = 'channel-text-wrapper';
+
         const numberSpan = document.createElement('span');
         numberSpan.className = 'channel-list-number';
         numberSpan.textContent = formatChannelNumber(index);
@@ -221,7 +224,6 @@ function populateChannelList() {
         liveIcon.className = 'material-symbols-outlined';
         liveIcon.textContent = 'sensors';
 
-        const textWrapper = document.createElement('div');
         textWrapper.appendChild(numberSpan);
         textWrapper.appendChild(nameSpan);
 
@@ -230,6 +232,7 @@ function populateChannelList() {
         channelListContainer.appendChild(li); 
     }); 
 }
+
 function moveFocus(direction) { 
     currentFocusIndex = (currentFocusIndex + direction + channelList.length) % channelList.length; 
     if (currentFocusIndex < 0) currentFocusIndex = 0;
