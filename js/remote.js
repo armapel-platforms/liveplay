@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const pauseBtn = document.getElementById('btn-pause');
   const muteIcon = muteBtn.querySelector('.material-symbols-outlined');
   const pauseIcon = pauseBtn.querySelector('.material-symbols-outlined');
+  
+  const dPadAndOkButtons = document.querySelectorAll('.control-area, #btn-ok');
 
   async function initializeRemote() {
     try {
@@ -22,8 +24,38 @@ document.addEventListener('DOMContentLoaded', () => {
       firebase.initializeApp(firebaseConfig);
       
       connectButton.addEventListener('click', () => handleConnect(firebase.database()));
+      
       clickableButtons.forEach(button => {
         button.addEventListener('click', handleRemotePress);
+      });
+
+      const handlePressFeedback = (event) => {
+        event.preventDefault();
+        const key = event.currentTarget.dataset.key;
+        if (!key) return;
+
+        let visualElement;
+        if (key === 'ok') {
+          visualElement = document.getElementById('btn-ok');
+        } else {
+          visualElement = document.querySelector(`.arrow[data-arrow="${key}"]`);
+        }
+
+        if (visualElement) {
+            if (event.type === 'mousedown' || event.type === 'touchstart') {
+                visualElement.classList.add('active');
+            } else {
+                visualElement.classList.remove('active');
+            }
+        }
+      };
+
+      dPadAndOkButtons.forEach(button => {
+        button.addEventListener('mousedown', handlePressFeedback);
+        button.addEventListener('mouseup', handlePressFeedback);
+        button.addEventListener('mouseleave', handlePressFeedback);
+        button.addEventListener('touchstart', handlePressFeedback, { passive: true });
+        button.addEventListener('touchend', handlePressFeedback);
       });
       
     } catch (error) {
