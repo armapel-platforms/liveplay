@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/firebase.js');
       if (!response.ok) { throw new Error('Failed to fetch Firebase config'); }
       const firebaseConfig = await response.json();
-      if (!firebaseConfig || !firebaseConfig.apiKey) { throw new Error('Invalid Firebase config received'); }
+      if (!firebaseConfig ||.apiKey) { throw new Error('Invalid Firebase config received'); }
       
       firebase.initializeApp(firebaseConfig);
       
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const handlePressFeedback = (event) => {
-        event.preventDefault();
         const key = event.currentTarget.dataset.key;
         if (!key) return;
 
