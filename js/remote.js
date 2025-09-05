@@ -4,13 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const remoteControlContainer = document.getElementById('remote-control-container');
   const connectButton = document.getElementById('connect-btn');
   const codeInput = document.getElementById('code-input');
-  const clickableButtons = document.querySelectorAll('.remote-btn, .control-area, #btn-ok');
-  
-  const muteBtn = document.getElementById('btn-mute');
-  const playPauseBtn = document.getElementById('btn-playpause');
-  const muteIcon = muteBtn.querySelector('.material-symbols-outlined');
-  const playPauseIcon = playPauseBtn.querySelector('.material-symbols-outlined');
-  
+  const clickableButtons = document.querySelectorAll('.remote-btn, .control-area, #btn-ok, .num-btn');
+  const tvCodeDisplay = document.getElementById('tv-code-display');
+  const guideToggle = document.getElementById('guide-toggle');
+  const guideContent = document.getElementById('guide-content');
+
   async function initializeRemote() {
     try {
       const response = await fetch('/api/firebase.js');
@@ -28,6 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
       connectButton.addEventListener('click', () => handleConnect(firebase.database()));
       clickableButtons.forEach(button => {
         button.addEventListener('click', handleRemotePress);
+      });
+      guideToggle.addEventListener('click', () => {
+        guideContent.classList.toggle('hidden');
       });
       
     } catch (error) {
@@ -56,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       await roomRef.update({ status: 'remote_connected' });
       
+      tvCodeDisplay.textContent = enteredCode;
       codeEntryContainer.classList.add('hidden');
       remoteControlContainer.classList.remove('hidden');
       
@@ -68,16 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   
   const handleRemotePress = async (event) => {
-    const commandKey = event.currentTarget.id.replace('btn-', '');
-    
-    if (commandKey === 'mute') {
-      muteBtn.classList.toggle('active-state');
-      muteIcon.textContent = muteBtn.classList.contains('active-state') ? 'volume_off' : 'volume_up';
-    }
-    if (commandKey === 'playpause') {
-      playPauseBtn.classList.toggle('active-state');
-      playPauseIcon.textContent = playPauseBtn.classList.contains('active-state') ? 'play_arrow' : 'pause';
-    }
+    let commandKey = event.currentTarget.dataset.key;
     
     if (navigator.vibrate) {
       navigator.vibrate(50);
