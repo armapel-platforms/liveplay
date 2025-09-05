@@ -36,7 +36,7 @@
             --input-background: #1a1a1a;
             --accent-color: #ff4d00;
             --accent-color-active: #e64400;
-            --dpad-bg: #1e1e1e; /* Now used for the new d-pad buttons */
+            --dpad-bg: #1e1e1e;
             --dpad-center-bg: #444;
             --btn-bg: #2c2c2c;
             --btn-bg-active: #444;
@@ -55,6 +55,9 @@
             font-family: 'TT Hoves Pro Trial', sans-serif;
             -webkit-tap-highlight-color: transparent;
             overflow: hidden;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .hidden {
@@ -134,9 +137,9 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
-            padding: 30px 0 40px 0;
+            padding: 20px 0;
             box-sizing: border-box;
         }
 
@@ -183,16 +186,15 @@
         }
         
         /* ------------------------------------------ */
-        /* --- D-Pad Controls (NEW Grid Layout) --- */
+        /* --- D-Pad Controls (Grid Layout) --- */
         /* ------------------------------------------ */
         .d-pad-container {
             display: grid;
-            grid-template-columns: repeat(3, 80px); /* Three 80px columns */
-            grid-template-rows: repeat(3, 80px);    /* Three 80px rows */
-            gap: 10px;
+            grid-template-columns: repeat(3, 70px); 
+            grid-template-rows: repeat(3, 70px);    
+            gap: 15px;
             align-items: center;
             justify-content: center;
-            margin: 10px 0;
             flex-shrink: 0;
         }
 
@@ -213,8 +215,9 @@
         }
 
         .d-pad-btn .material-symbols-outlined {
-            font-size: 3.5rem;
-            color: #888;
+            font-size: 3rem;
+            color: #ccc;
+            font-weight: 300;
         }
 
         #btn-ok {
@@ -224,7 +227,7 @@
             height: 100%;
             cursor: pointer;
             transition: background-color 0.2s;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: white;
             display: flex;
@@ -270,7 +273,6 @@
             font-size: 1.6em;
             font-weight: 500;
             cursor: pointer;
-            user-select: none;
             transition: background-color 0.2s, color 0.2s;
         }
 
@@ -328,7 +330,6 @@
         
         <!-- Directional Pad (D-Pad) -->
         <div class="d-pad-container">
-            <!-- NEW HTML Structure: Each button is its own container -->
             <div class="d-pad-btn" data-key="up">
                 <span class="material-symbols-outlined">expand_less</span>
             </div>
