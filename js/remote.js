@@ -6,23 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const codeInput = document.getElementById('code-input');
   const clickableButtons = document.querySelectorAll('.control-area, #btn-ok, .num-btn');
   const tvCodeDisplay = document.getElementById('tv-code-display');
+
   const muteBtn = document.getElementById('btn-mute');
   const pauseBtn = document.getElementById('btn-pause');
   const muteIcon = muteBtn.querySelector('.material-symbols-outlined');
   const pauseIcon = pauseBtn.querySelector('.material-symbols-outlined');
 
-  
   async function initializeRemote() {
     try {
       const response = await fetch('/api/firebase.js');
-      if (!response.ok) {
-        throw new Error('Failed to fetch Firebase config');
-      }
+      if (!response.ok) { throw new Error('Failed to fetch Firebase config'); }
       const firebaseConfig = await response.json();
-      
-      if (!firebaseConfig || !firebaseConfig.apiKey) {
-        throw new Error('Invalid Firebase config received');
-      }
+      if (!firebaseConfig || !firebaseConfig.apiKey) { throw new Error('Invalid Firebase config received'); }
       
       firebase.initializeApp(firebaseConfig);
       
@@ -73,12 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const commandKey = event.currentTarget.dataset.key;
 
     if (commandKey === 'mute') {
-        muteBtn.classList.toggle('active-state');
-        muteIcon.textContent = muteBtn.classList.contains('active-state') ? 'volume_off' : 'volume_up';
+      muteBtn.classList.toggle('active-state');
+      muteIcon.textContent = muteBtn.classList.contains('active-state') ? 'volume_off' : 'volume_up';
     }
     if (commandKey === 'pause') {
-        pauseBtn.classList.toggle('active-state');
-        pauseIcon.textContent = pauseBtn.classList.contains('active-state') ? 'play_arrow' : 'pause';
+      pauseBtn.classList.toggle('active-state');
+      pauseIcon.textContent = pauseBtn.classList.contains('active-state') ? 'play_arrow' : 'pause';
     }
     
     if (navigator.vibrate) {
