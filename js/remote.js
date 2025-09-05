@@ -4,11 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const remoteControlContainer = document.getElementById('remote-control-container');
   const connectButton = document.getElementById('connect-btn');
   const codeInput = document.getElementById('code-input');
-  const clickableButtons = document.querySelectorAll('.remote-btn, .control-area, #btn-ok, .num-btn');
+  const clickableButtons = document.querySelectorAll('.control-area, #btn-ok, .num-btn');
   const tvCodeDisplay = document.getElementById('tv-code-display');
-  const guideToggle = document.getElementById('guide-toggle');
-  const guideContent = document.getElementById('guide-content');
+  const muteBtn = document.getElementById('btn-mute');
+  const pauseBtn = document.getElementById('btn-pause');
+  const muteIcon = muteBtn.querySelector('.material-symbols-outlined');
+  const pauseIcon = pauseBtn.querySelector('.material-symbols-outlined');
 
+  
   async function initializeRemote() {
     try {
       const response = await fetch('/api/firebase.js');
@@ -26,9 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
       connectButton.addEventListener('click', () => handleConnect(firebase.database()));
       clickableButtons.forEach(button => {
         button.addEventListener('click', handleRemotePress);
-      });
-      guideToggle.addEventListener('click', () => {
-        guideContent.classList.toggle('hidden');
       });
       
     } catch (error) {
@@ -70,7 +70,16 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   
   const handleRemotePress = async (event) => {
-    let commandKey = event.currentTarget.dataset.key;
+    const commandKey = event.currentTarget.dataset.key;
+
+    if (commandKey === 'mute') {
+        muteBtn.classList.toggle('active-state');
+        muteIcon.textContent = muteBtn.classList.contains('active-state') ? 'volume_off' : 'volume_up';
+    }
+    if (commandKey === 'pause') {
+        pauseBtn.classList.toggle('active-state');
+        pauseIcon.textContent = pauseBtn.classList.contains('active-state') ? 'play_arrow' : 'pause';
+    }
     
     if (navigator.vibrate) {
       navigator.vibrate(50);
@@ -86,4 +95,4 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   
   initializeRemote();
-});
+});```
