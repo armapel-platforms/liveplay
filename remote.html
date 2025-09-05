@@ -44,56 +44,86 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-evenly;
+            justify-content: space-between;
             align-items: center;
-            padding: 20px 0 0 0;
+            padding: 30px 0;
             box-sizing: border-box;
         }
-        .remote-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box; flex-shrink: 0; }
-        .header-title { font-size: 1.5em; }
-        .header-title strong { font-weight: 800; }
-        #tv-code-box { background: #ff4d00; border-radius: 10px; padding: 5px 15px; }
-        #tv-code-display { font-size: 1.5em; font-weight: 900; letter-spacing: 1.5px; }
-        #tv-code-label { font-size: 0.6em; text-align: center; color: #fff; }
+        .remote-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+        .header-title {
+            font-size: 1.8em;
+            font-weight: 300;
+        }
+        .header-title strong {
+            font-weight: 700;
+        }
         
-        .d-pad-container { position: relative; width: 280px; height: 280px; flex-shrink: 0; }
+        #tv-code-box {
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 12px;
+            padding: 8px 18px;
+            text-align: center;
+        }
+        #tv-code-display {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--primary-text-color);
+        }
+        #tv-code-label {
+            font-size: 0.6em;
+            text-align: center;
+            color: var(--primary-text-color);
+            font-weight: 700;
+        }
+        
+        .d-pad-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            flex-shrink: 0;
+            margin: 20px 0;
+        }
         .control-area { position: absolute; cursor: pointer; z-index: 8; }
         [data-key="up"] { width: 100%; height: 50%; top: -15%; left: 0; }
         [data-key="down"] { width: 100%; height: 50%; bottom: -15%; left: 0; }
         [data-key="left"] { width: 50%; height: 100%; left: -15%; top: 0; }
         [data-key="right"] { width: 50%; height: 100%; right: -15%; top: 0; }
         #d-pad-visual { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--dpad-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; pointer-events: none; }
-        .arrow { position: absolute; color: #888; font-size: 3.5rem; }
-        #d-pad-visual .arrow.up { top: 20px; }
-        #d-pad-visual .arrow.down { bottom: 20px; }
-        #d-pad-visual .arrow.left { left: 20px; }
-        #d-pad-visual .arrow.right { right: 20px; }
-        #btn-ok { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 130px; height: 130px; background-color: var(--dpad-center-bg); border-radius: 50%; z-index: 10; cursor: pointer; }
-
-        .arrow.active { color: #fff; transform: scale(1.15); }
+        .arrow { position: absolute; color: #888; font-size: 4rem; font-weight: 300; transition: color 0.2s, transform 0.2s; } /* Thinner arrows */
+        #d-pad-visual .arrow.up { top: 25px; }
+        #d-pad-visual .arrow.down { bottom: 25px; }
+        #d-pad-visual .arrow.left { left: 25px; }
+        #d-pad-visual .arrow.right { right: 25px; }
+        #btn-ok { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; background-color: var(--dpad-center-bg); border-radius: 50%; z-index: 10; cursor: pointer; transition: background-color 0.2s, transform 0.2s; }
+        
+        .arrow.active { color: #fff; transform: scale(1.1); }
         #btn-ok.active { background-color: #666; transform: translate(-50%, -50%) scale(1.05); }
+
         .numpad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 15px;
             width: 100%;
-            max-width: 230px;
+            max-width: 240px;
             flex-shrink: 0;
-            margin-bottom: 20px;
         }
         .num-btn { width: 65px; height: 65px; display: flex; justify-content: center; align-items: center; background-color: var(--btn-bg); color: var(--primary-text-color); border-radius: 50%; font-size: 1.5em; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; }
         .num-btn:active { background-color: var(--btn-bg-active); }
         .num-btn span.material-symbols-outlined { font-variation-settings: 'FILL' 0; transition: font-variation-settings 0.2s; }
         
-        #btn-mute.active-state, #btn-pause.active-state {
-            background-color: var(--accent-color);
-        }
-        #btn-mute.active-state:active, #btn-pause.active-state:active {
-            background-color: var(--accent-color-active);
-        }
-        .num-btn.active-state span.material-symbols-outlined {
-            font-variation-settings: 'FILL' 1;
-        }
+        #btn-mute.active-state, #btn-pause.active-state { background-color: var(--accent-color); }
+        #btn-mute.active-state:active, #btn-pause.active-state:active { background-color: var(--accent-color-active); }
+        .num-btn.active-state span.material-symbols-outlined { font-variation-settings: 'FILL' 1; }
     </style>
 </head>
 <body>
@@ -121,10 +151,10 @@
             <div class="control-area" data-key="left"></div>
             <div class="control-area" data-key="right"></div>
             <div id="d-pad-visual">
-                <span class="arrow up material-symbols-outlined">expand_less</span>
-                <span class="arrow left material-symbols-outlined">chevron_left</span>
-                <span class="arrow right material-symbols-outlined">chevron_right</span>
-                <span class="arrow down material-symbols-outlined">expand_more</span>
+                <span class="arrow up material-symbols-outlined" data-arrow="up">expand_less</span>
+                <span class="arrow left material-symbols-outlined" data-arrow="left">chevron_left</span>
+                <span class="arrow right material-symbols-outlined" data-arrow="right">chevron_right</span>
+                <span class="arrow down material-symbols-outlined" data-arrow="down">expand_more</span>
             </div>
             <div id="btn-ok" data-key="ok"></div>
         </div>
