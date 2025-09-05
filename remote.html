@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Liveplay for TV</title>
+
+    <!-- Initial Script: Redirects non-mobile users -->
     <script>
         const isMobileOrTablet = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         if (!isMobileOrTablet) { 
             window.location.href = '/404'; 
         }
     </script>
+
+    <!-- Favicon and App Icons -->
     <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96">
     <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg">
     <link rel="shortcut icon" href="/logo/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png">
     <link rel="manifest" href="/logo/site.webmanifest">
+
+    <!-- External Fonts -->
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0">
 
+    <!-- Embedded Styles -->
     <style>
+        /* ------------------------- */
+        /* --- CSS Variables --- */
+        /* ------------------------- */
         :root {
             --background-color: #000;
             --primary-text-color: #fff;
@@ -31,6 +42,9 @@
             --btn-bg-active: #444;
         }
 
+        /* ------------------------- */
+        /* --- General Styles --- */
+        /* ------------------------- */
         body, html {
             margin: 0;
             padding: 0;
@@ -61,6 +75,9 @@
             box-sizing: border-box;
         }
 
+        /* -------------------------------- */
+        /* --- Code Entry Screen Styles --- */
+        /* -------------------------------- */
         #code-entry-container h1 {
             font-size: 2em;
             margin-bottom: 10px;
@@ -112,6 +129,9 @@
             background-color: var(--accent-color-active);
         }
 
+        /* ---------------------------------- */
+        /* --- Remote Control Screen Styles --- */
+        /* ---------------------------------- */
         #remote-control-container {
             width: 100%;
             height: 100%;
@@ -165,63 +185,84 @@
             margin-top: 2px;
         }
         
+        /* ------------------------------------------ */
+        /* --- D-Pad Controls (Compatible with JS) --- */
+        /* ------------------------------------------ */
         .d-pad-container {
-            display: grid;
-            grid-template-columns: repeat(3, 70px); 
-            grid-template-rows: repeat(3, 70px);    
-            gap: 15px;
-            align-items: center;
-            justify-content: center;
+            position: relative;
+            width: 270px;
+            height: 270px;
             flex-shrink: 0;
         }
 
-        .d-pad-btn {
+        /* INVISIBLE CLICKABLE AREAS - Your JS looks for these */
+        .control-area {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10; /* Must be on top */
+        }
+        
+        [data-key="up"] { width: 50%; height: 40%; top: 0; left: 25%; }
+        [data-key="down"] { width: 50%; height: 40%; bottom: 0; left: 25%; }
+        [data-key="left"] { width: 40%; height: 50%; left: 0; top: 25%; }
+        [data-key="right"] { width: 40%; height: 50%; right: 0; top: 25%; }
+        
+        /* VISUAL REPRESENTATION - This is just for looks */
+        #d-pad-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-color: var(--dpad-bg);
             border-radius: 50%;
-            width: 100%;
-            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            pointer-events: none; /* Visuals don't intercept clicks */
         }
 
-        .d-pad-btn:active {
-            background-color: var(--btn-bg-active);
-        }
-
-        .d-pad-btn .material-symbols-outlined {
-            font-size: 3rem;
-            color: #ccc;
+        .arrow {
+            position: absolute;
+            color: #888;
+            font-size: 4rem;
             font-weight: 300;
+            transition: color 0.2s, transform 0.2s;
         }
 
+        #d-pad-visual .arrow.up { top: 25px; }
+        #d-pad-visual .arrow.down { bottom: 25px; }
+        #d-pad-visual .arrow.left { left: 25px; }
+        #d-pad-visual .arrow.right { right: 25px; }
+        
         #btn-ok {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
             background-color: var(--dpad-center-bg);
             border-radius: 50%;
-            width: 100%;
-            height: 100%;
+            z-index: 5; /* Below control areas but above visual */
             cursor: pointer;
-            transition: background-color 0.2s;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        
+        /* REQUIRED FOR VISUAL FEEDBACK - Your JS adds/removes this class */
+        .arrow.active {
+            color: #fff;
+            transform: scale(1.1);
         }
 
-        #btn-ok:active {
+        #btn-ok.active {
             background-color: #666;
+            transform: translate(-50%, -50%) scale(1.05);
         }
 
-        [data-key="up"]    { grid-area: 1 / 2 / 2 / 3; }
-        [data-key="down"]  { grid-area: 3 / 2 / 4 / 3; }
-        [data-key="left"]  { grid-area: 2 / 1 / 3 / 2; }
-        [data-key="right"] { grid-area: 2 / 3 / 3 / 4; }
-        [data-key="ok"]    { grid-area: 2 / 2 / 3 / 3; }
-
+        /* ------------------------- */
+        /* --- Numpad Controls --- */
+        /* ------------------------- */
         .numpad {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -276,6 +317,9 @@
 </head>
 <body>
 
+    <!-- ======================= -->
+    <!-- == Code Entry Screen == -->
+    <!-- ======================= -->
     <div class="container" id="code-entry-container">
         <h1>Enter TV Code</h1>
         <p>Enter the 4-digit code displayed on your TV screen to connect.</p>
@@ -285,7 +329,11 @@
         </div>
     </div>
 
+    <!-- ========================== -->
+    <!-- == Remote Control Screen == -->
+    <!-- ========================== -->
     <div class="hidden" id="remote-control-container">
+        <!-- Remote Header -->
         <div class="remote-header">
             <div class="header-title"><strong>liveplay</strong> for TV</div>
             <div id="tv-code-box">
@@ -294,22 +342,27 @@
             </div>
         </div>
         
+        <!-- Directional Pad (D-Pad) -->
         <div class="d-pad-container">
-            <div class="d-pad-btn" data-key="up">
-                <span class="material-symbols-outlined">expand_less</span>
+            <!-- Invisible click areas FOR JAVASCRIPT -->
+            <div class="control-area" data-key="up"></div>
+            <div class="control-area" data-key="down"></div>
+            <div class="control-area" data-key="left"></div>
+            <div class="control-area" data-key="right"></div>
+
+            <!-- Visual representation FOR LOOKS -->
+            <div id="d-pad-visual">
+                <span class="arrow up" data-arrow="up">expand_less</span>
+                <span class="arrow left" data-arrow="left">chevron_left</span>
+                <span class="arrow right" data-arrow="right">chevron_right</span>
+                <span class="arrow down" data-arrow="down">expand_more</span>
             </div>
-            <div class="d-pad-btn" data-key="left">
-                <span class="material-symbols-outlined">chevron_left</span>
-            </div>
-            <div id="btn-ok" data-key="ok">OK</div>
-            <div class="d-pad-btn" data-key="right">
-                <span class="material-symbols-outlined">chevron_right</span>
-            </div>
-            <div class="d-pad-btn" data-key="down">
-                <span class="material-symbols-outlined">expand_more</span>
-            </div>
+
+            <!-- Center OK button is both visual and functional -->
+            <div id="btn-ok" data-key="ok"></div>
         </div>
 
+        <!-- Number Pad & Action Buttons -->
         <div class="numpad">
             <div class="num-btn" data-key="1">1</div>
             <div class="num-btn" data-key="2">2</div>
@@ -326,8 +379,14 @@
         </div>
     </div>
 
+    <!-- ======================= -->
+    <!-- ===== Scripts ========= -->
+    <!-- ======================= -->
+    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
+    <!-- Your Application Logic -->
     <script src="/js/remote.js"></script>
 
 </body>
