@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Liveplay for TV</title>
+
+    <!-- Initial Script: Redirects non-mobile users -->
     <script>
         const isMobileOrTablet = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if (!isMobileOrTablet) { window.location.href = '/404'; }
+        if (!isMobileOrTablet) { 
+            window.location.href = '/404'; 
+        }
     </script>
-    <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
-    <link rel="shortcut" href="/logo/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
-    <link rel="manifest" href="/logo/site.webmanifest" />
+
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg">
+    <link rel="shortcut icon" href="/logo/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png">
+    <link rel="manifest" href="/logo/site.webmanifest">
+
+    <!-- External Fonts -->
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0">
+
+    <!-- Embedded Styles -->
     <style>
+        /* ------------------------- */
+        /* --- CSS Variables --- */
+        /* ------------------------- */
         :root {
             --background-color: #000;
             --primary-text-color: #fff;
@@ -26,29 +40,112 @@
             --dpad-center-bg: #444;
             --btn-bg: #2c2c2c;
             --btn-bg-active: #444;
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 50px;
         }
 
-        body, html { margin: 0; padding: 0; width: 100%; height: 100vh; background-color: var(--background-color); color: var(--primary-text-color); font-family: 'TT Hoves Pro Trial', sans-serif; -webkit-tap-highlight-color: transparent; overflow: hidden; }
-        .hidden { display: none !important; }
-        .container { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 15px; box-sizing: border-box; }
-        
-        #code-entry-container h1 { font-size: 2em; margin-bottom: 10px; }
-        #code-entry-container p { font-size: 1em; color: #E0E0E0; max-width: 300px; margin-top: 0; }
-        .input-group { width: 80%; max-width: 300px; margin-top: 20px; }
-        #code-input { width: 100%; font-family: 'TT Hoves Pro Trial', sans-serif; font-weight: 800; font-size: 2.5rem; text-align: center; letter-spacing: 1rem; text-indent: 1rem; padding: 10px; background-color: var(--input-background); border: 1px solid #333; border-radius: 8px; color: var(--primary-text-color); box-sizing: border-box; }
-        #connect-btn { width: 100%; font-family: 'TT Hoves Pro Trial', sans-serif; padding: 15px 20px; margin-top: 20px; font-size: 1.2rem; background-color: var(--accent-color); border: none; border-radius: 50px; color: var(--primary-text-color); cursor: pointer; }
-        #connect-btn:active { background-color: var(--accent-color-active); }
+        /* ------------------------- */
+        /* --- General Styles --- */
+        /* ------------------------- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            font-family: 'TT Hoves Pro Trial', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+        }
 
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* -------------------------------- */
+        /* --- Code Entry Screen Styles --- */
+        /* -------------------------------- */
+        #code-entry-container h1 {
+            font-size: 2.2em;
+            margin-bottom: 15px;
+        }
+
+        #code-entry-container p {
+            font-size: 1em;
+            color: #E0E0E0;
+            max-width: 320px;
+            margin-top: 0;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        #code-input {
+            width: 100%;
+            padding: 12px;
+            font-family: 'TT Hoves Pro Trial', sans-serif;
+            font-weight: 800;
+            font-size: 2.8rem;
+            text-align: center;
+            letter-spacing: 1.2rem;
+            text-indent: 1.2rem;
+            background-color: var(--input-background);
+            color: var(--primary-text-color);
+            border: 1px solid #333;
+            border-radius: var(--border-radius-md);
+            box-sizing: border-box;
+            margin-bottom: 25px;
+        }
+
+        #connect-btn {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background-color: var(--accent-color);
+            color: var(--primary-text-color);
+            border: none;
+            border-radius: var(--border-radius-lg);
+            cursor: pointer;
+            font-family: 'TT Hoves Pro Trial', sans-serif;
+            transition: background-color 0.2s ease;
+        }
+
+        #connect-btn:active {
+            background-color: var(--accent-color-active);
+        }
+
+        /* ---------------------------------- */
+        /* --- Remote Control Screen Styles --- */
+        /* ---------------------------------- */
         #remote-control-container {
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
-            padding: 30px 0;
+            padding: 25px 0;
             box-sizing: border-box;
         }
+
         .remote-header {
             width: 100%;
             display: flex;
@@ -58,10 +155,12 @@
             box-sizing: border-box;
             flex-shrink: 0;
         }
+
         .header-title {
             font-size: 1.1em;
             font-weight: 300;
         }
+
         .header-title strong {
             font-weight: 700;
         }
@@ -69,78 +168,183 @@
         #tv-code-box {
             background-color: var(--accent-color);
             border: none;
-            border-radius: 12px;
-            padding: 5px 15px;
+            border-radius: var(--border-radius-md);
+            padding: 8px 18px;
             text-align: center;
         }
+
         #tv-code-display {
             font-size: 1.35em;
             font-weight: 700;
             letter-spacing: 2px;
             color: var(--primary-text-color);
         }
+
         #tv-code-label {
-            font-size: 0.45em;
+            font-size: 0.5em;
+            font-weight: 700;
             text-align: center;
             color: var(--primary-text-color);
-            font-weight: 700;
+            margin-top: 2px;
         }
         
+        /* ------------------------- */
+        /* --- D-Pad Controls --- */
+        /* ------------------------- */
         .d-pad-container {
             position: relative;
             width: 270px;
             height: 270px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             flex-shrink: 0;
-            margin: 5px 0;
         }
-        .control-area { position: absolute; cursor: pointer; z-index: 8; }
-        [data-key="up"] { width: 50%; height: 40%; top: 0; left: 25%; border-radius: 100px 100px 0 0; }
-        [data-key="down"] { width: 50%; height: 40%; bottom: 0; left: 25%; border-radius: 0 0 100px 100px; }
-        [data-key="left"] { width: 40%; height: 50%; left: 0; top: 25%; border-radius: 100px 0 0 100px; }
-        [data-key="right"] { width: 40%; height: 50%; right: 0; top: 25%; border-radius: 0 100px 100px 0; }
-        #d-pad-visual { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--dpad-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; pointer-events: none; }
-        .arrow { position: absolute; color: #888; font-size: 4rem; font-weight: 300; transition: color 0.2s, transform 0.2s; }
-        #d-pad-visual .arrow.up { top: 25px; }
-        #d-pad-visual .arrow.down { bottom: 25px; }
-        #d-pad-visual .arrow.left { left: 25px; }
-        #d-pad-visual .arrow.right { right: 25px; }
-        #btn-ok { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; background-color: var(--dpad-center-bg); border-radius: 50%; z-index: 10; cursor: pointer; transition: background-color 0.2s, transform 0.2s; }
-        
-        .arrow.active { color: #fff; transform: scale(1.1); }
-        #btn-ok.active { background-color: #666; transform: translate(-50%, -50%) scale(1.05); }
 
+        .control-area {
+            position: absolute;
+            cursor: pointer;
+            z-index: 8;
+        }
+        
+        /* UPDATED: Sizing and positioning for clickable areas to match the new visual cross */
+        [data-key="up"] { width: 90px; height: 90px; top: 0; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
+        [data-key="down"] { width: 90px; height: 90px; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 20px 20px; }
+        [data-key="left"] { width: 90px; height: 90px; left: 0; top: 50%; transform: translateY(-50%); border-radius: 20px 0 0 20px; }
+        [data-key="right"] { width: 90px; height: 90px; right: 0; top: 50%; transform: translateY(-50%); border-radius: 0 20px 20px 0; }
+
+        /* NEW: This is the container for the visual cross shape */
+        #d-pad-visual {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        /* NEW: Psuedo-elements to create the vertical and horizontal bars of the D-Pad */
+        #d-pad-visual::before,
+        #d-pad-visual::after {
+            content: '';
+            position: absolute;
+            background-color: var(--dpad-bg);
+        }
+        
+        /* The vertical bar */
+        #d-pad-visual::before {
+            width: 90px;
+            height: 100%;
+            border-radius: 20px;
+        }
+        
+        /* The horizontal bar */
+        #d-pad-visual::after {
+            width: 100%;
+            height: 90px;
+            border-radius: 20px;
+        }
+
+        .arrow {
+            position: absolute;
+            color: #888;
+            font-size: 4rem;
+            font-weight: 300;
+            transition: color 0.2s, transform 0.2s;
+        }
+        
+        /* UPDATED: Arrow positions to align with the new cross shape */
+        #d-pad-visual .arrow.up { top: 15px; }
+        #d-pad-visual .arrow.down { bottom: 15px; }
+        #d-pad-visual .arrow.left { left: 15px; }
+        #d-pad-visual .arrow.right { right: 15px; }
+
+        .arrow.active {
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        #btn-ok {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px; /* Reduced size to fit better */
+            height: 100px; /* Reduced size to fit better */
+            background-color: var(--dpad-center-bg);
+            border-radius: 50%;
+            z-index: 10;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        #btn-ok.active {
+            background-color: #666;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        /* ------------------------- */
+        /* --- Numpad Controls --- */
+        /* ------------------------- */
         .numpad {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 20px;
             width: 100%;
-            max-width: 320px;
+            max-width: 340px;
             flex-shrink: 0;
+            padding: 0 10px;
+            box-sizing: border-box;
         }
+
         .num-btn {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
+            margin: 0 auto;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: var(--btn-bg);
             color: var(--primary-text-color);
-            border-radius: 50%;
-            font-size: 1.5em;
+            border-radius: var(--border-radius-lg);
+            font-size: 1.6em;
+            font-weight: 500;
             cursor: pointer;
             user-select: none;
             transition: background-color 0.2s, color 0.2s;
-            margin: 0 auto;
         }
-        .num-btn:active { background-color: var(--btn-bg-active); }
-        .num-btn span.material-symbols-outlined { font-variation-settings: 'FILL' 0; transition: font-variation-settings 0.2s; }
+
+        .num-btn:active {
+            background-color: var(--btn-bg-active);
+        }
+
+        .num-btn span.material-symbols-outlined {
+            font-variation-settings: 'FILL' 0;
+            transition: font-variation-settings 0.2s;
+            font-size: 1.8rem;
+        }
         
-        #btn-mute.active-state, #btn-pause.active-state { background-color: var(--accent-color); }
-        #btn-mute.active-state:active, #btn-pause.active-state:active { background-color: var(--accent-color-active); }
-        .num-btn.active-state span.material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+        #btn-mute.active-state,
+        #btn-pause.active-state {
+            background-color: var(--accent-color);
+        }
+
+        #btn-mute.active-state:active,
+        #btn-pause.active-state:active {
+            background-color: var(--accent-color-active);
+        }
+
+        .num-btn.active-state span.material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
     </style>
 </head>
 <body>
+
+    <!-- ======================= -->
+    <!-- == Code Entry Screen == -->
+    <!-- ======================= -->
     <div class="container" id="code-entry-container">
         <h1>Enter TV Code</h1>
         <p>Enter the 4-digit code displayed on your TV screen to connect.</p>
@@ -150,7 +354,11 @@
         </div>
     </div>
 
+    <!-- ========================== -->
+    <!-- == Remote Control Screen == -->
+    <!-- ========================== -->
     <div class="hidden" id="remote-control-container">
+        <!-- Remote Header -->
         <div class="remote-header">
             <div class="header-title"><strong>liveplay</strong> for TV</div>
             <div id="tv-code-box">
@@ -159,20 +367,25 @@
             </div>
         </div>
         
+        <!-- Directional Pad (D-Pad) -->
         <div class="d-pad-container">
+            <!-- Invisible click areas -->
             <div class="control-area" data-key="up"></div>
             <div class="control-area" data-key="down"></div>
             <div class="control-area" data-key="left"></div>
             <div class="control-area" data-key="right"></div>
+            <!-- Visual representation -->
             <div id="d-pad-visual">
                 <span class="arrow up material-symbols-outlined" data-arrow="up">expand_less</span>
                 <span class="arrow left material-symbols-outlined" data-arrow="left">chevron_left</span>
                 <span class="arrow right material-symbols-outlined" data-arrow="right">chevron_right</span>
                 <span class="arrow down material-symbols-outlined" data-arrow="down">expand_more</span>
             </div>
+            <!-- Center OK button -->
             <div id="btn-ok" data-key="ok"></div>
         </div>
 
+        <!-- Number Pad & Action Buttons -->
         <div class="numpad">
             <div class="num-btn" data-key="1">1</div>
             <div class="num-btn" data-key="2">2</div>
@@ -189,8 +402,15 @@
         </div>
     </div>
 
+    <!-- ======================= -->
+    <!-- ===== Scripts ========= -->
+    <!-- ======================= -->
+    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
+    <!-- Application Logic -->
     <script src="/js/remote.js"></script>
+
 </body>
 </html>
