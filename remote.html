@@ -203,15 +203,16 @@
         /* ------------------------------------------ */
         .d-pad-container {
             position: relative;
-            width: 280px;
-            height: 280px;
+            width: 220px;
+            height: 220px;
             flex-shrink: 0;
             border-radius: 50%;
             background-color: var(--dpad-bg);
             display: flex;
-            justify-content: start;
+            justify-content: center;
             align-items: center;
             margin: 2px 0;
+            padding: -20px 0;
         }
 
         .control-area {
@@ -227,8 +228,8 @@
         
         #btn-ok {
             position: absolute;
-            width: 140px;
-            height: 140px;
+            width: 130px;
+            height: 130px;
             background-color: var(--dpad-center-bg);
             border-radius: 50%;
             z-index: 5;
@@ -300,10 +301,6 @@
     </style>
 </head>
 <body>
-
-    <!-- ======================= -->
-    <!-- == Code Entry Screen == -->
-    <!-- ======================= -->
     <div class="container" id="code-entry-container">
         <h1>Enter TV Code</h1>
         <p>Enter the 4-digit code displayed on your TV screen to connect.</p>
@@ -312,12 +309,7 @@
             <button id="connect-btn">Connect</button>
         </div>
     </div>
-
-    <!-- ========================== -->
-    <!-- == Remote Control Screen == -->
-    <!-- ========================== -->
     <div class="hidden" id="remote-control-container">
-        <!-- Remote Header -->
         <div class="remote-header">
             <div class="header-title"><strong>liveplay</strong> for TV</div>
             <div class="header-right-controls">
@@ -331,8 +323,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Directional Pad (D-Pad) -->
         <div class="d-pad-container">
             <div class="control-area" data-key="up"></div>
             <div class="control-area" data-key="down"></div>
@@ -340,8 +330,6 @@
             <div class="control-area" data-key="right"></div>
             <div id="btn-ok" data-key="ok"></div>
         </div>
-
-        <!-- Number Pad & Action Buttons -->
         <div class="numpad">
             <!-- Row 1 -->
             <div class="num-btn" data-key="1">1</div>
@@ -361,15 +349,8 @@
         </div>
     </div>
 
-    <!-- ======================= -->
-    <!-- ===== Scripts ========= -->
-    <!-- ======================= -->
-    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    
-    <!-- Application Logic -->
     <script src="/js/remote.js"></script>
-
 </body>
 </html>
