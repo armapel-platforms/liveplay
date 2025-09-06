@@ -1,29 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta Tags -->
+    <!-- Meta Tags for Mobile Experience -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Liveplay for TV</title>
 
-    <!-- Initial Script: Redirects non-mobile users -->
-    <script>
-        const isMobileOrTablet = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if (!isMobileOrTablet) { 
-            window.location.href = '/404'; 
-        }
-    </script>
-
     <!-- Favicon and App Icons -->
-    <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96">
     <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg">
-    <link rel="shortcut icon" href="/logo/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png">
     <link rel="manifest" href="/logo/site.webmanifest">
 
     <!-- External Fonts -->
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0" />
 
     <!-- Embedded Styles -->
     <style>
@@ -36,8 +26,9 @@
             --input-background: #1a1a1a;
             --accent-color: #ff4d00;
             --accent-color-active: #e64400;
-            --dpad-bg: #1e1e1e;
-            --dpad-center-bg: #444;
+            --dpad-bg: #222;
+            --dpad-center-bg: #fff;
+            --dpad-center-bg-active: #e0e0e0;
             --btn-bg: #2c2c2c;
             --btn-bg-active: #444;
         }
@@ -53,9 +44,9 @@
             background-color: var(--background-color);
             color: var(--primary-text-color);
             font-family: 'TT Hoves Pro Trial', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap highlight on mobile */
             overflow: hidden;
-            -webkit-user-select: none;
+            -webkit-user-select: none; /* Disables text selection */
             -ms-user-select: none;
             user-select: none;
         }
@@ -123,10 +114,16 @@
             border-radius: 50px;
             cursor: pointer;
             font-family: 'TT Hoves Pro Trial', sans-serif;
+            transition: background-color 0.2s;
         }
 
         #connect-btn:active {
             background-color: var(--accent-color-active);
+        }
+
+        #connect-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
         }
 
         /* ---------------------------------- */
@@ -137,9 +134,9 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            padding: 20px 0;
+            padding: 20px;
             box-sizing: border-box;
         }
 
@@ -148,58 +145,79 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 25px;
-            box-sizing: border-box;
             flex-shrink: 0;
         }
 
         .header-title {
-            font-size: 1.1em;
-            font-weight: 300;
+            font-size: 1.2em;
         }
 
         .header-title strong {
             font-weight: 700;
         }
+
+        .header-right-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         
+        #device-display {
+            display: flex;
+            align-items: center;
+            background-color: #222;
+            border: 1px solid #444;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.9em;
+        }
+        
+        #device-display .material-symbols-outlined {
+            font-size: 1.2em;
+            margin-right: 6px;
+        }
+
         #tv-code-box {
             background-color: var(--accent-color);
-            border: none;
             border-radius: 12px;
-            padding: 8px 18px;
+            padding: 6px 14px;
             text-align: center;
         }
 
         #tv-code-display {
-            font-size: 1.35em;
+            font-size: 1.2em;
             font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--primary-text-color);
+            letter-spacing: 1px;
         }
 
         #tv-code-label {
             font-size: 0.5em;
             font-weight: 700;
             text-align: center;
-            color: var(--primary-text-color);
-            margin-top: 2px;
+            margin-top: 1px;
+            text-transform: uppercase;
         }
         
         /* ------------------------------------------ */
-        /* --- D-Pad Controls (Compatible with JS) --- */
+        /* --- D-Pad Controls --- */
         /* ------------------------------------------ */
         .d-pad-container {
             position: relative;
-            width: 270px;
-            height: 270px;
+            width: 280px;
+            height: 280px;
             flex-shrink: 0;
+            border-radius: 50%;
+            background-color: var(--dpad-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px 0;
         }
 
-        /* INVISIBLE CLICKABLE AREAS - Your JS looks for these */
         .control-area {
             position: absolute;
             cursor: pointer;
-            z-index: 10; /* Must be on top */
+            z-index: 10;
         }
         
         [data-key="up"] { width: 50%; height: 40%; top: 0; left: 25%; }
@@ -207,59 +225,17 @@
         [data-key="left"] { width: 40%; height: 50%; left: 0; top: 25%; }
         [data-key="right"] { width: 40%; height: 50%; right: 0; top: 25%; }
         
-        /* VISUAL REPRESENTATION - This is just for looks */
-        #d-pad-visual {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--dpad-bg);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none; /* Visuals don't intercept clicks */
-        }
-
-        .arrow {
-            position: absolute;
-            color: #888;
-            font-size: 4rem;
-            font-weight: 300;
-            transition: color 0.2s, transform 0.2s;
-        }
-
-        #d-pad-visual .arrow.up { top: 25px; }
-        #d-pad-visual .arrow.down { bottom: 25px; }
-        #d-pad-visual .arrow.left { left: 25px; }
-        #d-pad-visual .arrow.right { right: 25px; }
-        
         #btn-ok {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             width: 140px;
             height: 140px;
             background-color: var(--dpad-center-bg);
             border-radius: 50%;
-            z-index: 5; /* Below control areas but above visual */
+            z-index: 5;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.2s;
         }
         
-        /* REQUIRED FOR VISUAL FEEDBACK - Your JS adds/removes this class */
-        .arrow.active {
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-        #btn-ok.active {
-            background-color: #666;
-            transform: translate(-50%, -50%) scale(1.05);
-        }
-
         /* ------------------------- */
         /* --- Numpad Controls --- */
         /* ------------------------- */
@@ -268,51 +244,59 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             width: 100%;
-            max-width: 340px;
+            max-width: 360px;
             flex-shrink: 0;
-            padding: 0 10px;
-            box-sizing: border-box;
+            margin-bottom: 5px;
         }
 
         .num-btn {
-            width: 65px;
-            height: 65px;
+            width: 70px;
+            height: 70px;
             margin: 0 auto;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: var(--btn-bg);
             color: var(--primary-text-color);
-            border-radius: 50px;
-            font-size: 1.6em;
+            border-radius: 50%;
+            font-size: 1.6em; /* Font size for numbers */
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .num-btn:active {
-            background-color: var(--btn-bg-active);
-        }
-
-        .num-btn span.material-symbols-outlined {
-            font-variation-settings: 'FILL' 0;
-            transition: font-variation-settings 0.2s;
-            font-size: 1.8rem;
+            transition: background-color 0.2s, transform 0.2s;
         }
         
+        .num-btn .material-symbols-outlined {
+           font-size: 1.8rem; /* Font size for icons */
+        }
+        
+        /* --- Button States & Visual Feedback --- */
+
+        /* Special active state for toggle buttons (Mute/Pause) */
         #btn-mute.active-state,
         #btn-pause.active-state {
             background-color: var(--accent-color);
+        }
+        
+        .num-btn.active-state .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1; /* Fills the icon */
         }
 
         #btn-mute.active-state:active,
         #btn-pause.active-state:active {
             background-color: var(--accent-color-active);
         }
-
-        .num-btn.active-state span.material-symbols-outlined {
-            font-variation-settings: 'FILL' 1;
+        
+        /* Generic visual feedback for ANY button press */
+        .num-btn.active {
+            background-color: var(--btn-bg-active);
+            transform: scale(1.1);
         }
+
+        #btn-ok.active {
+            background-color: var(--dpad-center-bg-active);
+            transform: scale(1.05);
+        }
+
     </style>
 </head>
 <body>
@@ -336,42 +320,40 @@
         <!-- Remote Header -->
         <div class="remote-header">
             <div class="header-title"><strong>liveplay</strong> for TV</div>
-            <div id="tv-code-box">
-                <div id="tv-code-display">----</div>
-                <div id="tv-code-label">YOUR TV CODE</div>
+            <div class="header-right-controls">
+                <div id="device-display">
+                    <span class="material-symbols-outlined">tv</span>
+                    <span id="device-name">TV</span>
+                </div>
+                <div id="tv-code-box">
+                    <div id="tv-code-display">0000</div>
+                    <div id="tv-code-label">YOUR TV CODE</div>
+                </div>
             </div>
         </div>
         
         <!-- Directional Pad (D-Pad) -->
         <div class="d-pad-container">
-            <!-- Invisible click areas FOR JAVASCRIPT -->
             <div class="control-area" data-key="up"></div>
             <div class="control-area" data-key="down"></div>
             <div class="control-area" data-key="left"></div>
             <div class="control-area" data-key="right"></div>
-
-            <!-- Visual representation FOR LOOKS -->
-            <div id="d-pad-visual">
-                <span class="arrow up" data-arrow="up">expand_less</span>
-                <span class="arrow left" data-arrow="left">chevron_left</span>
-                <span class="arrow right" data-arrow="right">chevron_right</span>
-                <span class="arrow down" data-arrow="down">expand_more</span>
-            </div>
-
-            <!-- Center OK button is both visual and functional -->
             <div id="btn-ok" data-key="ok"></div>
         </div>
 
         <!-- Number Pad & Action Buttons -->
         <div class="numpad">
+            <!-- Row 1 -->
             <div class="num-btn" data-key="1">1</div>
             <div class="num-btn" data-key="2">2</div>
             <div class="num-btn" data-key="3">3</div>
             <div class="num-btn" data-key="4">4</div>
+            <!-- Row 2 -->
             <div class="num-btn" data-key="5">5</div>
             <div class="num-btn" data-key="6">6</div>
             <div class="num-btn" data-key="7">7</div>
             <div class="num-btn" data-key="8">8</div>
+            <!-- Row 3 -->
             <div class="num-btn" data-key="9">9</div>
             <div class="num-btn" data-key="0">0</div>
             <div id="btn-mute" class="num-btn" data-key="mute"><span class="material-symbols-outlined">volume_up</span></div>
@@ -386,7 +368,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     
-    <!-- Your Application Logic -->
+    <!-- Application Logic -->
     <script src="/js/remote.js"></script>
 
 </body>
