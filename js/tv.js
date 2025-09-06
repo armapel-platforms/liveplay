@@ -3,15 +3,12 @@ let channelList = [];
 let currentChannelIndex = 0, isSidebarActive = false, currentFocusIndex = 0, isExitPopupActive = false;
 let lastCommandTime = 0;
 let database;
-let channelInput = '';
-let channelInputTimeout;
 
 const remoteCodePopup = document.getElementById('remote-code-popup');
 const remoteCodeDisplay = document.getElementById('remote-code-display');
 const video = document.getElementById('video');
 const uiOverlay = document.getElementById('ui-overlay');
 const channelName = document.getElementById('channel-name');
-const channelNumber = document.getElementById('channel-number');
 const channelCategory = document.getElementById('channel-category');
 const sidebar = document.getElementById('sidebar');
 const channelListContainer = document.getElementById('channel-list-container');
@@ -19,10 +16,6 @@ const timeDateElement = document.getElementById('time-date');
 const exitPopupOverlay = document.getElementById('exit-popup-overlay');
 const exitConfirmBtn = document.getElementById('exit-confirm-btn');
 const exitCancelBtn = document.getElementById('exit-cancel-btn');
-const directInputDisplay = document.getElementById('direct-input-display');
-const directInputChannelNumber = document.getElementById('direct-input-channel-number');
-const directInputChannelName = document.getElementById('direct-input-channel-name');
-
 
 async function initializeApp() {
     try {
@@ -102,13 +95,6 @@ function handleRemoteCommand(command) {
     const timeSinceLast = now - lastCommandTime;
     lastCommandTime = now;
 
-    if (!isNaN(parseInt(key))) {
-        handleChannelInput(key);
-        return;
-    } else {
-        hideDirectInput();
-    }
-
     if (isExitPopupActive) {
         if (key === 'left') exitCancelBtn.focus();
         else if (key === 'right') exitConfirmBtn.focus();
@@ -139,50 +125,13 @@ function handleRemoteCommand(command) {
         case 'ok': showAndHideUi(); break;
         case 'back': showExitPopup(); break;
         case 'mute': video.muted = !video.muted; break;
-        case 'pause': video.paused ? video.play() : video.pause(); break;
+        case 'playpause': video.paused ? video.play() : video.pause(); break;
     }
-}
-
-function handleChannelInput(number) {
-    clearTimeout(channelInputTimeout);
-    channelInput += number;
-
-    directInputDisplay.classList.add('visible');
-    
-    const channelIndex = parseInt(channelInput, 10) - 1;
-    if (channelList[channelIndex]) {
-        directInputChannelName.textContent = channelList[channelIndex].name;
-    } else {
-        directInputChannelName.textContent = '...';
-    }
-    directInputChannelNumber.textContent = channelInput.padStart(3, '0');
-
-    if (channelInput.length >= 3) {
-        tuneToChannelInput();
-    } else {
-        channelInputTimeout = setTimeout(tuneToChannelInput, 2000);
-    }
-}
-
-function tuneToChannelInput() {
-    const channelIndex = parseInt(channelInput, 10) - 1;
-    if (channelIndex >= 0 && channelIndex < channelList.length) {
-        currentChannelIndex = channelIndex;
-        loadChannel(channelList[currentChannelIndex]);
-    }
-    channelInput = '';
-    setTimeout(() => directInputDisplay.classList.remove('visible'), 500);
-}
-
-function hideDirectInput() {
-    channelInput = '';
-    clearTimeout(channelInputTimeout);
-    directInputDisplay.classList.remove('visible');
 }
 
 async function loadChannel(channel) {
     if (!channel) return;
-    updateChannelInfo(channel, currentChannelIndex);
+    updateChannelInfo(channel);
     try {
         const streamResponse = await fetch(`/api/getStream.js?name=${encodeURIComponent(channel.name)}`);
         if (!streamResponse.ok) throw new Error(`API Error: ${streamResponse.statusText}`);
@@ -197,8 +146,7 @@ async function loadChannel(channel) {
 }
 
 function changeChannel(direction) { currentChannelIndex = (currentChannelIndex - direction + channelList.length) % channelList.length; loadChannel(channelList[currentChannelIndex]); }
-function formatChannelNumber(index) { return String(index + 1).padStart(3, '0'); }
-function updateChannelInfo(channel, index) { channelName.textContent = channel.name; channelCategory.textContent = channel.category; channelNumber.textContent = formatChannelNumber(index); }
+function updateChannelInfo(channel) { channelName.textContent = channel.name; channelCategory.textContent = channel.category; }
 function showAndHideUi() { uiOverlay.classList.add('visible'); clearTimeout(uiTimeout); uiTimeout = setTimeout(() => uiOverlay.classList.remove('visible'), 4000); }
 function toggleSidebar() { isSidebarActive ? hideSidebar() : showSidebar(); }
 function showSidebar() { isSidebarActive = true; currentFocusIndex = currentChannelIndex; sidebar.classList.add('show'); updateFocus(); }
@@ -207,32 +155,20 @@ function populateChannelList() {
     channelListContainer.innerHTML = ''; 
     channelList.forEach((channel, index) => { 
         const li = document.createElement('li'); 
-        li.dataset.index = index;
+        li.dataset.index = index; 
         
-        const textWrapper = document.createElement('div');
-        textWrapper.className = 'channel-text-wrapper';
-
-        const numberSpan = document.createElement('span');
-        numberSpan.className = 'channel-list-number';
-        numberSpan.textContent = formatChannelNumber(index);
-
-        const nameSpan = document.createElement('span');
-        nameSpan.className = 'channel-list-name';
-        nameSpan.textContent = channel.name;
+        const channelNameSpan = document.createElement('span');
+        channelNameSpan.textContent = channel.name;
         
-        const liveIcon = document.createElement('span');
-        liveIcon.className = 'material-symbols-outlined';
-        liveIcon.textContent = 'sensors';
+        const sensorIcon = document.createElement('span');
+        sensorIcon.className = 'material-symbols-outlined';
+        sensorIcon.textContent = 'sensors';
 
-        textWrapper.appendChild(numberSpan);
-        textWrapper.appendChild(nameSpan);
-
-        li.appendChild(textWrapper);
-        li.appendChild(liveIcon);
+        li.appendChild(channelNameSpan);
+        li.appendChild(sensorIcon);
         channelListContainer.appendChild(li); 
     }); 
 }
-
 function moveFocus(direction) { 
     currentFocusIndex = (currentFocusIndex + direction + channelList.length) % channelList.length; 
     if (currentFocusIndex < 0) currentFocusIndex = 0;
