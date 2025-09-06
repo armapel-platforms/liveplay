@@ -4,12 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const remoteControlContainer = document.getElementById('remote-control-container');
   const connectButton = document.getElementById('connect-btn');
   const codeInput = document.getElementById('code-input');
-  const clickableButtons = document.querySelectorAll('.control-area, #btn-ok, .num-btn');
-  const tvCodeDisplay = document.getElementById('tv-code-display');
+  const clickableButtons = document.querySelectorAll('.control-area, #btn-ok, .remote-btn');
   const muteBtn = document.getElementById('btn-mute');
-  const pauseBtn = document.getElementById('btn-pause');
+  const playPauseBtn = document.getElementById('btn-playpause');
   const muteIcon = muteBtn.querySelector('.material-symbols-outlined');
-  const pauseIcon = pauseBtn.querySelector('.material-symbols-outlined');
+  const pauseIcon = playPauseBtn.querySelector('.material-symbols-outlined');
 
   
   async function initializeRemote() {
@@ -57,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
       
       await roomRef.update({ status: 'remote_connected' });
       
-      tvCodeDisplay.textContent = enteredCode;
       codeEntryContainer.classList.add('hidden');
       remoteControlContainer.classList.remove('hidden');
       
@@ -76,9 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
         muteBtn.classList.toggle('active-state');
         muteIcon.textContent = muteBtn.classList.contains('active-state') ? 'volume_off' : 'volume_up';
     }
-    if (commandKey === 'pause') {
-        pauseBtn.classList.toggle('active-state');
-        pauseIcon.textContent = pauseBtn.classList.contains('active-state') ? 'play_arrow' : 'pause';
+    if (commandKey === 'playpause') {
+        playPauseBtn.classList.toggle('active-state');
+        pauseIcon.textContent = playPauseBtn.classList.contains('active-state') ? 'play_arrow' : 'pause';
     }
     
     if (navigator.vibrate) {
