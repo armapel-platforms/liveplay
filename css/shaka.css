@@ -2,15 +2,13 @@
 
 .material-icons-round {
   font-family: 'Material Symbols Outlined' !important;
-  font-weight: 200;
+  font-weight: 200 !important;
   font-size: 20px;
 }
 
-.shaka-player-container,
-.shaka-player-container button {
-  font-family: 'TT Hoves Pro Trial', sans-serif;
+.shaka-player-container {
+  font-family: 'TT Hoves Pro Trial', sans-serif !important;
 }
-
 .shaka-overflow-menu {
   background-color: rgba(25, 25, 25, 0.5);
   backdrop-filter: blur(20px);
@@ -25,12 +23,12 @@
 }
 
 .shaka-mute-button .material-icons-round {
-  font-variation-settings: 'FILL' 0, 'wght' 200;
+  font-variation-settings: 'FILL' 0, 'wght' 200 !important;
   transition: font-variation-settings 0.2s ease-in-out;
 }
 
 .shaka-mute-button[aria-pressed="true"] .material-icons-round {
-  font-variation-settings: 'FILL' 1, 'wght' 200;
+  font-variation-settings: 'FILL' 1, 'wght' 200 !important;
 }
 
 .shaka-overflow-menu button .shaka-overflow-button-label {
@@ -50,8 +48,10 @@
 .shaka-overflow-menu button:hover .material-icons-round,
 .shaka-overflow-menu button:hover .shaka-current-selection-span {
   color: #fff;
+  font-family: 'TT Hoves Pro Trial', sans-serif !important;
 }
 
 .shaka-overflow-menu button:hover {
-  background-color: #ff4d00
+  background-color: #ff4d00;
+  font-family: 'TT Hoves Pro Trial', sans-serif !important;
 }
