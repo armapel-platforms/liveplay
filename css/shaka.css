@@ -423,12 +423,12 @@
 }
 .shaka-overflow-menu button,
 .shaka-settings-menu button {
-  font-size: 10px;
+  font-size: 12px;
   background: 0 0;
   color: var(--main-text-color);
   border: none;
   min-height: 30px;
-  padding: 4px 4px;
+  padding: 5.5px 4px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -451,7 +451,7 @@
 .shaka-settings-menu i {
   padding-left: 10px;
   padding-right: 10px;
-  font-size: 19px;
+  font-size: 16px;
 }
 .shaka-overflow-menu.shaka-low-position,
 .shaka-settings-menu.shaka-low-position {
@@ -467,7 +467,7 @@
 }
 .shaka-current-selection-span {
   color: var(--secondary-text-color);
-  font-size: 8px;
+  font-size: 10px;
 }
 .shaka-settings-menu span {
   margin-left: 54px;
