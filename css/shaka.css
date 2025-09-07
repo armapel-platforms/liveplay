@@ -10,7 +10,7 @@
   --main-font: 'TT Hoves Pro Trial', sans-serif;
   --menu-border-radius: 15px;
   --menu-hover-radius: 5px;
-  --menu-padding: 5px;
+  --menu-padding: 10px 5px;
   --range-track-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -417,7 +417,8 @@
 .shaka-settings-menu::-webkit-scrollbar {
   display: none;
 }
-.shaka-overflow-menu, shaka-settings-menu {
+.shaka-overflow-menu, 
+.shaka-settings-menu {
   scrollbar-width: none;
 }
 .shaka-overflow-menu button,
@@ -427,7 +428,7 @@
   color: var(--main-text-color);
   border: none;
   min-height: 30px;
-  padding: 3.5px 6px;
+  padding: 4px 4px;
   display: flex;
   align-items: center;
   cursor: pointer;
