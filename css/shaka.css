@@ -413,7 +413,7 @@
 .shaka-controls-container[shown="true"] .shaka-settings-menu {
   opacity: 1;
 }
-.shaka-overflow-menu,
+.shaka-overflow-menu::-webkit-scrollbar,
 .shaka-settings-menu::-webkit-scrollbar {
   display: none;
 }
