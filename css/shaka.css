@@ -428,7 +428,7 @@
   color: var(--main-text-color);
   border: none;
   min-height: 30px;
-  padding: 5.5px 4px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -449,8 +449,8 @@
 }
 .shaka-overflow-menu i,
 .shaka-settings-menu i {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 0px;
+  padding-right: 8px;
   font-size: 16px;
 }
 .shaka-overflow-menu.shaka-low-position,
