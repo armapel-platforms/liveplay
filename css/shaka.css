@@ -407,6 +407,10 @@
   right: 15px;
   bottom: 30px;
 }
+.shaka-settings-menu {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 .shaka-controls-container[casting="true"] .shaka-overflow-menu,
 .shaka-controls-container[casting="true"] .shaka-settings-menu,
 .shaka-controls-container[shown="true"] .shaka-overflow-menu,
@@ -452,6 +456,7 @@
   padding-left: 0px;
   padding-right: 8px;
   font-size: 16px;
+  font-weight: 200 !important;
 }
 .shaka-overflow-menu.shaka-low-position,
 .shaka-settings-menu.shaka-low-position {
@@ -476,7 +481,7 @@
   margin-left: 0;
 }
 .shaka-back-to-overflow-button i {
-  padding-right: 20px;
+  padding-right: 8px !important;
 }
 .shaka-auto-span {
   left: 17px;
@@ -528,4 +533,12 @@
 .shaka-video-container button[aria-label="Pause"] .material-symbols-outlined,
 .shaka-video-container .shaka-mute-button[aria-pressed="true"] .material-symbols-outlined {
   font-variation-settings: 'FILL' 1;
+}
+.shaka-settings-menu button:not(.shaka-back-to-overflow-button) {
+  justify-content: center;
+}
+.shaka-settings-menu button i.material-symbols-outlined[aria-hidden="true"] {
+  order: 2; 
+  margin-left: 6px;
+  margin-right: -6px;
 }
