@@ -409,7 +409,7 @@
 }
 .shaka-settings-menu {
   padding-top: 3px;
-  padding-bottom: 3px;
+  padding-bottom: 0px;
 }
 .shaka-controls-container[casting="true"] .shaka-overflow-menu,
 .shaka-controls-container[casting="true"] .shaka-settings-menu,
@@ -432,7 +432,7 @@
   color: var(--main-text-color);
   border: none;
   min-height: 30px;
-  padding: 5.5px 10px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
   cursor: pointer;
