@@ -324,8 +324,7 @@
   display: none;
 }
 .shaka-seek-bar-container {
-  opacity: 0;
-  transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
+  display: none !important;
 }
 .shaka-controls-container[casting="true"] .shaka-seek-bar-container,
 .shaka-controls-container[shown="true"] .shaka-seek-bar-container {
