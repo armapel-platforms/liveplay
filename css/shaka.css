@@ -10,7 +10,7 @@
   --main-font: 'TT Hoves Pro Trial', sans-serif;
   --menu-border-radius: 15px;
   --menu-hover-radius: 5px;
-  --menu-padding: 10px 5px;
+  --menu-padding: 5px;
   --range-track-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -111,7 +111,7 @@
 .shaka-bottom-controls {
   width: 96%;
   padding: 0;
-  padding-bottom: 2.5%;
+  padding-bottom: 2.0%;
   z-index: 1;
 }
 .shaka-controls-button-panel {
@@ -397,7 +397,7 @@
   box-shadow: 0 1px 9px 0 rgba(0 0 0 / 40%);
   border-radius: var(--menu-border-radius);
   max-height: 200px;
-  min-width: 150px;
+  min-width: 140px;
   opacity: 0;
   transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
   display: flex;
@@ -423,7 +423,7 @@
 }
 .shaka-overflow-menu button,
 .shaka-settings-menu button {
-  font-size: 12px;
+  font-size: 10px;
   background: 0 0;
   color: var(--main-text-color);
   border: none;
@@ -451,6 +451,7 @@
 .shaka-settings-menu i {
   padding-left: 10px;
   padding-right: 10px;
+  font-size: 19px;
 }
 .shaka-overflow-menu.shaka-low-position,
 .shaka-settings-menu.shaka-low-position {
@@ -466,6 +467,7 @@
 }
 .shaka-current-selection-span {
   color: var(--secondary-text-color);
+  font-size: 8px;
 }
 .shaka-settings-menu span {
   margin-left: 54px;
