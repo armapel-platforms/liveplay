@@ -341,40 +341,42 @@
   height: 100%;
 }
 .shaka-spinner-svg {
-  display: none;
-}
-
-.shaka-spinner {
-  position: relative; /* Needed for the ::after element */
-  padding: 0; /* Reset default padding */
-  width: 40px; /* Set a specific size */
-  height: 40px; /* Set a specific size */
-  border-radius: 50%;
-  animation: rotate 0.9s linear infinite;
-  
-  background: linear-gradient(90deg, 
-    rgba(0,0,0,0.1) 0%, 
-    var(--theme-accent-color) 70%
-  );
-}
-
-.shaka-spinner::after {
-  content: '';
-  background: #000;
   position: absolute;
-  left: 4px;
-  right: 4px;
-  top: 4px;
-  bottom: 4px;
-  border-radius: 50%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  animation: rotate 2s linear infinite;
+  transform-origin: center center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
-
+.shaka-spinner-path {
+  stroke: var(--theme-accent-color);
+  stroke-dasharray: 20, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1s ease-in-out infinite;
+  stroke-linecap: round;
+}
 @keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
+  100% {
     transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
   }
 }
 .shaka-spacer {
@@ -430,7 +432,7 @@
   color: var(--main-text-color);
   border: none;
   min-height: 30px;
-  padding: 0px 5px;
+  padding: 5.5px 10px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -473,7 +475,6 @@
   font-size: 10px;
 }
 .shaka-settings-menu span {
-  margin-left: 45px;
 }
 .shaka-back-to-overflow-button span {
   margin-left: 0;
@@ -532,10 +533,15 @@
   font-variation-settings: 'FILL' 1;
 }
 
+.shaka-settings-menu button:not(.shaka-back-to-overflow-button) {
+    padding-left: 32px;
+}
+
 .shaka-settings-menu button:not(.shaka-back-to-overflow-button) > i {
     order: -1;
     visibility: hidden;
-    margin-right: 10px;
+    margin-left: -20px; 
+    margin-right: 0;
     padding-right: 0;
 }
 
