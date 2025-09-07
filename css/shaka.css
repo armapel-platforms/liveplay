@@ -408,8 +408,8 @@
   bottom: 30px;
 }
 .shaka-settings-menu {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 .shaka-controls-container[casting="true"] .shaka-overflow-menu,
 .shaka-controls-container[casting="true"] .shaka-settings-menu,
@@ -534,7 +534,7 @@
 }
 
 .shaka-settings-menu button:not(.shaka-back-to-overflow-button) {
-    padding-left: 32px;
+    padding-left: 37px;
 }
 
 .shaka-settings-menu button:not(.shaka-back-to-overflow-button) > i {
