@@ -3,7 +3,7 @@
 .material-icons-round {
   font-family: 'Material Symbols Outlined' !important;
   font-weight: 200 !important;
-  font-size: 20px;
+  font-size: 20px ;
 }
 
 .shaka-player-container {
@@ -17,7 +17,7 @@
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 5px;
-  width: 130px;
+  width: 95px;
   height: auto;
 }
 
@@ -53,5 +53,6 @@
 }
 
 .shaka-overflow-menu button:hover {
-  background-color: #ff4d00;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
 }
