@@ -48,10 +48,8 @@
 .shaka-overflow-menu button:hover .material-icons-round,
 .shaka-overflow-menu button:hover .shaka-current-selection-span {
   color: #fff;
-  font-family: 'TT Hoves Pro Trial', sans-serif !important;
 }
 
 .shaka-overflow-menu button:hover {
   background-color: #ff4d00;
-  font-family: 'TT Hoves Pro Trial', sans-serif !important;
 }
