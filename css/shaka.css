@@ -408,8 +408,6 @@
   bottom: 30px;
 }
 .shaka-settings-menu {
-  padding-top: 3px;
-  padding-bottom: 0px;
 }
 .shaka-controls-container[casting="true"] .shaka-overflow-menu,
 .shaka-controls-container[casting="true"] .shaka-settings-menu,
@@ -432,7 +430,7 @@
   color: var(--main-text-color);
   border: none;
   min-height: 30px;
-  padding: 8px 10px;
+  padding: 6px 9.5px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -534,7 +532,7 @@
 }
 
 .shaka-settings-menu button:not(.shaka-back-to-overflow-button) {
-    padding-left: 37px;
+    padding-left: 40px;
 }
 
 .shaka-settings-menu button:not(.shaka-back-to-overflow-button) > i {
