@@ -1,7 +1,12 @@
 .material-icons-round {
   font-family: 'Material Symbols Outlined' !important;
-  font-weight: 200 !important;
+  font-weight: 200;
   font-size: 20px;
+}
+
+.shaka-player-container {
+   font-family: 'TT Hoves Pro Trial', sans-serif;
+   font-weight: 400;
 }
 
 .shaka-overflow-menu {
@@ -10,4 +15,41 @@
     -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1)
+  width: 140px;
+}
+
+.shaka-player-container .material-icons-round {
+  font-family: 'Material Symbols Outlined' !important;
+}
+
+.shaka-mute-button .material-icons-round {
+  font-variation-settings: 'FILL' 0, 'wght' 200;
+  transition: font-variation-settings 0.2s ease-in-out;
+}
+
+.shaka-mute-button[aria-pressed="true"] .material-icons-round {
+  font-variation-settings: 'FILL' 1, 'wght' 200;
+}
+
+.shaka-overflow-menu button .shaka-overflow-button-label {
+  color: #fff;
+}
+
+.shaka-overflow-menu button .material-icons-round {
+  color: #f1f1f1;
+}
+
+
+.shaka-overflow-menu button .shaka-current-selection-span {
+  color: #a8a8a8;
+}
+
+.shaka-overflow-menu button:hover .shaka-overflow-button-label,
+.shaka-overflow-menu button:hover .material-icons-round,
+.shaka-overflow-menu button:hover .shaka-current-selection-span {
+  color: #fff;
+}
+
+.shaka-overflow-menu button:hover {
+  background-color: #ff4d00
 }
