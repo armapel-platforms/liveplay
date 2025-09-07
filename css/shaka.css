@@ -1,8 +1,9 @@
 /*!
  * Shaka Player - Final, Self-Contained, Responsive Theme (Glassmorphism)
- * Version: 1.0.0
+ * Version: 2.1.0 (Polished Mobile Layout)
  * Author: Your Name
- * Description: A clean, organized, and fully responsive theme for Shaka Player.
+ * Description: A clean, organized, and fully responsive theme for Shaka Player
+ *              with corrected menu alignment and a refined mobile layout.
 */
 
 
@@ -16,13 +17,13 @@
 
 /* All theme customizations can be easily changed here. */
 :root {
-  --theme-accent-color: #ff4d00;
+  --theme-accent-color: #ff5722;
   --menu-background-color: rgba(25, 25, 25, 0.5);
   --main-text-color: #ffffff;
   --secondary-text-color: #b0b0b0;
   --main-font: 'TT Hoves Pro Trial', sans-serif;
-  --menu-border-radius: 20px;
-  --menu-hover-radius: 15px;
+  --menu-border-radius: 15px;
+  --menu-hover-radius: 8px;
   --menu-padding: 10px;
   --range-track-color: rgba(255, 255, 255, 0.3);
 }
@@ -39,20 +40,17 @@
   display: flex;
 }
 
-/* Use Material Symbols for all icons and apply the main font globally. */
 .shaka-video-container .material-icons-round {
   font-family: 'Material Symbols Outlined' !important;
   font-size: 24px;
-  font-style: normal !important; /* Prevents icons from appearing italic */
-  font-weight: 200 !important;   /* Matches the font weight loaded via @import */
+  font-style: normal !important;
+  font-weight: 200 !important;
 }
 .shaka-video-container * {
   font-family: var(--main-font);
 }
 
-.shaka-hidden {
-  display: none !important;
-}
+.shaka-hidden { display: none !important; }
 
 /* Core containers and control panel layout */
 .shaka-controls-container { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 1; }
@@ -71,56 +69,12 @@
    2. SLIDERS (SEEK & VOLUME BARS)
    =================================================================== */
 
-.shaka-range-container {
-  position: relative;
-  height: 2px; /* Thinner bar */
-  margin: 5px 6px; /* Recalculated margin for vertical centering */
-  border-radius: 2px;
-  background: linear-gradient( to right, var(--theme-accent-color) var(--fill-percentage, 0%), var(--range-track-color) var(--fill-percentage, 0%) );
-}
-
-.shaka-volume-bar-container {
-  width: 100px;
-}
-
-.shaka-range-element {
-  -webkit-appearance: none;
-  background: transparent;
-  position: absolute;
-  top: -5px; /* Recalculated position for vertical centering */
-  left: 0; right: 0; bottom: 0;
-  margin: 0; padding: 0;
-  width: 100%;
-  height: 12px; /* Keep a large, easy-to-click invisible area */
-  z-index: 1;
-}
-
-/* Thumb (the draggable circle) for WebKit browsers */
-.shaka-range-element::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: none;
-  border-radius: 10px;
-  height: 10px; /* Slightly smaller to match the thinner bar */
-  width: 10px;
-  background: var(--main-text-color);
-}
-
-/* Thumb for Firefox */
-.shaka-range-element::-moz-range-thumb {
-  border: none;
-  border-radius: 10px;
-  height: 10px;
-  width: 10px;
-  background: var(--main-text-color);
-}
-
-.shaka-seek-bar-container {
-  display: none !important;
-}
-
-.shaka-controls-container[shown=true] .shaka-seek-bar-container {
-  opacity: 1;
-}
+.shaka-range-container { position: relative; height: 2px; margin: 5px 6px; border-radius: 2px; background: linear-gradient( to right, var(--theme-accent-color) var(--fill-percentage, 0%), var(--range-track-color) var(--fill-percentage, 0%) ); }
+.shaka-volume-bar-container { width: 100px; }
+.shaka-range-element { -webkit-appearance: none; background: transparent; position: absolute; top: -5px; left: 0; right: 0; margin: 0; padding: 0; width: 100%; height: 12px; z-index: 1; }
+.shaka-range-element::-webkit-slider-thumb { -webkit-appearance: none; border: none; border-radius: 10px; height: 10px; width: 10px; background: var(--main-text-color); }
+.shaka-range-element::-moz-range-thumb { border: none; border-radius: 10px; height: 10px; width: 10px; background: var(--main-text-color); }
+.shaka-seek-bar-container { display: none !important; }
 
 
 /* ===================================================================
@@ -146,64 +100,47 @@
    =================================================================== */
 
 .shaka-overflow-menu {
-  /* Glassmorphism background */
   background: var(--menu-background-color);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  
-  /* Layout and Appearance */
   border-radius: var(--menu-border-radius);
   padding: var(--menu-padding);
   box-sizing: border-box;
   box-shadow: 0 1px 9px 0 rgba(0, 0, 0, 0.4);
   max-height: 250px;
-  min-width: 180px;
-  
-  /* Positioning and Animation */
-  position: absolute;
-  z-index: 2;
-  right: 15px;
-  bottom: 30px;
+  min-width: 220px;
+  position: absolute; z-index: 2; right: 15px; bottom: 30px;
   opacity: 0;
   transition: all 0.2s ease-in-out;
-
-  /* Scrolling */
-  overflow-x: hidden;
-  overflow-y: auto;
-  white-space: nowrap;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE, Edge */
+  overflow-x: hidden; overflow-y: auto;
+  scrollbar-width: none; -ms-overflow-style: none;
 }
-.shaka-overflow-menu::-webkit-scrollbar { display: none; } /* Chrome, Safari */
+.shaka-overflow-menu::-webkit-scrollbar { display: none; }
+.shaka-controls-container[shown=true] .shaka-overflow-menu { opacity: 1; }
 
-.shaka-controls-container[shown=true] .shaka-overflow-menu {
-  opacity: 1;
-}
-
-/* --- Menu Buttons and Text --- */
 .shaka-overflow-menu button {
-  color: var(--main-text-color);
-  border-radius: var(--menu-hover-radius);
+  display: flex; flex-direction: row; align-items: center;
+  width: 100%; text-align: left;
+  color: var(--main-text-color); background: transparent;
+  border-radius: var(--menu-hover-radius); font-size: 14px;
+  border: none; min-height: 40px; padding: 5px 10px;
+  margin-bottom: 2px; cursor: pointer;
   transition: background-color 0.2s ease;
-  font-size: 13px;
-  background: transparent;
-  border: none;
-  min-height: 30px;
-  padding: 3.5px 6px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
 }
 .shaka-overflow-menu button:hover {
   background: var(--theme-accent-color);
 }
+.shaka-overflow-menu button .material-icons-round {
+  margin-right: 15px;
+  flex-shrink: 0;
+}
 .shaka-overflow-button-label {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column; justify-content: center;
+  flex-grow: 1;
 }
 .shaka-current-selection-span {
   color: var(--secondary-text-color);
+  font-size: 12px;
 }
 .shaka-overflow-menu button[aria-selected="true"] .material-icons-round {
   color: var(--main-text-color);
@@ -214,29 +151,30 @@
    5. MOBILE RESPONSIVE STYLES
    =================================================================== */
 
-/* These rules activate only on screens 600px wide or smaller. */
 @media (max-width: 600px) {
+  /* --- UPDATED Mobile Overflow Menu Layout --- */
   .shaka-overflow-menu {
-    /* Reposition to a full-width bottom sheet */
-    left: 2.5%;
-    right: 2.5%;
-    bottom: 10px;
-    width: 95%;
-    min-width: 0;
+    /* Centering and Width Constraints */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%; /* Be flexible on very narrow screens */
+    max-width: 320px; /* But don't get too wide */
     
-    /* Make it smaller to not cover too much of a tall phone screen */
+    /* Positioning */
+    bottom: 10px;
+    right: auto;
+    
+    /* Height constraint */
     max-height: 35vh;
   }
 
   .shaka-overflow-menu button {
-    /* Make buttons larger and easier to tap */
     font-size: 15px;
-    min-height: 44px;
+    min-height: 48px;
     padding: 8px;
   }
 
   .shaka-controls-button-panel {
-    /* Make the time indicator text more readable */
     font-size: 14px;
   }
 }
