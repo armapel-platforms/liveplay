@@ -261,8 +261,8 @@
   top: 0;
   left: 0;
   margin: calc((12px - 3px) / 2) 6px;
-  height: 3px;
-  border-radius: 4px;
+  height: 1px;
+  border-radius: 2px;
   background: var(--range-track-color);
 }
 .shaka-volume-bar-container {
@@ -414,9 +414,15 @@
 .shaka-controls-container[shown="true"] .shaka-settings-menu {
   opacity: 1;
 }
+.shaka-overflow-menu::-webkit-scrollbar {
+  display: none;
+}
+.shaka-overflow-menu {
+  scrollbar-width: none;
+}
 .shaka-overflow-menu button,
 .shaka-settings-menu button {
-  font-size: 14px;
+  font-size: 12px;
   background: 0 0;
   color: var(--main-text-color);
   border: none;
@@ -519,4 +525,4 @@
 .shaka-video-container button[aria-label="Pause"] .material-symbols-outlined,
 .shaka-video-container .shaka-mute-button[aria-pressed="true"] .material-symbols-outlined {
   font-variation-settings: 'FILL' 1;
-}```
+}
