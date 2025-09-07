@@ -432,7 +432,7 @@
   color: var(--main-text-color);
   border: none;
   min-height: 30px;
-  padding: 8px 12px;
+  padding: 5.5px 10px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -529,16 +529,16 @@
   transform: translateX(-100%);
 }
 
-/* Icon Fill Customization */
 .shaka-video-container button[aria-label="Pause"] .material-symbols-outlined,
 .shaka-video-container .shaka-mute-button[aria-pressed="true"] .material-symbols-outlined {
   font-variation-settings: 'FILL' 1;
 }
 .shaka-settings-menu button:not(.shaka-back-to-overflow-button) {
-  justify-content: center;
+  justify-content: flex-start;
 }
-.shaka-settings-menu button i.material-symbols-outlined[aria-hidden="true"] {
-  order: 2; 
-  margin-left: 6px;
-  margin-right: -6px;
+
+.shaka-settings-menu button span + i.material-symbols-outlined {
+  order: -1;
+  margin-left: 0;
+  margin-right: 10px;
 }
