@@ -9,12 +9,14 @@
 .shaka-player-container {
   font-family: 'TT Hoves Pro Trial', sans-serif !important;
 }
+
 .shaka-overflow-menu {
   background-color: rgba(25, 25, 25, 0.5);
   backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1)
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
   width: 140px;
 }
 
