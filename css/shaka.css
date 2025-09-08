@@ -230,7 +230,6 @@
   padding: calc(9.5% / 2);
   width: 0;
   height: 0;
-  filter: drop-shadow(0 0 2px rgba(255 255 255 / 50%));
 }
 .shaka-current-time {
   font-size: 14px;
@@ -437,7 +436,7 @@
 }
 .shaka-overflow-menu button:hover,
 .shaka-settings-menu button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255,77,0) 80%;
   border-radius: var(--menu-hover-radius);
 }
 .shaka-overflow-menu button label,
