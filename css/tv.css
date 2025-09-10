@@ -1,0 +1,210 @@
+body {
+    font-family: 'TT Hoves Pro Trial', sans-serif;
+    margin: 0;
+    overflow: hidden;
+    color: #fff;
+    background-color: #000;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Default icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+
+/* --- Text Logo Styling --- */
+.text-logo {
+    font-weight: 100; /* Thin font for "for TV" */
+    color: #fff;
+    font-size: 1.8rem;
+}
+
+.text-logo strong {
+    font-weight: 800; /* Bold for "liveplay" */
+}
+
+/* --- TV Application (tv.html) --- */
+
+#intro-screen h1 {
+    font-size: 5vw;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    font-weight: 100;
+}
+
+#intro-screen h1 strong {
+    font-weight: 800;
+}
+
+#intro-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('/logo/tv-intro-bg.png'); background-size: cover;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; animation: fadeInOut 5s forwards;
+}
+
+#pairing-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    background-color: #101010;
+}
+
+.pairing-container {
+    text-align: center; padding: 40px; background-color: #1a1a1a;
+    border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.pairing-container h2 { font-size: 2.5rem; margin-top: 0; }
+.pairing-container p { color: #aaa; font-size: 1.2rem; }
+
+.url-container, #tv-code-container {
+    background-color: #000; padding: 15px 30px; border-radius: 10px;
+    font-size: 1.8rem; font-weight: bold; letter-spacing: 4px;
+    margin: 20px 0; display: inline-block;
+}
+#tv-code-container { font-size: 3rem; letter-spacing: 15px; padding-left: 35px; }
+
+#tv-app { position: relative; width: 100vw; height: 100vh; }
+
+#channel-info {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    width: 95%; max-width: 1200px; background: rgba(25, 25, 25, 0.5);
+    backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px; padding: 20px 30px; display: flex;
+    justify-content: space-between; align-items: center; opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.info-left h2 { margin: 0; font-size: 2.5rem; font-weight: 600; }
+.info-left p { margin: 0; color: #ccc; font-size: 1.2rem; }
+.info-right { display: flex; align-items: center; gap: 25px; }
+
+.live-indicator {
+    color: #ff4d00; font-weight: bold; display: flex;
+    align-items: center; gap: 8px;
+}
+.live-indicator .material-symbols-outlined { font-size: 28px; }
+
+#current-time { font-size: 2rem; font-weight: 500; }
+.text-logo.small { font-size: 1.2rem; opacity: 0.8; }
+
+#channel-list {
+    position: fixed; left: 0; top: 0; height: 100%; width: 300px;
+    background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(15px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%); transition: transform 0.4s ease;
+}
+#channel-list.visible { transform: translateX(0); }
+.logo-header { padding: 25px 20px; text-align: center; }
+
+.datetime-container { background-color: #000; padding: 15px 20px; text-align: center; }
+#time-list { font-size: 1.8rem; font-weight: 600; }
+#date-list { font-size: 0.9rem; color: #aaa; }
+
+#channels {
+    list-style: none; padding: 0; margin: 0;
+    height: calc(100vh - 165px); overflow-y: auto;
+}
+#channels::-webkit-scrollbar { width: 0px; }
+
+#channels li {
+    padding: 15px 20px; background: rgba(25, 25, 25, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; transition: background-color 0.2s;
+}
+#channels li.active { background-color: rgba(255, 77, 0, 0.8); }
+#channels li span { font-weight: 500; }
+#channels li .material-symbols-outlined { opacity: 0.6; }
+
+/* --- Remote Application (remote.html) --- */
+
+#code-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8); z-index: 100;
+    display: flex; justify-content: center; align-items: center;
+}
+.modal-content {
+    background-color: #1e1e1e; padding: 30px; border-radius: 15px;
+    text-align: center; width: 90%; max-width: 350px;
+}
+.modal-content h2 { margin-top: 0; }
+#code-input {
+    width: 100%; padding: 15px; font-size: 2rem; text-align: center;
+    letter-spacing: 10px; border: 1px solid #444; background-color: #333;
+    color: #fff; border-radius: 8px; box-sizing: border-box; margin: 20px 0;
+}
+#connect-btn {
+    width: 100%; padding: 15px; font-size: 1.2rem; font-weight: bold;
+    background-color: #ff4d00; color: #fff; border: none;
+    border-radius: 8px; cursor: pointer;
+}
+#error-message { color: #ff4f4f; margin-top: 15px; }
+
+#remote-app {
+    display: flex; flex-direction: column; height: 100vh;
+    padding: 20px; box-sizing: border-box;
+}
+#remote-app header { text-align: center; padding-bottom: 20px; }
+#remote-app header .text-logo { font-size: 2rem; }
+
+.button-row {
+    display: flex; justify-content: space-around; background-color: #ff4d00;
+    padding: 10px; border-radius: 50px; /* Rounded pill shape */
+    margin-bottom: 40px;
+}
+.button-row button {
+    background: none; border: none; color: #fff; cursor: pointer;
+    padding: 8px;
+}
+.button-row .material-symbols-outlined { font-size: 28px; }
+
+.d-pad-container {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr; gap: 10px;
+    width: 220px; height: 220px; margin: auto;
+}
+.d-pad-btn {
+    background-color: #333; border: none; border-radius: 15px; color: #fff;
+    cursor: pointer; user-select: none; display: flex;
+    justify-content: center; align-items: center;
+}
+.d-pad-btn .material-symbols-outlined { font-size: 48px; } /* Larger icons for D-Pad */
+
+.up { grid-column: 2; grid-row: 1; }
+.left { grid-column: 1; grid-row: 2; }
+.ok {
+    grid-column: 2; grid-row: 2; border-radius: 50%;
+    background-color: #444; font-size: 1.2rem; font-weight: bold;
+}
+.right { grid-column: 3; grid-row: 2; }
+.down { grid-column: 2; grid-row: 3; }
+
+#remote-app footer { margin-top: auto; padding-top: 20px; font-size: 0.9rem; }
+.guide { background-color: #1a1a1a; padding: 15px; border-radius: 10px; }
+.guide h3 { margin-top: 0; text-align: center; }
+.guide ul { list-style: none; padding: 0; color: #bbb; font-size: 0.8rem; }
+.guide li { margin-bottom: 8px; }
+
+/* Utility Classes */
+.hidden { display: none !important; }
+
+@keyframes fadeInOut {
+    0% { opacity: 0; } 20% { opacity: 1; }
+    80% { opacity: 1; } 100% { opacity: 0; }
+}
