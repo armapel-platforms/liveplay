@@ -7,6 +7,7 @@ export default function handler(request, response) {
     storageBucket: process.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.PUBLIC_FIREBASE_APP_ID,
+    measurementId: process.env.PUBLIC_FIREBASE_MEASUREMENT_ID,
   };
 
   response.status(200).json(firebaseConfig);
