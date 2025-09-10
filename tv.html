@@ -31,6 +31,16 @@
             width: 100%;
             height: 100%;
         }
+
+        .channel-info {
+            z-index: 10; /* Sits above the video */
+        }
+        .channel-list {
+            z-index: 20; /* Sits above the channel info */
+        }
+        .d-pad {
+            z-index: 30; /* Sits on top of everything */
+        }
         .channel-list {
             position: absolute;
             left: -400px;
@@ -84,9 +94,7 @@
             align-items: center;
             padding: 15px 20px; /* Adjusted padding slightly */
             cursor: pointer;
-            /* --- MODIFICATION: Added border-bottom for separator --- */
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            /* Removed margin and border-radius for a continuous list */
         }
         .channel-list-item.active {
             background-color: #ff4d00;
@@ -101,7 +109,6 @@
         }
         .channel-info {
             position: absolute;
-            bottom: 15%;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(25, 25, 25, 0.5);
