@@ -72,6 +72,11 @@
         .channels-container {
             overflow-y: auto;
             flex-grow: 1;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .channels-container::-webkit-scrollbar {
+            display: none;
         }
         .channel-list-item {
             display: flex;
