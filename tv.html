@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>liveplay for TV</title>
+    <link rel="stylesheet" href="/css/tv.css">
+    <!-- Shaka Player for video streaming -->
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/shaka-player.ui.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/controls.css">
+</head>
+<body>
+
+    <!-- 1. Intro Screen -->
+    <div id="intro-screen">
+        <h1><strong>liveplay</strong> for TV</h1>
+    </div>
+
+    <!-- 2. Pairing Screen -->
+    <div id="pairing-screen" class="hidden">
+        <div class="pairing-container">
+            <h2>Pair Your Phone</h2>
+            <p>To turn your phone into a remote, visit:</p>
+            <div class="url-container"><span>liveplay.tv/remote</span></div>
+            <p>YOUR TV CODE</p>
+            <div id="tv-code-container">----</div>
+        </div>
+    </div>
+
+    <!-- 3. Main TV Interface -->
+    <div id="tv-app" class="hidden">
+        <!-- Shaka Player Video Container -->
+        <div data-shaka-player-container style="width: 100vw; height: 100vh;">
+            <video autoplay data-shaka-player id="player" style="width:100%;height:100%;"></video>
+        </div>
+
+        <!-- Channel List (Sidebar) -->
+        <div id="channel-list" class="hidden">
+            <div class="logo-header">
+                <img src="/logo/liveplay-logo.png" alt="liveplay logo" class="logo">
+            </div>
+            <div class="datetime-container">
+                <div id="time-list"></div>
+                <div id="date-list"></div>
+            </div>
+            <ul id="channels">
+                <!-- Channel items will be injected here by tv.js -->
+            </ul>
+        </div>
+
+        <!-- Channel Information -->
+        <div id="channel-info" class="hidden">
+            <div class="info-left">
+                <h2 id="channel-name"></h2>
+                <p id="channel-category"></p>
+            </div>
+            <div class="info-right">
+                <div class="live-indicator">
+                    <img src="/logo/sensors-icon.svg" alt="Live Icon" class="sensors-icon"> LIVE
+                </div>
+                <div id="current-time"></div>
+                <img src="/logo/liveplay-logo.png" alt="liveplay logo" class="logo-small">
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase and App Logic -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="/js/tv.js"></script>
+</body>
+</html>
