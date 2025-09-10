@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Liveplay for TV</title>
+    <link rel="stylesheet" href="/css/tv.css">
+</head>
+<body>
+    <!-- 1. Code Entry Popup -->
+    <div id="code-modal">
+        <div class="modal-content">
+            <h2>Enter Your TV Code</h2>
+            <input type="number" id="code-input" maxlength="4" placeholder="----">
+            <button id="connect-btn">Connect</button>
+            <p id="error-message" class="hidden">Invalid Code. Please try again.</p>
+        </div>
+    </div>
+
+    <!-- 2. Remote Control Interface -->
+    <div id="remote-app" class="hidden">
+        <header>
+            <img src="/logo/liveplay-logo.png" alt="liveplay Logo" class="logo">
+        </header>
+
+        <main>
+            <div class="button-row">
+                <button id="mute-btn">Mute</button>
+                <button id="list-btn">Channel List</button>
+                <button id="play-pause-btn">Pause</button>
+            </div>
+
+            <div class="d-pad-container">
+                <button id="up-btn" class="d-pad-btn up">&#9650;</button>
+                <button id="left-btn" class="d-pad-btn left">&#9664;</button>
+                <button id="ok-btn" class="d-pad-btn ok">OK</button>
+                <button id="right-btn" class="d-pad-btn right">&#9654;</button>
+                <button id="down-btn" class="d-pad-btn down">&#9660;</button>
+            </div>
+        </main>
+
+        <footer>
+            <div class="guide">
+                <h3>Remote Control Guide</h3>
+                <ul>
+                    <li><strong>Up/Down Arrows:</strong> Change the channel or navigate menus. Press and hold to scroll quickly.</li>
+                    <li><strong>Left/Right Arrows:</strong> Access channel-specific options or features.</li>
+                    <li><strong>OK Button:</strong> Select the highlighted item or confirm an action.</li>
+                    <li><strong>Top Buttons:</strong> Control playback, audio, and channel list visibility.</li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Firebase and App Logic -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="/js/remote.js"></script>
+</body>
+</html>
