@@ -16,55 +16,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/controls.css">
 </head>
 <body>
-
-    <div id="intro-screen">
-        <h1><strong>liveplay</strong> for TV</h1>
+    <div id="loading-overlay">
+        <div class="loading-text">Initializing...</div>
     </div>
 
-    <div id="pairing-screen" class="hidden">
-        <div class="pairing-container">
-            <h2>Pair Your Phone</h2>
-            <p>To turn your phone into a remote, visit:</p>
-            <div class="url-container"><span>liveplay.tv/remote</span></div>
-            <p>YOUR TV CODE</p>
-            <div id="tv-code-container">----</div>
-        </div>
-    </div>
+    <div id="intro-screen"><h1><strong>liveplay</strong> for TV</h1></div>
+    <div id="pairing-screen" class="hidden"><div class="pairing-container"><h2>Pair Your Phone</h2><p>To turn your phone into a remote, visit:</p><div class="url-container"><span>liveplay.tv/remote</span></div><p>YOUR TV CODE</p><div id="tv-code-container">----</div></div></div>
+    <div id="tv-app" class="hidden"><div data-shaka-player-container style="width: 100vw; height: 100vh;"><video autoplay data-shaka-player id="player" style="width:100%;height:100%;"></video></div><div id="channel-list" class="hidden"><div class="logo-header"><div class="text-logo"><strong>liveplay</strong> for TV</div></div><div class="datetime-container"><div id="time-list"></div><div id="date-list"></div></div><ul id="channels"></ul></div><div id="channel-info" class="hidden"><div class="info-left"><h2 id="channel-name"></h2><p id="channel-category"></p></div><div class="info-right"><div class="live-indicator"><span class="material-symbols-outlined">sensors</span> LIVE</div><div id="current-time"></div><div class="text-logo small"><strong>liveplay</strong> for TV</div></div></div></div>
 
-    <div id="tv-app" class="hidden">
-        <div data-shaka-player-container style="width: 100vw; height: 100vh;">
-            <video autoplay data-shaka-player id="player" style="width:100%;height:100%;"></video>
-        </div>
-
-        <div id="channel-list" class="hidden">
-            <div class="logo-header">
-                <div class="text-logo"><strong>liveplay</strong> for TV</div>
-            </div>
-            <div class="datetime-container">
-                <div id="time-list"></div>
-                <div id="date-list"></div>
-            </div>
-            <ul id="channels">
-            </ul>
-        </div>
-
-        <div id="channel-info" class="hidden">
-            <div class="info-left">
-                <h2 id="channel-name"></h2>
-                <p id="channel-category"></p>
-            </div>
-            <div class="info-right">
-                <div class="live-indicator">
-                    <span class="material-symbols-outlined">sensors</span> LIVE
-                </div>
-                <div id="current-time"></div>
-                <div class="text-logo small"><strong>liveplay</strong> for TV</div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script src="/js/tv.js"></script>
 </body>
 </html>
