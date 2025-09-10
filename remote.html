@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>liveplay Remote</title>
+    <title>Liveplay for TV/title>
     <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
     <link rel="shortcut" href="/logo/favicon.ico" />
@@ -14,54 +14,25 @@
     <link rel="stylesheet" href="/css/tv.css">
 </head>
 <body>
-    <!-- 1. Code Entry Popup -->
+    <!-- The code entry modal is the default view -->
     <div id="code-modal">
         <div class="modal-content">
-            <h2>Enter Your TV Code</h2>
-            <input type="number" id="code-input" maxlength="4" placeholder="----">
-            <button id="connect-btn">Connect</button>
-            <p id="error-message" class="hidden">Invalid Code. Please try again.</p>
+            <!-- The loading text will be controlled by JS -->
+            <h2 id="modal-title">Enter Your TV Code</h2>
+            <div id="modal-loader" class="hidden">Initializing...</div>
+            <div id="modal-form">
+                <input type="number" id="code-input" maxlength="4" placeholder="----">
+                <button id="connect-btn">Connect</button>
+                <p id="error-message" class="hidden">Invalid Code. Please try again.</p>
+            </div>
         </div>
     </div>
+    
+    <!-- The remote app is hidden by default -->
+    <div id="remote-app" class="hidden"><header><div class="text-logo"><strong>liveplay</strong> for TV</div></header><main><div class="button-row"><button id="mute-btn"><span class="material-symbols-outlined">volume_up</span></button><button id="list-btn"><span class="material-symbols-outlined">list</span></button><button id="play-pause-btn"><span class="material-symbols-outlined">pause</span></button></div><div class="d-pad-container"><button id="up-btn" class="d-pad-btn up"><span class="material-symbols-outlined">keyboard_arrow_up</span></button><button id="left-btn" class="d-pad-btn left"><span class="material-symbols-outlined">keyboard_arrow_left</span></button><button id="ok-btn" class="d-pad-btn ok">OK</button><button id="right-btn" class="d-pad-btn right"><span class="material-symbols-outlined">keyboard_arrow_right</span></button><button id="down-btn" class="d-pad-btn down"><span class="material-symbols-outlined">keyboard_arrow_down</span></button></div></main><footer><div class="guide"><h3>Remote Control Guide</h3><ul><li><strong>Up/Down Arrows:</strong> Change the channel or navigate menus.</li><li><strong>Left/Right Arrows:</strong> Access channel-specific options.</li><li><strong>OK Button:</strong> Select the highlighted item or confirm an action.</li></ul></div></footer></div>
 
-    <!-- 2. Remote Control Interface -->
-    <div id="remote-app" class="hidden">
-        <header>
-            <div class="text-logo"><strong>liveplay</strong> for TV</div>
-        </header>
-
-        <main>
-            <div class="button-row">
-                <!-- Updated buttons with icons -->
-                <button id="mute-btn"><span class="material-symbols-outlined">volume_up</span></button>
-                <button id="list-btn"><span class="material-symbols-outlined">list</span></button>
-                <button id="play-pause-btn"><span class="material-symbols-outlined">pause</span></button>
-            </div>
-
-            <div class="d-pad-container">
-                <!-- Updated D-Pad with icons -->
-                <button id="up-btn" class="d-pad-btn up"><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
-                <button id="left-btn" class="d-pad-btn left"><span class="material-symbols-outlined">keyboard_arrow_left</span></button>
-                <button id="ok-btn" class="d-pad-btn ok">OK</button>
-                <button id="right-btn" class="d-pad-btn right"><span class="material-symbols-outlined">keyboard_arrow_right</span></button>
-                <button id="down-btn" class="d-pad-btn down"><span class="material-symbols-outlined">keyboard_arrow_down</span></button>
-            </div>
-        </main>
-
-        <footer>
-            <div class="guide">
-                <h3>Remote Control Guide</h3>
-                <ul>
-                    <li><strong>Up/Down Arrows:</strong> Change the channel or navigate menus. Press and hold to scroll quickly.</li>
-                    <li><strong>Left/Right Arrows:</strong> Access channel-specific options or features.</li>
-                    <li><strong>OK Button:</strong> Select the highlighted item or confirm an action.</li>
-                </ul>
-            </div>
-        </footer>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script src="/js/remote.js"></script>
 </body>
 </html>
