@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- PASTE FIREBASE CONFIG HERE ---
+    // --- IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION HERE ---
     const firebaseConfig = {
         apiKey: "YOUR_API_KEY",
         authDomain: "YOUR_AUTH_DOMAIN",
@@ -31,39 +31,42 @@ document.addEventListener('DOMContentLoaded', () => {
     let shakaPlayer;
     let channelInfoTimeout;
     
-    // --- 1. INITIALIZATION ---
     function init() {
         enterFullScreen();
         setupClock();
         
-        // Hide intro and show pairing after animation
         setTimeout(() => {
             introScreen.classList.add('hidden');
             pairingScreen.classList.remove('hidden');
-            generateTvCode();
-        }, 5000); // Must match CSS animation duration
+            generateAndRegisterTvCode();
+        }, 5000); 
     }
 
-    // --- 2. PAIRING LOGIC ---
-    function generateTvCode() {
+    function generateAndRegisterTvCode() {
         tvCode = Math.floor(1000 + Math.random() * 9000).toString();
         tvCodeContainer.textContent = tvCode;
-        listenForRemote();
+        
+        // Create the TV's record in Firebase so the remote can find it
+        const tvRef = database.ref(`tvs/${tvCode}`);
+        tvRef.set({
+            remoteConnected: false,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        }).then(() => {
+            listenForRemoteConnection();
+        });
     }
 
-    function listenForRemote() {
-        const tvRef = database.ref(`tvs/${tvCode}`);
-        tvRef.on('value', (snapshot) => {
-            if (snapshot.exists() && snapshot.val().remoteConnected) {
-                // Paired successfully!
-                tvRef.off(); // Stop listening for new remotes
+    function listenForRemoteConnection() {
+        const remoteStatusRef = database.ref(`tvs/${tvCode}/remoteConnected`);
+        remoteStatusRef.on('value', (snapshot) => {
+            if (snapshot.val() === true) {
+                remoteStatusRef.off(); 
                 startTvApplication();
                 listenForCommands();
             }
         });
     }
 
-    // --- 3. TV APPLICATION START ---
     async function startTvApplication() {
         pairingScreen.classList.add('hidden');
         tvApp.classList.remove('hidden');
@@ -71,14 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
         await installShakaPolyfills();
         initShakaPlayer();
         await loadChannels();
-        playChannel(currentChannelIndex);
+        if(channels.length > 0) {
+            playChannel(currentChannelIndex);
+        } else {
+            console.error("No channels loaded, cannot start playback.");
+        }
     }
     
-    // --- 4. CHANNEL & PLAYER MANAGEMENT ---
     async function loadChannels() {
         try {
-            // Assuming the getChannels.js is served from /api/getChannels
             const response = await fetch('/api/getChannels');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             channels = await response.json();
             renderChannelList();
         } catch (error) {
@@ -93,8 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const channel = channels[index];
 
         try {
-            // Assuming getStream.js is served from /api/getStream
             const response = await fetch(`/api/getStream?name=${encodeURIComponent(channel.name)}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const streamData = await response.json();
 
             if (streamData.error) {
@@ -102,13 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // Configure Widevine/ClearKey if needed
-            const playerConfig = {
-                drm: {
-                    clearKeys: streamData.clearKey ? streamData.clearKey : {}
-                }
-            };
-
+            const playerConfig = { drm: { clearKeys: streamData.clearKey || {} } };
             await shakaPlayer.load(streamData.manifestUri, null, playerConfig);
             updateChannelUI(channel);
             updateActiveChannelInList();
@@ -123,23 +123,22 @@ document.addEventListener('DOMContentLoaded', () => {
         channels.forEach((channel, index) => {
             const li = document.createElement('li');
             li.dataset.index = index;
-            li.innerHTML = `<span>${channel.name}</span> <img src="/logo/sensors-icon.svg" class="sensors-icon">`;
-            li.addEventListener('click', () => playChannel(index)); // For testing with mouse
+            // FIXED: Use Material Symbol span instead of img
+            li.innerHTML = `<span>${channel.name}</span> <span class="material-symbols-outlined">sensors</span>`;
+            li.addEventListener('click', () => playChannel(index));
             channelUl.appendChild(li);
         });
     }
     
     function updateActiveChannelInList() {
-        const items = channelUl.querySelectorAll('li');
-        items.forEach(item => item.classList.remove('active'));
-        const activeItem = channelUl.querySelector(`li[data-index="${currentChannelIndex}"]`);
+        document.querySelectorAll('#channels li').forEach(item => item.classList.remove('active'));
+        const activeItem = document.querySelector(`#channels li[data-index="${currentChannelIndex}"]`);
         if(activeItem) {
             activeItem.classList.add('active');
             activeItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
     
-    // --- 5. COMMANDS FROM REMOTE ---
     function listenForCommands() {
         const commandRef = database.ref(`tvs/${tvCode}/command`);
         let lastTimestamp = 0;
@@ -156,95 +155,81 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleCommand(command) {
+        if (!command) return;
         console.log("Received command:", command);
         switch (command) {
-            case 'channel_up':
-                changeChannel(1);
-                break;
-            case 'channel_down':
-                changeChannel(-1);
-                break;
-            case 'play_pause':
-                togglePlayPause();
-                break;
-            case 'toggle_list':
-                channelListContainer.classList.toggle('visible');
-                break;
-            // Add cases for 'ok', 'left', 'right' as needed
+            case 'channel_up': changeChannel(1); break;
+            case 'channel_down': changeChannel(-1); break;
+            case 'play_pause': togglePlayPause(); break;
+            case 'toggle_mute': toggleMute(); break; // ADDED
+            case 'toggle_list': channelListContainer.classList.toggle('visible'); break;
+            case 'ok': console.log("OK command received."); break; // Ready for implementation
+            case 'left': console.log("Left command received."); break; // Ready for implementation
+            case 'right': console.log("Right command received."); break; // Ready for implementation
         }
     }
     
     function changeChannel(direction) {
         let nextIndex = currentChannelIndex + direction;
-        if (nextIndex >= channels.length) {
-            nextIndex = 0; // Wrap around to the start
-        }
-        if (nextIndex < 0) {
-            nextIndex = channels.length - 1; // Wrap around to the end
-        }
+        if (nextIndex >= channels.length) nextIndex = 0;
+        if (nextIndex < 0) nextIndex = channels.length - 1;
         playChannel(nextIndex);
     }
     
     function togglePlayPause() {
-        if (playerElement.paused) {
-            playerElement.play();
-        } else {
-            playerElement.pause();
-        }
+        if (playerElement.paused) playerElement.play();
+        else playerElement.pause();
     }
 
-    // --- 6. UI & UTILITIES ---
+    // ADDED: Mute functionality
+    function toggleMute() {
+        playerElement.muted = !playerElement.muted;
+    }
+
     function updateChannelUI(channel) {
         document.getElementById('channel-name').textContent = channel.name;
         document.getElementById('channel-category').textContent = channel.category;
-
         channelInfoContainer.style.opacity = '1';
         
         clearTimeout(channelInfoTimeout);
-        channelInfoTimeout = setTimeout(() => {
-            channelInfoContainer.style.opacity = '0';
-        }, 5000);
+        channelInfoTimeout = setTimeout(() => { channelInfoContainer.style.opacity = '0'; }, 5000);
     }
 
     function setupClock() {
+        const timeEl = document.getElementById('current-time');
+        const timeListEl = document.getElementById('time-list');
+        const dateListEl = document.getElementById('date-list');
         function update() {
             const now = new Date();
-            const timeOpts = { hour: '2-digit', minute: '2-digit', hour12: true };
-            const dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
-            const timeString = now.toLocaleTimeString('en-US', timeOpts);
-            const dateString = now.toLocaleDateString('en-US', dateOpts);
-
-            document.getElementById('current-time').textContent = timeString;
-            document.getElementById('time-list').textContent = timeString;
-            document.getElementById('date-list').textContent = dateString;
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            timeEl.textContent = timeString;
+            timeListEl.textContent = timeString;
+            dateListEl.textContent = dateString;
         }
         update();
         setInterval(update, 1000);
     }
 
     function enterFullScreen() {
+        // Note: Automatic fullscreen can be blocked by browsers if not initiated by a user gesture.
+        // This is best-effort for TV-like environments.
         document.documentElement.requestFullscreen().catch(err => {
-            console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+            console.warn(`Could not enter fullscreen: ${err.message}`);
         });
     }
 
     function initShakaPlayer() {
         shakaPlayer = new shaka.Player(playerElement);
-        // Hide default controls
         const ui = new shaka.ui.Overlay(shakaPlayer, playerElement.parentElement, playerElement);
-        ui.getControls().getControlsContainer().style.display = 'none';
-        
-        shakaPlayer.addEventListener('error', (e) => console.error("Shaka Player Error", e.detail));
+        ui.getControls().getControlsContainer().style.display = 'none'; // Hide default controls
+        shakaPlayer.addEventListener('error', e => console.error("Shaka Player Error", e.detail));
     }
 
     async function installShakaPolyfills() {
-        // Install polyfills for browser compatibility if needed.
         shaka.polyfill.installAll();
-        if (shaka.Player.isBrowserSupported()) {
-            console.log("Shaka Player is supported!");
-        } else {
-            console.error('Browser not supported!');
+        if (!shaka.Player.isBrowserSupported()) {
+            console.error('Shaka Player is not supported by this browser.');
         }
     }
 
