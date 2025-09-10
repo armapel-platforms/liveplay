@@ -10,8 +10,6 @@
     { "source": "/home/about-us", "destination": "/about.html" },
     { "source": "/home/terms-of-service", "destination": "/terms.html" },
     { "source": "/home/privacy-policy", "destination": "/privacy.html" },
-    { "source": "/home/faq", "destination": "/faq.html" },
-    { "source": "/tv", "destination": "/tv.html" },
-    { "source": "/tv/remote", "destination": "/remote.html" }
+    { "source": "/home/faq", "destination": "/faq.html" }
   ]
 }
