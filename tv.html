@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
     <link rel="manifest" href="/logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0,0" />
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/shaka-player.ui.js"></script>
     <style>
         body, html {
@@ -95,12 +95,15 @@
         }
         .channel-list-item .sensor-icon {
             font-size: 20px;
-            color: rgba(255, 255, 255, 0.8); /* Inactive icon color */
+            color: #ff4d00;
         }
         .channel-list-item.active {
             background-color: #ff4d00;
-            color: white; /* Active text and icon color */
+            color: white;
             font-weight: bold;
+        }
+        .channel-list-item.active .sensor-icon {
+             color: white;
         }
 
         .channel-info {
@@ -148,7 +151,7 @@
             align-items: center;
             justify-content: flex-end;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 400;
             color: #ff4d00;
             margin-top: 2px;
         }
@@ -241,7 +244,6 @@
         document.addEventListener('DOMContentLoaded', initApp);
 
         async function initApp() {
-            // --- No changes needed in this section ---
             const video = document.getElementById('video');
             const player = new shaka.Player(video);
             player.configure({ ui: { enabled: false } });
@@ -260,7 +262,8 @@
                     channels = await response.json();
                     if (channels.length > 0) {
                         renderChannelList();
-                        loadStream(channels[currentChannelIndex].name);
+                        // Load the initial stream without showing the info panel
+                        loadStream(channels[currentChannelIndex].name, false); 
                     } else {
                         console.error('No channels loaded from API.');
                     }
@@ -269,7 +272,6 @@
                 }
             }
 
-            // --- No changes needed in the JS logic here, CSS handles the styling ---
             function renderChannelList() {
                 channelsContainerEl.innerHTML = '';
                 channels.forEach((channel, index) => {
@@ -322,7 +324,7 @@
                     }
 
                     await player.load(streamData.manifestUri);
-                    showChannelInfo();
+
                 } catch (error) {
                     console.error('Error loading stream:', error);
                 }
@@ -372,20 +374,35 @@
                 else if (element.msRequestFullscreen) element.msRequestFullscreen();
             }
             
-            // --- Event listeners remain unchanged ---
             document.getElementById('up-btn').addEventListener('click', () => changeChannel(-1));
             document.getElementById('down-btn').addEventListener('click', () => changeChannel(1));
             document.getElementById('left-btn').addEventListener('click', () => channelListEl.classList.toggle('visible'));
             document.getElementById('right-btn').addEventListener('click', () => channelListEl.classList.remove('visible'));
             document.getElementById('ok-btn').addEventListener('click', showChannelInfo);
 
+            // --- MODIFICATION: ADDED e.preventDefault() ---
             document.addEventListener('keydown', (e) => {
                 switch (e.key) {
-                    case 'ArrowUp': changeChannel(-1); break;
-                    case 'ArrowDown': changeChannel(1); break;
-                    case 'ArrowLeft': channelListEl.classList.add('visible'); break;
-                    case 'ArrowRight': channelListEl.classList.remove('visible'); break;
-                    case 'Enter': showChannelInfo(); break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        changeChannel(-1);
+                        break;
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        changeChannel(1);
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        channelListEl.classList.add('visible');
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        channelListEl.classList.remove('visible');
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        showChannelInfo();
+                        break;
                     case 'Escape':
                          if (document.fullscreenElement) document.exitFullscreen();
                          channelListEl.classList.remove('visible');
