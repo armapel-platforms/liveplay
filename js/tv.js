@@ -1,3 +1,9 @@
+// tv.js (Final Clean Version for V9 Compatibility Scripts)
+
+/**
+ * Main function to initialize the application.
+ * It fetches the Firebase configuration before running any other code.
+ */
 async function main() {
     const loadingOverlay = document.getElementById('loading-overlay');
     try {
@@ -18,7 +24,12 @@ async function main() {
     }
 }
 
+/**
+ * Contains all the logic for the TV application after Firebase is ready.
+ * @param {object} database - The initialized Firebase Realtime Database instance.
+ */
 function runTvApp(database) {
+    // --- Constants ---
     const COMMANDS = {
         CHANNEL_UP: 'channel_up',
         CHANNEL_DOWN: 'channel_down',
@@ -27,6 +38,7 @@ function runTvApp(database) {
         TOGGLE_LIST: 'toggle_list',
     };
 
+    // --- DOM Elements ---
     const introScreen = document.getElementById('intro-screen');
     const pairingScreen = document.getElementById('pairing-screen');
     const tvApp = document.getElementById('tv-app');
@@ -38,11 +50,14 @@ function runTvApp(database) {
     const channelListContainer = document.getElementById('channel-list');
     const channelUl = document.getElementById('channels');
 
+    // --- App State ---
     let tvCode = null;
     let channels = [];
     let currentChannelIndex = 0;
     let shakaPlayer;
     let channelInfoTimeout;
+
+    // --- 1. Initialization & Setup ---
 
     function init() {
         enterFullScreen();
@@ -53,6 +68,8 @@ function runTvApp(database) {
             generateAndRegisterTvCode();
         }, 5000);
     }
+
+    // --- 2. Firebase & Pairing Logic ---
 
     function generateAndRegisterTvCode() {
         tvCode = Math.floor(1000 + Math.random() * 9000).toString();
@@ -99,6 +116,8 @@ function runTvApp(database) {
         }
     }
 
+    // --- 3. Player & Channel Logic ---
+
     async function startTvApplication() {
         pairingScreen.classList.add('hidden');
         tvApp.classList.remove('hidden');
@@ -136,10 +155,14 @@ function runTvApp(database) {
             updateActiveChannelInList();
         } catch (error) {
             console.error(`Stream Error for "${channel.name}":`, error);
+            // Show error feedback to the user on the TV screen
             channelNameEl.textContent = channel.name;
             channelCategoryEl.textContent = "Error playing stream";
             channelInfoContainer.style.opacity = '1';
             clearTimeout(channelInfoTimeout);
+            // ** THE FIX IS HERE **
+            // This stops the function to prevent further errors.
+            return;
         }
     }
 
@@ -157,6 +180,8 @@ function runTvApp(database) {
     function toggleMute() {
         playerElement.muted = !playerElement.muted;
     }
+
+    // --- 4. UI & Utility Functions ---
 
     function renderChannelList() {
         channelUl.innerHTML = '';
@@ -205,6 +230,7 @@ function runTvApp(database) {
     }
 
     function enterFullScreen() {
+        // Note: Automatic fullscreen can be blocked by browsers if not initiated by a user gesture.
         document.documentElement.requestFullscreen().catch(err => {
             console.warn(`Could not enter fullscreen: ${err.message}`);
         });
@@ -224,7 +250,9 @@ function runTvApp(database) {
         }
     }
 
+    // --- 5. Start Application ---
     init();
 }
 
+// Start the entire process once the DOM is ready.
 document.addEventListener('DOMContentLoaded', main);
