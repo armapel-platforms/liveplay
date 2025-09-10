@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liveplay for TV</title>
+    <link rel="icon" type="image/png" href="/logo/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/logo/favicon.svg" />
+    <link rel="shortcut" href="/logo/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
+    <link rel="manifest" href="/logo/site.webmanifest" />
+    <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0..1,0" />
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/shaka-player.ui.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/controls.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'TT Hoves Pro Trial', sans-serif;
+            color: white;
+        }
+        #video-container {
+            width: 100%;
+            height: 100%;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+        }
+        .liveplay-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+        }
+        .liveplay-logo .bold {
+            font-weight: bold;
+        }
+        .liveplay-logo .thin {
+            font-weight: 300;
+        }
+        .channel-list {
+            position: absolute;
+            left: -300px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: rgba(25, 25, 25, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: left 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .channel-list.visible {
+            left: 0;
+        }
+        .channel-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .channel-list-item.active {
+            background-color: #ff4d00;
+            color: white;
+        }
+        .channel-list-item .sensor-icon {
+            color: transparent;
+        }
+        .channel-list-item.active .sensor-icon {
+            color: white;
+        }
+        .channel-info {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(25, 25, 25, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        .channel-info h2 {
+            margin: 0 0 10px 0;
+        }
+        .channel-info p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .live-indicator .sensor-icon {
+            color: #ff4d00;
+            margin-right: 5px;
+        }
+        .d-pad {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 5px;
+            width: 120px;
+        }
+        .d-pad-btn {
+            background-color: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+        }
+        .d-pad-btn:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        #up-btn { grid-column: 2; grid-row: 1; }
+        #left-btn { grid-column: 1; grid-row: 2; }
+        #ok-btn { grid-column: 2; grid-row: 2; }
+        #right-btn { grid-column: 3; grid-row: 2; }
+        #down-btn { grid-column: 2; grid-row: 3; }
+    </style>
+</head>
+<body>
+
+    <div class="liveplay-logo">
+        <span class="bold">liveplay</span> <span class="thin">for TV</span>
+    </div>
+
+    <div id="video-container">
+        <video id="video" poster="//shaka-player-demo.appspot.com/assets/poster.jpg" controls autoplay></video>
+    </div>
+
+    <div class="channel-list" id="channel-list"></div>
+
+    <div class="channel-info" id="channel-info">
+        <h2 id="channel-name"></h2>
+        <p id="channel-category"></p>
+        <p id="current-time"></p>
+        <div class="live-indicator">
+            <span class="material-symbols-outlined sensor-icon">sensors</span> LIVE
+        </div>
+    </div>
+
+    <div class="d-pad">
+        <button id="up-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
+        <button id="left-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_left</span></button>
+        <button id="ok-btn" class="d-pad-btn">OK</button>
+        <button id="right-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_right</span></button>
+        <button id="down-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span></button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        async function initApp() {
+            const video = document.getElementById('video');
+            const player = new shaka.Player(video);
+
+            const videoContainer = document.getElementById('video-container');
+            const controls = videoContainer.querySelector('.shaka-controls-container');
+            if (controls) {
+                controls.style.display = 'none';
+            }
+
+            const channelListEl = document.getElementById('channel-list');
+            const channelInfoEl = document.getElementById('channel-info');
+            let channels = [];
+            let currentChannelIndex = 0;
+            let channelInfoTimeout;
+
+            async function loadChannels() {
+                try {
+                    const response = await fetch('/api/getChannels');
+                    channels = await response.json();
+                    renderChannelList();
+                    loadStream(channels[currentChannelIndex].name);
+                } catch (error) {
+                    console.error('Error fetching channels:', error);
+                }
+            }
+
+            function renderChannelList() {
+                channelListEl.innerHTML = '';
+                channels.forEach((channel, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'channel-list-item';
+                    if (index === currentChannelIndex) {
+                        item.classList.add('active');
+                    }
+                    item.textContent = channel.name;
+                    item.addEventListener('click', () => {
+                        currentChannelIndex = index;
+                        loadStream(channel.name);
+                        updateChannelListActiveState();
+                    });
+                    const sensorIcon = document.createElement('span');
+                    sensorIcon.className = 'material-symbols-outlined sensor-icon';
+                    sensorIcon.textContent = 'sensors';
+                    item.appendChild(sensorIcon);
+                    channelListEl.appendChild(item);
+                });
+            }
+
+            function updateChannelListActiveState() {
+                const items = channelListEl.querySelectorAll('.channel-list-item');
+                items.forEach((item, index) => {
+                    if (index === currentChannelIndex) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+            }
+
+            async function loadStream(channelName) {
+                try {
+                    const response = await fetch(`/api/getStream?name=${encodeURIComponent(channelName)}`);
+                    const streamData = await response.json();
+                    player.load(streamData.manifestUri);
+                    showChannelInfo();
+                } catch (error) {
+                    console.error('Error fetching stream data:', error);
+                }
+            }
+
+            function showChannelInfo() {
+                const channel = channels[currentChannelIndex];
+                document.getElementById('channel-name').textContent = channel.name;
+                document.getElementById('channel-category').textContent = channel.category;
+                document.getElementById('current-time').textContent = new Date().toLocaleTimeString();
+                channelInfoEl.style.display = 'block';
+
+                clearTimeout(channelInfoTimeout);
+                channelInfoTimeout = setTimeout(() => {
+                    channelInfoEl.style.display = 'none';
+                }, 5000);
+            }
+
+            function changeChannel(direction) {
+                currentChannelIndex += direction;
+                if (currentChannelIndex < 0) {
+                    currentChannelIndex = channels.length - 1;
+                } else if (currentChannelIndex >= channels.length) {
+                    currentChannelIndex = 0;
+                }
+                loadStream(channels[currentChannelIndex].name);
+                updateChannelListActiveState();
+            }
+
+            // D-pad controls
+            document.getElementById('up-btn').addEventListener('click', () => changeChannel(-1));
+            document.getElementById('down-btn').addEventListener('click', () => changeChannel(1));
+            document.getElementById('left-btn').addEventListener('click', () => {
+                channelListEl.classList.toggle('visible');
+            });
+            document.getElementById('right-btn').addEventListener('click', () => {
+                channelListEl.classList.remove('visible');
+            });
+            document.getElementById('ok-btn').addEventListener('click', showChannelInfo);
+
+            // Keyboard controls
+            document.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case 'ArrowUp':
+                        changeChannel(-1);
+                        break;
+                    case 'ArrowDown':
+                        changeChannel(1);
+                        break;
+                    case 'ArrowLeft':
+                        channelListEl.classList.add('visible');
+                        break;
+                    case 'ArrowRight':
+                        channelListEl.classList.remove('visible');
+                        break;
+                    case 'Enter':
+                        showChannelInfo();
+                        break;
+                }
+            });
+
+            // Fullscreen management
+            function goFullscreen() {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen()
+                } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+                    document.documentElement.msRequestFullscreen();
+                }
+            }
+
+            document.body.addEventListener('click', goFullscreen, { once: true });
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                }
+            });
+
+            await loadChannels();
+        }
+    </script>
+</body>
+</html>
