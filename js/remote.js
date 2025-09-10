@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION HERE ---
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_AUTH_DOMAIN",
-        databaseURL: "YOUR_DATABASE_URL",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_STORAGE_BUCKET",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyC35egyqfOM08IEnUaVBJozdKyKwc6k0ec",
+      authDomain: "armapel-platforms.firebaseapp.com",
+      projectId: "armapel-platforms",
+      storageBucket: "armapel-platforms.firebasestorage.app",
+      messagingSenderId: "1005805951257",
+      appId: "1:1005805951257:web:d1348ad32e8a81acd18d88",
+      measurementId: "G-BGQTESZ3SJ"
     };
 
     firebase.initializeApp(firebaseConfig);
