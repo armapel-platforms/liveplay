@@ -203,6 +203,7 @@
         document.addEventListener('DOMContentLoaded', initApp);
 
         async function initApp() {
+            // Unchanged variables...
             const video = document.getElementById('video');
             const player = new shaka.Player(video);
 
@@ -217,6 +218,7 @@
             let currentChannelIndex = 0;
             let channelInfoTimeout;
 
+            // All other functions (loadChannels, renderChannelList, etc.) are unchanged...
             async function loadChannels() {
                 try {
                     const response = await fetch('/api/getChannels');
@@ -305,6 +307,22 @@
                 document.getElementById('datetime-display').textContent = `${dateString} | ${timeString}`;
             }
 
+            // --- THIS IS THE KEY FIX ---
+            // This function now targets the entire page document, not just the video.
+            function goFullscreen() {
+                const element = document.documentElement;
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) { // Firefox
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) { // IE/Edge
+                    element.msRequestFullscreen();
+                }
+            }
+            
+            // Event listeners are unchanged...
             document.getElementById('up-btn').addEventListener('click', () => changeChannel(-1));
             document.getElementById('down-btn').addEventListener('click', () => changeChannel(1));
             document.getElementById('left-btn').addEventListener('click', () => channelListEl.classList.toggle('visible'));
@@ -325,11 +343,6 @@
                 }
             });
 
-            function goFullscreen() {
-                if (video.requestFullscreen) {
-                    video.requestFullscreen({ navigationUI: "hide" });
-                }
-            }
             document.body.addEventListener('click', goFullscreen, { once: true });
 
             await loadChannels();
