@@ -18,7 +18,7 @@
       "permanent": false
     },
     {
-      "source": "/((?!not-available).*)",
+      "source": "/((?!not-available|favicon\\.ico).*)",
       "missing": [
         {
           "type": "header",
