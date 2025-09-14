@@ -1,4 +1,0 @@
-RewriteEngine On
-GeoIPEnable On
-RewriteCond %{ENV:GEOIP_COUNTRY_CODE} !^PH$ [NC]
-RewriteRule ^.*$ /not-available [R=302,L]
