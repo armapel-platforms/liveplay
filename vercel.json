@@ -1,7 +1,7 @@
 {
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/:path((?!not-available.html$).*)",
+      "source": "/((?!not-available.html).*)",
       "missing": [
         {
           "type": "header",
@@ -9,8 +9,11 @@
           "value": "PH"
         }
       ],
-      "destination": "/not-available.html"
-    },
+      "destination": "/not-available.html",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
     { "source": "/", "destination": "/home" },
     { "source": "/home", "destination": "/index.html" },
     { "source": "/home/search", "destination": "/search.html" },
