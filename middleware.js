@@ -13,7 +13,7 @@ export default function middleware(request) {
   const country = request.geo?.country;
 
   if (country !== ALLOWED_COUNTRY) {
-    return NextResponse.rewrite(new URL('/not-available', request.url));
+    return NextResponse.rewrite(new URL('/not-available.html', request.url));
   }
 
   return next();
