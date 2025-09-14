@@ -1,5 +1,16 @@
 {
   "rewrites": [
+    {
+      "source": "/:path((?!not-available.html$).*)",
+      "missing": [
+        {
+          "type": "header",
+          "key": "x-vercel-ip-country",
+          "value": "PH"
+        }
+      ],
+      "destination": "/not-available.html"
+    },
     { "source": "/", "destination": "/home" },
     { "source": "/home", "destination": "/index.html" },
     { "source": "/home/search", "destination": "/search.html" },
