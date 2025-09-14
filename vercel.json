@@ -13,6 +13,11 @@
       "permanent": false
     },
     {
+      "source": "/:path*.html",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
       "source": "/((?!not-available).*)",
       "missing": [
         {
@@ -26,7 +31,6 @@
     }
   ],
   "rewrites": [
-    { "source": "/:any*.html", "destination": "/404" },
     { "source": "/", "destination": "/home" },
     { "source": "/home", "destination": "/index.html" },
     { "source": "/home/search", "destination": "/search.html" },
@@ -38,7 +42,7 @@
     { "source": "/home/terms-of-service", "destination": "/terms.html" },
     { "source": "/home/privacy-policy", "destination": "/privacy.html" },
     { "source": "/home/faq", "destination": "/faq.html" },
-    { "source": "/tv", "destination": "/tv.html" },
-    { "source": "/not-available", "destination": "/not-available.html" }
+    { "source": "/not-available", "destination": "/not-available.html" },
+    { "source": "/tv", "destination": "/tv.html" }
   ]
 }
