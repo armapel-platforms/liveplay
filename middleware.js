@@ -5,7 +5,7 @@ const ALLOWED_COUNTRY = 'PH';
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|not-available|.*\\..*).*)',
+    '/((?!_next/static|_next/image|favicon.ico|not-available.html|.*\\..*).*)',
   ],
 };
 
