@@ -1,6 +1,18 @@
 {
   "redirects": [
     {
+      "source": "/not-available",
+      "has": [
+        {
+          "type": "header",
+          "key": "x-vercel-ip-country",
+          "value": "PH"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    },
+    {
       "source": "/((?!not-available).*)",
       "missing": [
         {
