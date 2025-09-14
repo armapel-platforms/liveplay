@@ -11,6 +11,7 @@
     { "source": "/home/terms-of-service", "destination": "/terms.html" },
     { "source": "/home/privacy-policy", "destination": "/privacy.html" },
     { "source": "/home/faq", "destination": "/faq.html" },
+    { "source": "/not-available", "destination": "/not-available.html" },
     { "source": "/tv", "destination": "/tv.html" }
   ]
 }
