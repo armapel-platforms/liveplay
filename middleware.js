@@ -5,12 +5,12 @@ export const config = {
 };
 
 export default function middleware(request) {
-  const country = request.geo?.country || 'US';
+  const country = request.geo?.country;
 
-  if (country !== 'PH') {
-    const url = new URL('/not-available.html', request.url);
-    
-    return Response.redirect(url, 307);
+  if (country === 'PH') {
+    return;
   }
 
+  const url = new URL('/not-available.html', request.url);
+  return Response.redirect(url, 307);
 }
