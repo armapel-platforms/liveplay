@@ -26,6 +26,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/:any*.html", "destination": "/404" },
     { "source": "/", "destination": "/home" },
     { "source": "/home", "destination": "/index.html" },
     { "source": "/home/search", "destination": "/search.html" },
