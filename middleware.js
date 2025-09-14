@@ -1,20 +1,18 @@
-import { next } from '@vercel/edge';
-import { NextResponse } from 'next/server';
-
-const ALLOWED_COUNTRY = 'PH';
+import { NextRequest, NextResponse } from 'next/server';
+import { geolocation } from '@vercel/functions';
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|not-available.html|.*\\..*).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|not-available).*)',
   ],
 };
 
-export default function middleware(request) {
-  const country = request.geo?.country;
+export function middleware(request: NextRequest) {
+  const { country } = geolocation(request);
 
-  if (country !== ALLOWED_COUNTRY) {
-    return NextResponse.rewrite(new URL('/not-available.html', request.url));
+  if (country !== 'PH') {
+    return NextResponse.redirect(new URL('/not-available', request.url));
   }
 
-  return next();
+  return NextResponse.next();
 }
