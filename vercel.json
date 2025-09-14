@@ -1,7 +1,7 @@
 {
   "redirects": [
     {
-      "source": "/((?!not-available\\.html).*)",
+      "source": "/((?!not-available).*)",
       "missing": [
         {
           "type": "header",
@@ -9,7 +9,7 @@
           "value": "PH"
         }
       ],
-      "destination": "/not-available.html",
+      "destination": "/not-available",
       "permanent": false
     }
   ],
@@ -25,6 +25,7 @@
     { "source": "/home/terms-of-service", "destination": "/terms.html" },
     { "source": "/home/privacy-policy", "destination": "/privacy.html" },
     { "source": "/home/faq", "destination": "/faq.html" },
-    { "source": "/tv", "destination": "/tv.html" }
+    { "source": "/tv", "destination": "/tv.html" },
+    { "source": "/not-available", "destination": "/not-available.html" }
   ]
 }
