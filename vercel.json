@@ -1,4 +1,18 @@
 {
+  "redirects": [
+    {
+      "source": "/((?!not-available\\.html).*)",
+      "missing": [
+        {
+          "type": "header",
+          "key": "x-vercel-ip-country",
+          "value": "PH"
+        }
+      ],
+      "destination": "/not-available.html",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/home" },
     { "source": "/home", "destination": "/index.html" },
