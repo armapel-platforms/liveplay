@@ -1,34 +1,8 @@
 {
   "redirects": [
-    {
-      "source": "/not-available",
-      "has": [
-        {
-          "type": "header",
-          "key": "x-vercel-ip-country",
-          "value": "PH"
-        }
-      ],
-      "destination": "/",
-      "permanent": false
-    },
-    {
-      "source": "/:path*.html",
-      "destination": "/404",
-      "permanent": false
-    },
-    {
-      "source": "/((?!not-available|favicon\\.ico).*)",
-      "missing": [
-        {
-          "type": "header",
-          "key": "x-vercel-ip-country",
-          "value": "PH"
-        }
-      ],
-      "destination": "/not-available",
-      "permanent": false
-    }
+    { "source": "/not-available", "has": [ { "type": "header", "key": "x-vercel-ip-country", "value": "PH" } ], "destination": "/", "permanent": false },
+    { "source": "/:path*.html", "destination": "/404", "permanent": false },
+    { "source": "/((?!not-available).*)", "missing": [ { "type": "header", "key": "x-vercel-ip-country", "value": "PH" } ], "destination": "/not-available", "permanent": false }
   ],
   "rewrites": [
     { "source": "/", "destination": "/home" },
