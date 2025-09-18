@@ -33,12 +33,12 @@
             height: 100%;
         }
 
-        .channel-info, .channel-list, .d-pad {
+        .channel-info, .channel-list, .d-pad-wrapper {
             position: absolute;
             z-index: 10;
         }
         .channel-list { z-index: 20; }
-        .d-pad { z-index: 30; }
+        .d-pad-wrapper { z-index: 30; }
 
         .channel-list {
             left: -400px;
@@ -98,6 +98,11 @@
             font-size: 20px;
             color: #ff4d00;
         }
+        /* Style for the selected item in the list */
+        .channel-list-item.selected {
+             background-color: rgba(255, 255, 255, 0.2);
+        }
+        /* Style for the currently playing channel */
         .channel-list-item.active {
             background-color: #ff4d00;
             color: white;
@@ -110,7 +115,7 @@
         .channel-info {
             left: 0;
             right: 0;
-            bottom: -200px; 
+            bottom: -200px;
             margin: 0 auto 30px auto;
             background: rgba(25, 25, 25, 0.8);
             backdrop-filter: blur(15px);
@@ -161,45 +166,62 @@
             margin-right: 6px;
         }
 
-        .d-pad {
-            bottom: 120px;
-            left: 100%;
-            transform: translateX(-50%);
-            display: grid;
-            grid-template-areas:
-                ". up ."
-                "left ok right"
-                ". down .";
-            gap: 10px;
+        /* --- D-PAD STYLES --- */
+        .d-pad-wrapper {
+            bottom: 50px;
+            right: 50px;
         }
-        .d-pad-btn {
+
+        .d-pad {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            border-radius: 50%;
             background-color: rgba(25, 25, 25, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 0.3s, transform 0.3s;
+            opacity: 0.7; /* Semi-transparent by default */
+        }
+
+        .d-pad:hover, .d-pad.active {
+            opacity: 1; /* Fully opaque on hover/touch */
+            transform: scale(1.05); /* Slightly larger */
+        }
+
+        .d-pad-btn {
+            position: absolute;
             color: white;
             font-size: 24px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            background: transparent;
+            border: none;
             display: flex;
             justify-content: center;
             align-items: center;
             width: 50px;
             height: 50px;
             border-radius: 50%;
+            transition: background-color 0.2s;
         }
         .d-pad-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+             background-color: rgba(255, 255, 255, 0.3);
         }
-        #up-btn { grid-area: up; }
-        #left-btn { grid-area: left; }
+
+        #up-btn { top: 0; left: 50%; transform: translateX(-50%); }
+        #down-btn { bottom: 0; left: 50%; transform: translateX(-50%); }
+        #left-btn { left: 0; top: 50%; transform: translateY(-50%); }
+        #right-btn { right: 0; top: 50%; transform: translateY(-50%); }
         #ok-btn {
-            grid-area: ok;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             font-weight: bold;
             font-size: 16px;
             width: 60px;
             height: 60px;
+            background-color: rgba(25, 25, 25, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        #right-btn { grid-area: right; }
-        #down-btn { grid-area: down; }
     </style>
 </head>
 <body>
@@ -233,13 +255,16 @@
         </div>
     </div>
 
-    <div class="d-pad">
-        <button id="up-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
-        <button id="left-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_left</span></button>
-        <button id="ok-btn" class="d-pad-btn">OK</button>
-        <button id="right-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_right</span></button>
-        <button id="down-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span></button>
+    <div class="d-pad-wrapper">
+        <div class="d-pad" id="d-pad">
+            <button id="up-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
+            <button id="left-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_left</span></button>
+            <button id="ok-btn" class="d-pad-btn">OK</button>
+            <button id="right-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_right</span></button>
+            <button id="down-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span></button>
+        </div>
     </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', initApp);
@@ -252,8 +277,11 @@
             const channelListEl = document.getElementById('channel-list');
             const channelsContainerEl = document.getElementById('channels-container');
             const channelInfoEl = document.getElementById('channel-info');
+            const dPadEl = document.getElementById('d-pad');
+
             let channels = [];
             let currentChannelIndex = 0;
+            let selectedChannelIndex = 0;
             let channelInfoTimeout;
 
             async function loadChannels() {
@@ -263,8 +291,7 @@
                     channels = await response.json();
                     if (channels.length > 0) {
                         renderChannelList();
-                        // Load the initial stream without showing the info panel
-                        loadStream(channels[currentChannelIndex].name, false); 
+                        loadStream(channels[currentChannelIndex].name);
                     } else {
                         console.error('No channels loaded from API.');
                     }
@@ -278,10 +305,10 @@
                 channels.forEach((channel, index) => {
                     const item = document.createElement('div');
                     item.className = 'channel-list-item';
-                    if (index === currentChannelIndex) {
-                        item.classList.add('active');
-                    }
-                    
+
+                    if (index === currentChannelIndex) item.classList.add('active');
+                    if (index === selectedChannelIndex) item.classList.add('selected');
+
                     const nameSpan = document.createElement('span');
                     nameSpan.textContent = channel.name;
                     item.appendChild(nameSpan);
@@ -292,24 +319,32 @@
                     item.appendChild(sensorIcon);
 
                     item.onclick = () => {
-                        currentChannelIndex = index;
-                        loadStream(channel.name);
-                        updateChannelListActiveState();
+                        selectedChannelIndex = index;
+                        playSelectedChannel();
                     };
                     channelsContainerEl.appendChild(item);
                 });
             }
 
-            function updateChannelListActiveState() {
+            function updateChannelListSelection() {
                 const items = channelsContainerEl.querySelectorAll('.channel-list-item');
                 items.forEach((item, index) => {
-                    if (index === currentChannelIndex) {
-                        item.classList.add('active');
-                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    } else {
-                        item.classList.remove('active');
+                    item.classList.remove('selected');
+                    if (index === selectedChannelIndex) {
+                        item.classList.add('selected');
+                        item.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
                     }
                 });
+            }
+
+            function updateChannelListActive() {
+                 const items = channelsContainerEl.querySelectorAll('.channel-list-item');
+                 items.forEach((item, index) => {
+                    item.classList.remove('active');
+                    if (index === currentChannelIndex) {
+                        item.classList.add('active');
+                    }
+                 });
             }
 
             async function loadStream(channelName) {
@@ -318,30 +353,28 @@
                     if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
                     const streamData = await response.json();
 
-                    if (streamData.clearKey && Object.keys(streamData.clearKey).length > 0) {
-                        player.configure({ drm: { clearKeys: streamData.clearKey }});
-                    } else {
-                        player.configure({ drm: { clearKeys: {} }});
-                    }
-
+                    player.configure({ drm: { clearKeys: streamData.clearKey || {} } });
                     await player.load(streamData.manifestUri);
+
+                    updateChannelListActive();
+                    showChannelInfo(currentChannelIndex);
 
                 } catch (error) {
                     console.error('Error loading stream:', error);
                 }
             }
 
-            function showChannelInfo() {
-                if (!channels[currentChannelIndex]) return;
+            function showChannelInfo(index) {
+                if (!channels[index]) return;
 
-                const channel = channels[currentChannelIndex];
+                const channel = channels[index];
                 const now = new Date();
                 const timeString = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace(' ', '');
 
                 document.getElementById('channel-name').textContent = channel.name;
                 document.getElementById('channel-category').textContent = channel.category;
                 document.getElementById('channel-time').textContent = timeString;
-                
+
                 channelInfoEl.classList.add('visible');
 
                 clearTimeout(channelInfoTimeout);
@@ -355,10 +388,34 @@
                 if (currentChannelIndex < 0) currentChannelIndex = channels.length - 1;
                 if (currentChannelIndex >= channels.length) currentChannelIndex = 0;
                 
+                selectedChannelIndex = currentChannelIndex;
+                updateChannelListSelection();
+
                 loadStream(channels[currentChannelIndex].name);
-                updateChannelListActiveState();
             }
-            
+
+            function navigateList(direction) {
+                selectedChannelIndex += direction;
+                if (selectedChannelIndex < 0) selectedChannelIndex = channels.length - 1;
+                if (selectedChannelIndex >= channels.length) selectedChannelIndex = 0;
+                updateChannelListSelection();
+            }
+
+            function playSelectedChannel() {
+                if(currentChannelIndex === selectedChannelIndex) return;
+                currentChannelIndex = selectedChannelIndex;
+                loadStream(channels[currentChannelIndex].name);
+                channelListEl.classList.remove('visible');
+            }
+
+            function handleOkPress() {
+                if (channelListEl.classList.contains('visible')) {
+                    playSelectedChannel();
+                } else {
+                    showChannelInfo(currentChannelIndex);
+                }
+            }
+
             function updateDateTime() {
                 const now = new Date();
                 const dateOptions = { month: 'long', day: 'numeric' };
@@ -374,35 +431,47 @@
                 else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen();
                 else if (element.msRequestFullscreen) element.msRequestFullscreen();
             }
-            
-            document.getElementById('up-btn').addEventListener('click', () => changeChannel(-1));
-            document.getElementById('down-btn').addEventListener('click', () => changeChannel(1));
-            document.getElementById('left-btn').addEventListener('click', () => channelListEl.classList.toggle('visible'));
-            document.getElementById('right-btn').addEventListener('click', () => channelListEl.classList.remove('visible'));
-            document.getElementById('ok-btn').addEventListener('click', showChannelInfo);
 
-            // --- MODIFICATION: ADDED e.preventDefault() ---
+            document.getElementById('up-btn').addEventListener('click', () => {
+                channelListEl.classList.contains('visible') ? navigateList(-1) : changeChannel(-1);
+            });
+            document.getElementById('down-btn').addEventListener('click', () => {
+                 channelListEl.classList.contains('visible') ? navigateList(1) : changeChannel(1);
+            });
+            document.getElementById('left-btn').addEventListener('click', () => {
+                if(!channelListEl.classList.contains('visible')){
+                   selectedChannelIndex = currentChannelIndex;
+                   updateChannelListSelection();
+                   channelListEl.classList.add('visible');
+                }
+            });
+            document.getElementById('right-btn').addEventListener('click', () => channelListEl.classList.remove('visible'));
+            document.getElementById('ok-btn').addEventListener('click', handleOkPress);
+
             document.addEventListener('keydown', (e) => {
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
+                    e.preventDefault();
+                }
+
                 switch (e.key) {
                     case 'ArrowUp':
-                        e.preventDefault();
-                        changeChannel(-1);
+                        channelListEl.classList.contains('visible') ? navigateList(-1) : changeChannel(-1);
                         break;
                     case 'ArrowDown':
-                        e.preventDefault();
-                        changeChannel(1);
+                        channelListEl.classList.contains('visible') ? navigateList(1) : changeChannel(1);
                         break;
                     case 'ArrowLeft':
-                        e.preventDefault();
-                        channelListEl.classList.add('visible');
+                        if(!channelListEl.classList.contains('visible')){
+                           selectedChannelIndex = currentChannelIndex;
+                           updateChannelListSelection();
+                           channelListEl.classList.add('visible');
+                        }
                         break;
                     case 'ArrowRight':
-                        e.preventDefault();
                         channelListEl.classList.remove('visible');
                         break;
                     case 'Enter':
-                        e.preventDefault();
-                        showChannelInfo();
+                        handleOkPress();
                         break;
                     case 'Escape':
                          if (document.fullscreenElement) document.exitFullscreen();
@@ -410,6 +479,10 @@
                          break;
                 }
             });
+
+            dPadEl.addEventListener('touchstart', () => dPadEl.classList.add('active'), { passive: true });
+            dPadEl.addEventListener('touchend', () => dPadEl.classList.remove('active'));
+
 
             document.body.addEventListener('click', goFullscreen, { once: true });
 
