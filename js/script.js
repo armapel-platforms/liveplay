@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const exitBtn = document.getElementById('exit-player-btn');
     let activeStream = null;
 
+    const originalTitle = "Liveplay - Free Live Philippine TV Channels Online";
+
     const isDesktop = () => window.innerWidth >= 1024;
 
     const setVideoPoster = () => {
@@ -383,6 +385,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('player-channel-name').textContent = stream.name;
         document.getElementById('player-channel-category').textContent = stream.category;
 
+        document.title = `${stream.name} - Liveplay`;
+
         if (!isDesktop()) {
             document.getElementById('minimized-player-logo').src = stream.logo;
             document.getElementById('minimized-player-name').textContent = stream.name;
@@ -432,6 +436,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         activeStream = null;
         history.pushState({}, '', '/home');
+
+        document.title = originalTitle;
 
         if (isDesktop()) {
             document.getElementById('player-channel-name').textContent = 'Channel Name';
