@@ -21,8 +21,8 @@
             var isAndroidTV = (userAgent.indexOf('android') > -1 && userAgent.indexOf('mobile') === -1);
 
             if (!isTV && !isAndroidTV) {
-                //if (window.location.pathname !== '/404' && window.location.pathname !== '/404.html') {
-                   // window.location.href = '/404';
+                if (window.location.pathname !== '/404' && window.location.pathname !== '/404.html') {
+                   window.location.href = '/404';
                 }
             }
         })();
@@ -205,10 +205,7 @@
 
         .d-pad:hover, .d-pad.active {
             opacity: 1;
-            border: 1px solid white;
-            background: rgba(25, 25, 25, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background-color: rgba(128, 128, 128, 0.7);
         }
 
         .d-pad-btn {
@@ -243,7 +240,12 @@
             font-size: 16px;
             width: 35px;
             height: 35px;
-            background-color: #ff4d00;
+            background-color: transparent;
+            border: 1px solid transparent;
+        }
+        
+        #ok-btn:hover {
+            background-color: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
