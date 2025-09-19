@@ -173,14 +173,14 @@
             height: 100px;
             position: relative;
             border-radius: 50%;
-            background-color: rgba(25, 25, 25, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: transparent 90%;
             transition: opacity 0.3s, transform 0.3s;
             opacity: 0.7;
         }
 
         .d-pad:hover, .d-pad.active {
             opacity: 1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .d-pad-btn {
@@ -254,7 +254,7 @@
         <div class="d-pad" id="d-pad">
             <button id="up-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
             <button id="left-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_left</span></button>
-            <button id="ok-btn" class="d-pad-btn">OK</button>
+            <button id="ok-btn" class="d-pad-btn"></button>
             <button id="right-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_right</span></button>
             <button id="down-btn" class="d-pad-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span></button>
         </div>
