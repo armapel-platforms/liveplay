@@ -31,6 +31,7 @@
 .shaka-video-container .material-icons-round,
 .shaka-video-container .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
+  font-weight: 200;
   font-size: 24px;
   font-style: normal;
   font-variation-settings: 'FILL' 0;
