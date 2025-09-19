@@ -98,9 +98,8 @@
             font-size: 20px;
             color: #ff4d00;
         }
-        .channel-list-item.selected {
-             background-color: rgba(255, 255, 255, 0.2);
-        }
+        /* --- REMOVED .selected CLASS --- */
+        /* Only style for the currently playing channel */
         .channel-list-item.active {
             background-color: #ff4d00;
             color: white;
@@ -113,8 +112,8 @@
         .channel-info {
             left: 0;
             right: 0;
-            bottom: -200px;
-            margin: 0 auto 30px auto;
+            bottom: 30px;
+            margin: 0 auto;
             background: rgba(25, 25, 25, 0.8);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
@@ -127,12 +126,14 @@
             justify-content: space-between;
             align-items: center;
             opacity: 0;
-            transition: bottom 0.4s ease, opacity 0.4s ease;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
         }
         .channel-info.visible {
-            bottom: 30px;
             opacity: 1;
+            pointer-events: auto;
         }
+
         .channel-info .details h2 {
             margin: 0 0 2px 0;
             font-size: 28px;
@@ -280,8 +281,7 @@
 
             // --- State Management ---
             let channels = [];
-            let currentChannelIndex = 0; // The channel that is currently playing
-            let selectedChannelIndex = 0; // The channel that is highlighted in the list
+            let currentChannelIndex = 0; // The only index we need to track now
             let channelInfoTimeout;
 
             // --- Core Functions ---
@@ -326,7 +326,6 @@
                     const item = document.createElement('div');
                     item.className = 'channel-list-item';
                     if (index === currentChannelIndex) item.classList.add('active');
-                    if (index === selectedChannelIndex) item.classList.add('selected');
 
                     const nameSpan = document.createElement('span');
                     nameSpan.textContent = channel.name;
@@ -338,29 +337,26 @@
                     item.appendChild(sensorIcon);
 
                     item.onclick = () => {
-                        selectedChannelIndex = index;
-                        playSelectedChannel();
+                        // Clicking an item in the list now directly changes the channel
+                        if (currentChannelIndex !== index) {
+                           currentChannelIndex = index;
+                           loadStream(channels[currentChannelIndex].name, true);
+                        }
                     };
                     channelsContainerEl.appendChild(item);
                 });
             }
-
-            function updateChannelListSelection() {
-                const items = channelsContainerEl.querySelectorAll('.channel-list-item');
-                items.forEach((item, index) => {
-                    item.classList.remove('selected');
-                    if (index === selectedChannelIndex) {
-                        item.classList.add('selected');
-                        item.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-                    }
-                });
-            }
-
+            
             function updateChannelListActive() {
                  const items = channelsContainerEl.querySelectorAll('.channel-list-item');
                  items.forEach((item, index) => {
-                    item.classList.remove('active');
-                    if (index === currentChannelIndex) item.classList.add('active');
+                    if (index === currentChannelIndex) {
+                        item.classList.add('active');
+                        // Ensure the active item is always visible in the list
+                        item.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                    } else {
+                        item.classList.remove('active');
+                    }
                  });
             }
 
@@ -394,29 +390,12 @@
                 if (currentChannelIndex < 0) currentChannelIndex = channels.length - 1;
                 if (currentChannelIndex >= channels.length) currentChannelIndex = 0;
                 
-                selectedChannelIndex = currentChannelIndex;
-                updateChannelListSelection();
                 loadStream(channels[currentChannelIndex].name, true);
-            }
-
-            function navigateList(direction) {
-                selectedChannelIndex += direction;
-                if (selectedChannelIndex < 0) selectedChannelIndex = channels.length - 1;
-                if (selectedChannelIndex >= channels.length) selectedChannelIndex = 0;
-                updateChannelListSelection();
-            }
-
-            function playSelectedChannel() {
-                if (currentChannelIndex !== selectedChannelIndex) {
-                    currentChannelIndex = selectedChannelIndex;
-                    loadStream(channels[currentChannelIndex].name, true);
-                }
-                closeChannelList();
             }
             
             function openChannelList() {
-                selectedChannelIndex = currentChannelIndex;
-                updateChannelListSelection();
+                // When opening, ensure the list is scrolled to the active channel
+                updateChannelListActive();
                 channelListEl.classList.add('visible');
             }
 
@@ -426,47 +405,39 @@
 
             // --- Event Listeners ---
 
-            // Main Keyboard Handler
             document.addEventListener('keydown', (e) => {
                 const handledKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape'];
                 if (handledKeys.includes(e.key)) {
                     e.preventDefault();
                 }
 
-                const isListVisible = channelListEl.classList.contains('visible');
-
-                if (isListVisible) {
-                    // --- Handle keys when the CHANNEL LIST IS VISIBLE ---
-                    switch (e.key) {
-                        case 'ArrowUp': navigateList(-1); break;
-                        case 'ArrowDown': navigateList(1); break;
-                        case 'ArrowRight':
-                        case 'Escape': closeChannelList(); break;
-                        case 'Enter': playSelectedChannel(); break;
-                    }
-                } else {
-                    // --- Handle keys when the CHANNEL LIST IS HIDDEN ---
-                    switch (e.key) {
-                        case 'ArrowUp': changeChannel(-1); break;
-                        case 'ArrowDown': changeChannel(1); break;
-                        case 'ArrowLeft': openChannelList(); break;
-                        case 'Enter': showChannelInfo(currentChannelIndex); break;
-                        case 'Escape': if (document.fullscreenElement) document.exitFullscreen(); break;
-                    }
+                switch (e.key) {
+                    // Up/Down always change the channel, regardless of list visibility
+                    case 'ArrowUp': changeChannel(-1); break;
+                    case 'ArrowDown': changeChannel(1); break;
+                    
+                    case 'ArrowLeft': openChannelList(); break;
+                    case 'ArrowRight': closeChannelList(); break;
+                    
+                    case 'Enter':
+                        // If list is open, Enter closes it. Otherwise, it shows the info banner.
+                        channelListEl.classList.contains('visible') ? closeChannelList() : showChannelInfo(currentChannelIndex);
+                        break;
+                        
+                    case 'Escape':
+                        closeChannelList();
+                        if (document.fullscreenElement) document.exitFullscreen();
+                        break;
                 }
             });
 
             // D-Pad Click Handlers
-            document.getElementById('up-btn').addEventListener('click', () => {
-                channelListEl.classList.contains('visible') ? navigateList(-1) : changeChannel(-1);
-            });
-            document.getElementById('down-btn').addEventListener('click', () => {
-                channelListEl.classList.contains('visible') ? navigateList(1) : changeChannel(1);
-            });
+            document.getElementById('up-btn').addEventListener('click', () => changeChannel(-1));
+            document.getElementById('down-btn').addEventListener('click', () => changeChannel(1));
             document.getElementById('left-btn').addEventListener('click', openChannelList);
             document.getElementById('right-btn').addEventListener('click', closeChannelList);
             document.getElementById('ok-btn').addEventListener('click', () => {
-                channelListEl.classList.contains('visible') ? playSelectedChannel() : showChannelInfo(currentChannelIndex);
+                channelListEl.classList.contains('visible') ? closeChannelList() : showChannelInfo(currentChannelIndex);
             });
 
             // D-Pad Touch/Hover Effect
