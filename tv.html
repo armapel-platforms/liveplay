@@ -197,7 +197,7 @@
             height: 100px;
             position: relative;
             border-radius: 50%;
-            background-color: transparent;
+            background-color: rgba(255, 255, 255, 0.1) transparent 50%;
             border: 1px solid transparent;
             transition: opacity 0.3s, transform 0.3s;
             opacity: 0.7;
@@ -205,8 +205,7 @@
 
         .d-pad:hover, .d-pad.active {
             opacity: 1;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .d-pad-btn {
@@ -312,6 +311,7 @@
             
             let scrollInterval = null;
             let accelerationTimeout = null;
+            let keyState = {};
 
             async function loadChannels() {
                 try {
@@ -439,44 +439,36 @@
                 channelListEl.classList.remove('visible');
             }
             
-            function startScrolling(direction) {
-                const scrollAction = () => {
-                    channelListEl.classList.contains('visible') ? navigateList(direction) : changeChannel(direction);
-                };
-                
-                scrollAction();
-
-                accelerationTimeout = setTimeout(() => {
-                    scrollInterval = setInterval(scrollAction, 100);
-                }, 300);
-            }
-
-            function stopScrolling() {
-                clearTimeout(accelerationTimeout);
-                clearInterval(scrollInterval);
-                scrollInterval = null;
-                accelerationTimeout = null;
-            }
-
-
             document.addEventListener('keydown', (e) => {
                 const handledKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape'];
                 if (handledKeys.includes(e.key)) e.preventDefault();
                 
-                const isListVisible = channelListEl.classList.contains('visible');
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    if (keyState[e.key]) return; 
+                    keyState[e.key] = true;
 
+                    const direction = (e.key === 'ArrowUp') ? -1 : 1;
+                    const scrollAction = () => {
+                        channelListEl.classList.contains('visible') ? navigateList(direction) : changeChannel(direction);
+                    };
+
+                    scrollAction(); 
+
+                    accelerationTimeout = setTimeout(() => {
+                        scrollInterval = setInterval(scrollAction, 100); 
+                    }, 400); 
+                    return; 
+                }
+                
+                const isListVisible = channelListEl.classList.contains('visible');
                 if (isListVisible) {
                     switch (e.key) {
-                        case 'ArrowUp': navigateList(-1); break;
-                        case 'ArrowDown': navigateList(1); break;
                         case 'ArrowRight':
                         case 'Escape': closeChannelList(); break;
                         case 'Enter': playSelectedChannel(); break;
                     }
                 } else {
                     switch (e.key) {
-                        case 'ArrowUp': changeChannel(-1); break;
-                        case 'ArrowDown': changeChannel(1); break;
                         case 'ArrowLeft': openChannelList(); break;
                         case 'Enter': showChannelInfo(currentChannelIndex); break;
                         case 'Escape': if (document.fullscreenElement) document.exitFullscreen(); break;
@@ -484,25 +476,25 @@
                 }
             });
 
+            document.addEventListener('keyup', (e) => {
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    keyState[e.key] = false;
+                    clearTimeout(accelerationTimeout);
+                    clearInterval(scrollInterval);
+                    accelerationTimeout = null;
+                    scrollInterval = null;
+                }
+            });
+
             const upBtn = document.getElementById('up-btn');
             const downBtn = document.getElementById('down-btn');
 
-            upBtn.addEventListener('mousedown', () => startScrolling(-1));
-            upBtn.addEventListener('mouseup', stopScrolling);
-            upBtn.addEventListener('mouseleave', stopScrolling);
-
-            downBtn.addEventListener('mousedown', () => startScrolling(1));
-            downBtn.addEventListener('mouseup', stopScrolling);
-            downBtn.addEventListener('mouseleave', stopScrolling);
-
-            upBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startScrolling(-1); }, { passive: false });
-            upBtn.addEventListener('touchend', stopScrolling);
-            upBtn.addEventListener('touchcancel', stopScrolling);
-
-            downBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startScrolling(1); }, { passive: false });
-            downBtn.addEventListener('touchend', stopScrolling);
-            downBtn.addEventListener('touchcancel', stopScrolling);
-
+            upBtn.addEventListener('click', () => {
+                channelListEl.classList.contains('visible') ? navigateList(-1) : changeChannel(-1);
+            });
+            downBtn.addEventListener('click', () => {
+                channelListEl.classList.contains('visible') ? navigateList(1) : changeChannel(1);
+            });
 
             document.getElementById('left-btn').addEventListener('click', openChannelList);
             document.getElementById('right-btn').addEventListener('click', closeChannelList);
