@@ -117,7 +117,7 @@
             -webkit-backdrop-filter: blur(15px);
             padding: 15px 25px;
             border-radius: 12px;
-            width: 95%;
+            width: 100%;
             max-width: 1440px;
             box-sizing: border-box;
             display: flex;
@@ -169,8 +169,8 @@
         }
 
         .d-pad {
-            width: 150px;
-            height: 150px;
+            width: 100px;
+            height: 100px;
             position: relative;
             border-radius: 50%;
             background-color: rgba(25, 25, 25, 0.5);
@@ -181,21 +181,20 @@
 
         .d-pad:hover, .d-pad.active {
             opacity: 1;
-            transform: scale(1.05);
         }
 
         .d-pad-btn {
             position: absolute;
             color: white;
-            font-size: 24px;
+            font-size: 15px;
             cursor: pointer;
             background: transparent;
             border: none;
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 50px;
-            height: 50px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             transition: background-color 0.2s;
         }
@@ -213,8 +212,8 @@
             transform: translate(-50%, -50%);
             font-weight: bold;
             font-size: 16px;
-            width: 60px;
-            height: 60px;
+            width: 30px;
+            height: 30px;
             background-color: rgba(25, 25, 25, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -266,24 +265,23 @@
         document.addEventListener('DOMContentLoaded', initApp);
 
         async function initApp() {
-            // --- Element References ---
             const video = document.getElementById('video');
             const channelListEl = document.getElementById('channel-list');
             const channelsContainerEl = document.getElementById('channels-container');
             const channelInfoEl = document.getElementById('channel-info');
             const dPadEl = document.getElementById('d-pad');
 
-            // --- Shaka Player Initialization ---
             const player = new shaka.Player(video);
             player.configure({ ui: { enabled: false } });
 
-            // --- State Management ---
             let channels = [];
-            let currentChannelIndex = 0; // The channel that is ACTUALLY PLAYING
-            let selectedChannelIndex = 0; // The channel that is HIGHLIGHTED in the list
+            let currentChannelIndex = 0;
+            let selectedChannelIndex = 0;
             let channelInfoTimeout;
+            
+            let scrollInterval = null;
+            let accelerationTimeout = null;
 
-            // --- Core Functions ---
             async function loadChannels() {
                 try {
                     const response = await fetch('/api/getChannels');
@@ -317,13 +315,16 @@
                 }
             }
 
-            // --- UI Update Functions ---
             function renderChannelList() {
                 channelsContainerEl.innerHTML = '';
                 channels.forEach((channel, index) => {
                     const item = document.createElement('div');
                     item.className = 'channel-list-item';
-
+                    item.onclick = () => {
+                        selectedChannelIndex = index;
+                        playSelectedChannel();
+                    };
+                    
                     const nameSpan = document.createElement('span');
                     nameSpan.textContent = channel.name;
                     item.appendChild(nameSpan);
@@ -333,22 +334,16 @@
                     sensorIcon.textContent = 'sensors';
                     item.appendChild(sensorIcon);
 
-                    item.onclick = () => {
-                        selectedChannelIndex = index;
-                        playSelectedChannel();
-                    };
                     channelsContainerEl.appendChild(item);
                 });
-                // After rendering, apply the initial highlight
                 updateChannelListHighlight();
             }
 
-            // This function now ONLY controls the visual highlight in the list
             function updateChannelListHighlight() {
                  const items = channelsContainerEl.querySelectorAll('.channel-list-item');
                  items.forEach((item, index) => {
                     if (index === selectedChannelIndex) {
-                        item.classList.add('active'); // Use .active for the #ff4d00 highlight
+                        item.classList.add('active');
                         item.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
                     } else {
                         item.classList.remove('active');
@@ -379,20 +374,15 @@
                 document.getElementById('datetime-display').textContent = `${dateString}, ${timeString}`;
             }
 
-            // --- Navigation and Action Logic ---
-
-            // This function is for when the channel list is hidden
             function changeChannel(direction) {
                 currentChannelIndex += direction;
                 if (currentChannelIndex < 0) currentChannelIndex = channels.length - 1;
                 if (currentChannelIndex >= channels.length) currentChannelIndex = 0;
                 
-                // Keep selector in sync
                 selectedChannelIndex = currentChannelIndex;
                 loadStream(channels[currentChannelIndex].name, true);
             }
 
-            // This function is for when the channel list is VISIBLE
             function navigateList(direction) {
                 selectedChannelIndex += direction;
                 if (selectedChannelIndex < 0) selectedChannelIndex = channels.length - 1;
@@ -400,7 +390,6 @@
                 updateChannelListHighlight();
             }
 
-            // This is called when "OK" is pressed
             function playSelectedChannel() {
                 if (currentChannelIndex !== selectedChannelIndex) {
                     currentChannelIndex = selectedChannelIndex;
@@ -410,7 +399,6 @@
             }
             
             function openChannelList() {
-                // Sync the highlight to the currently playing channel when opening
                 selectedChannelIndex = currentChannelIndex;
                 updateChannelListHighlight();
                 channelListEl.classList.add('visible');
@@ -419,19 +407,32 @@
             function closeChannelList() {
                 channelListEl.classList.remove('visible');
             }
+            
+            function startScrolling(direction) {
+                const scrollAction = () => {
+                    channelListEl.classList.contains('visible') ? navigateList(direction) : changeChannel(direction);
+                };
+                
+                scrollAction();
 
-            // --- Event Listeners ---
+                accelerationTimeout = setTimeout(() => {
+                    scrollInterval = setInterval(scrollAction, 100);
+                }, 300);
+            }
+
+            function stopScrolling() {
+                clearTimeout(accelerationTimeout);
+                clearInterval(scrollInterval);
+            }
+
 
             document.addEventListener('keydown', (e) => {
                 const handledKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape'];
-                if (handledKeys.includes(e.key)) {
-                    e.preventDefault();
-                }
-
+                if (handledKeys.includes(e.key)) e.preventDefault();
+                
                 const isListVisible = channelListEl.classList.contains('visible');
 
                 if (isListVisible) {
-                    // --- Handle keys when the CHANNEL LIST IS VISIBLE ---
                     switch (e.key) {
                         case 'ArrowUp': navigateList(-1); break;
                         case 'ArrowDown': navigateList(1); break;
@@ -440,7 +441,6 @@
                         case 'Enter': playSelectedChannel(); break;
                     }
                 } else {
-                    // --- Handle keys when the CHANNEL LIST IS HIDDEN ---
                     switch (e.key) {
                         case 'ArrowUp': changeChannel(-1); break;
                         case 'ArrowDown': changeChannel(1); break;
@@ -451,20 +451,23 @@
                 }
             });
 
-            // D-Pad Click Handlers
-            document.getElementById('up-btn').addEventListener('click', () => {
-                channelListEl.classList.contains('visible') ? navigateList(-1) : changeChannel(-1);
-            });
-            document.getElementById('down-btn').addEventListener('click', () => {
-                channelListEl.classList.contains('visible') ? navigateList(1) : changeChannel(1);
-            });
+            const upBtn = document.getElementById('up-btn');
+            const downBtn = document.getElementById('down-btn');
+
+            upBtn.addEventListener('mousedown', () => startScrolling(-1));
+            upBtn.addEventListener('mouseup', stopScrolling);
+            upBtn.addEventListener('mouseleave', stopScrolling); // Stop if mouse leaves button while held
+
+            downBtn.addEventListener('mousedown', () => startScrolling(1));
+            downBtn.addEventListener('mouseup', stopScrolling);
+            downBtn.addEventListener('mouseleave', stopScrolling);
+
             document.getElementById('left-btn').addEventListener('click', openChannelList);
             document.getElementById('right-btn').addEventListener('click', closeChannelList);
             document.getElementById('ok-btn').addEventListener('click', () => {
                 channelListEl.classList.contains('visible') ? playSelectedChannel() : showChannelInfo(currentChannelIndex);
             });
 
-            // D-Pad Touch/Hover Effect
             dPadEl.addEventListener('touchstart', () => dPadEl.classList.add('active'), { passive: true });
             dPadEl.addEventListener('touchend', () => dPadEl.classList.remove('active'));
             
@@ -477,7 +480,6 @@
             }
             document.body.addEventListener('click', goFullscreen, { once: true });
 
-            // --- App Initialization ---
             await loadChannels();
             setInterval(updateDateTime, 1000);
             updateDateTime();
