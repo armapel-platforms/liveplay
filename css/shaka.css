@@ -40,7 +40,7 @@
 }
 
 .shaka-video-container * {
-  font-family: Roboto-Regular, Roboto, sans-serif, TengwarTelcontar;
+  font-family: var(--main-font), Roboto-Regular, Roboto, sans-serif, TengwarTelcontar;
 }
 
 .shaka-video-container:fullscreen {
