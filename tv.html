@@ -225,8 +225,9 @@
             transition: background-color 0.2s;
         }
 
-        .d-pad-btn:hover {
+        .d-pad-btn:hover, .d-pad.active {
             background-color: rgba(0, 0, 0, 0.5);
+            color: rgba(255, 255, 255, 0.7);
         }            
         #up-btn { top: 0; left: 50%; transform: translateX(-50%); }
         #down-btn { bottom: 0; left: 50%; transform: translateX(-50%); }
@@ -238,13 +239,13 @@
             transform: translate(-50%, -50%);
             font-weight: bold;
             font-size: 16px;
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             background-color: transparent;
             border: 1px solid transparent;
         }
         
-        #ok-btn:hover {
+        #ok-btn.active {
             background-color: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
