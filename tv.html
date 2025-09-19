@@ -98,11 +98,9 @@
             font-size: 20px;
             color: #ff4d00;
         }
-        /* Style for the selected item in the list */
         .channel-list-item.selected {
              background-color: rgba(255, 255, 255, 0.2);
         }
-        /* Style for the currently playing channel */
         .channel-list-item.active {
             background-color: #ff4d00;
             color: white;
@@ -166,7 +164,6 @@
             margin-right: 6px;
         }
 
-        /* --- D-PAD STYLES --- */
         .d-pad-wrapper {
             bottom: 50px;
             right: 50px;
@@ -180,12 +177,12 @@
             background-color: rgba(25, 25, 25, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: opacity 0.3s, transform 0.3s;
-            opacity: 0.7; /* Semi-transparent by default */
+            opacity: 0.7;
         }
 
         .d-pad:hover, .d-pad.active {
-            opacity: 1; /* Fully opaque on hover/touch */
-            transform: scale(1.05); /* Slightly larger */
+            opacity: 1;
+            transform: scale(1.05);
         }
 
         .d-pad-btn {
@@ -270,20 +267,24 @@
         document.addEventListener('DOMContentLoaded', initApp);
 
         async function initApp() {
+            // --- Element References ---
             const video = document.getElementById('video');
-            const player = new shaka.Player(video);
-            player.configure({ ui: { enabled: false } });
-
             const channelListEl = document.getElementById('channel-list');
             const channelsContainerEl = document.getElementById('channels-container');
             const channelInfoEl = document.getElementById('channel-info');
             const dPadEl = document.getElementById('d-pad');
 
+            // --- Shaka Player Initialization ---
+            const player = new shaka.Player(video);
+            player.configure({ ui: { enabled: false } });
+
+            // --- State Management ---
             let channels = [];
-            let currentChannelIndex = 0;
-            let selectedChannelIndex = 0;
+            let currentChannelIndex = 0; // The channel that is currently playing
+            let selectedChannelIndex = 0; // The channel that is highlighted in the list
             let channelInfoTimeout;
 
+            // --- Core Functions ---
             async function loadChannels() {
                 try {
                     const response = await fetch('/api/getChannels');
@@ -291,7 +292,7 @@
                     channels = await response.json();
                     if (channels.length > 0) {
                         renderChannelList();
-                        loadStream(channels[currentChannelIndex].name);
+                        loadStream(channels[currentChannelIndex].name, true);
                     } else {
                         console.error('No channels loaded from API.');
                     }
@@ -300,12 +301,30 @@
                 }
             }
 
+            async function loadStream(channelName, showInfo = true) {
+                try {
+                    const response = await fetch(`/api/getStream?name=${encodeURIComponent(channelName)}`);
+                    if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+                    const streamData = await response.json();
+
+                    player.configure({ drm: { clearKeys: streamData.clearKey || {} } });
+                    await player.load(streamData.manifestUri);
+
+                    updateChannelListActive();
+                    if (showInfo) {
+                        showChannelInfo(currentChannelIndex);
+                    }
+                } catch (error) {
+                    console.error('Error loading stream:', error);
+                }
+            }
+
+            // --- UI Update Functions ---
             function renderChannelList() {
                 channelsContainerEl.innerHTML = '';
                 channels.forEach((channel, index) => {
                     const item = document.createElement('div');
                     item.className = 'channel-list-item';
-
                     if (index === currentChannelIndex) item.classList.add('active');
                     if (index === selectedChannelIndex) item.classList.add('selected');
 
@@ -341,32 +360,12 @@
                  const items = channelsContainerEl.querySelectorAll('.channel-list-item');
                  items.forEach((item, index) => {
                     item.classList.remove('active');
-                    if (index === currentChannelIndex) {
-                        item.classList.add('active');
-                    }
+                    if (index === currentChannelIndex) item.classList.add('active');
                  });
-            }
-
-            async function loadStream(channelName) {
-                try {
-                    const response = await fetch(`/api/getStream?name=${encodeURIComponent(channelName)}`);
-                    if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
-                    const streamData = await response.json();
-
-                    player.configure({ drm: { clearKeys: streamData.clearKey || {} } });
-                    await player.load(streamData.manifestUri);
-
-                    updateChannelListActive();
-                    showChannelInfo(currentChannelIndex);
-
-                } catch (error) {
-                    console.error('Error loading stream:', error);
-                }
             }
 
             function showChannelInfo(index) {
                 if (!channels[index]) return;
-
                 const channel = channels[index];
                 const now = new Date();
                 const timeString = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace(' ', '');
@@ -374,14 +373,21 @@
                 document.getElementById('channel-name').textContent = channel.name;
                 document.getElementById('channel-category').textContent = channel.category;
                 document.getElementById('channel-time').textContent = timeString;
-
                 channelInfoEl.classList.add('visible');
 
                 clearTimeout(channelInfoTimeout);
-                channelInfoTimeout = setTimeout(() => {
-                    channelInfoEl.classList.remove('visible');
-                }, 4000);
+                channelInfoTimeout = setTimeout(() => channelInfoEl.classList.remove('visible'), 4000);
             }
+            
+            function updateDateTime() {
+                const now = new Date();
+                const dateOptions = { month: 'long', day: 'numeric' };
+                const dateString = now.toLocaleDateString('en-US', dateOptions);
+                const timeString = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace(' ', '');
+                document.getElementById('datetime-display').textContent = `${dateString}, ${timeString}`;
+            }
+
+            // --- Navigation and Action Logic ---
 
             function changeChannel(direction) {
                 currentChannelIndex += direction;
@@ -390,8 +396,7 @@
                 
                 selectedChannelIndex = currentChannelIndex;
                 updateChannelListSelection();
-
-                loadStream(channels[currentChannelIndex].name);
+                loadStream(channels[currentChannelIndex].name, true);
             }
 
             function navigateList(direction) {
@@ -402,28 +407,72 @@
             }
 
             function playSelectedChannel() {
-                if(currentChannelIndex === selectedChannelIndex) return;
-                currentChannelIndex = selectedChannelIndex;
-                loadStream(channels[currentChannelIndex].name);
+                if (currentChannelIndex !== selectedChannelIndex) {
+                    currentChannelIndex = selectedChannelIndex;
+                    loadStream(channels[currentChannelIndex].name, true);
+                }
+                closeChannelList();
+            }
+            
+            function openChannelList() {
+                selectedChannelIndex = currentChannelIndex;
+                updateChannelListSelection();
+                channelListEl.classList.add('visible');
+            }
+
+            function closeChannelList() {
                 channelListEl.classList.remove('visible');
             }
 
-            function handleOkPress() {
-                if (channelListEl.classList.contains('visible')) {
-                    playSelectedChannel();
-                } else {
-                    showChannelInfo(currentChannelIndex);
+            // --- Event Listeners ---
+
+            // Main Keyboard Handler
+            document.addEventListener('keydown', (e) => {
+                const handledKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape'];
+                if (handledKeys.includes(e.key)) {
+                    e.preventDefault();
                 }
-            }
 
-            function updateDateTime() {
-                const now = new Date();
-                const dateOptions = { month: 'long', day: 'numeric' };
-                const dateString = now.toLocaleDateString('en-US', dateOptions);
-                const timeString = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace(' ', '');
-                document.getElementById('datetime-display').textContent = `${dateString}, ${timeString}`;
-            }
+                const isListVisible = channelListEl.classList.contains('visible');
 
+                if (isListVisible) {
+                    // --- Handle keys when the CHANNEL LIST IS VISIBLE ---
+                    switch (e.key) {
+                        case 'ArrowUp': navigateList(-1); break;
+                        case 'ArrowDown': navigateList(1); break;
+                        case 'ArrowRight':
+                        case 'Escape': closeChannelList(); break;
+                        case 'Enter': playSelectedChannel(); break;
+                    }
+                } else {
+                    // --- Handle keys when the CHANNEL LIST IS HIDDEN ---
+                    switch (e.key) {
+                        case 'ArrowUp': changeChannel(-1); break;
+                        case 'ArrowDown': changeChannel(1); break;
+                        case 'ArrowLeft': openChannelList(); break;
+                        case 'Enter': showChannelInfo(currentChannelIndex); break;
+                        case 'Escape': if (document.fullscreenElement) document.exitFullscreen(); break;
+                    }
+                }
+            });
+
+            // D-Pad Click Handlers
+            document.getElementById('up-btn').addEventListener('click', () => {
+                channelListEl.classList.contains('visible') ? navigateList(-1) : changeChannel(-1);
+            });
+            document.getElementById('down-btn').addEventListener('click', () => {
+                channelListEl.classList.contains('visible') ? navigateList(1) : changeChannel(1);
+            });
+            document.getElementById('left-btn').addEventListener('click', openChannelList);
+            document.getElementById('right-btn').addEventListener('click', closeChannelList);
+            document.getElementById('ok-btn').addEventListener('click', () => {
+                channelListEl.classList.contains('visible') ? playSelectedChannel() : showChannelInfo(currentChannelIndex);
+            });
+
+            // D-Pad Touch/Hover Effect
+            dPadEl.addEventListener('touchstart', () => dPadEl.classList.add('active'), { passive: true });
+            dPadEl.addEventListener('touchend', () => dPadEl.classList.remove('active'));
+            
             function goFullscreen() {
                 const element = document.documentElement;
                 if (element.requestFullscreen) element.requestFullscreen();
@@ -431,61 +480,9 @@
                 else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen();
                 else if (element.msRequestFullscreen) element.msRequestFullscreen();
             }
-
-            document.getElementById('up-btn').addEventListener('click', () => {
-                channelListEl.classList.contains('visible') ? navigateList(-1) : changeChannel(-1);
-            });
-            document.getElementById('down-btn').addEventListener('click', () => {
-                 channelListEl.classList.contains('visible') ? navigateList(1) : changeChannel(1);
-            });
-            document.getElementById('left-btn').addEventListener('click', () => {
-                if(!channelListEl.classList.contains('visible')){
-                   selectedChannelIndex = currentChannelIndex;
-                   updateChannelListSelection();
-                   channelListEl.classList.add('visible');
-                }
-            });
-            document.getElementById('right-btn').addEventListener('click', () => channelListEl.classList.remove('visible'));
-            document.getElementById('ok-btn').addEventListener('click', handleOkPress);
-
-            document.addEventListener('keydown', (e) => {
-                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
-                    e.preventDefault();
-                }
-
-                switch (e.key) {
-                    case 'ArrowUp':
-                        channelListEl.classList.contains('visible') ? navigateList(-1) : changeChannel(-1);
-                        break;
-                    case 'ArrowDown':
-                        channelListEl.classList.contains('visible') ? navigateList(1) : changeChannel(1);
-                        break;
-                    case 'ArrowLeft':
-                        if(!channelListEl.classList.contains('visible')){
-                           selectedChannelIndex = currentChannelIndex;
-                           updateChannelListSelection();
-                           channelListEl.classList.add('visible');
-                        }
-                        break;
-                    case 'ArrowRight':
-                        channelListEl.classList.remove('visible');
-                        break;
-                    case 'Enter':
-                        handleOkPress();
-                        break;
-                    case 'Escape':
-                         if (document.fullscreenElement) document.exitFullscreen();
-                         channelListEl.classList.remove('visible');
-                         break;
-                }
-            });
-
-            dPadEl.addEventListener('touchstart', () => dPadEl.classList.add('active'), { passive: true });
-            dPadEl.addEventListener('touchend', () => dPadEl.classList.remove('active'));
-
-
             document.body.addEventListener('click', goFullscreen, { once: true });
 
+            // --- App Initialization ---
             await loadChannels();
             setInterval(updateDateTime, 1000);
             updateDateTime();
