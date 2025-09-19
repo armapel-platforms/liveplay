@@ -40,7 +40,7 @@
 }
 
 .shaka-video-container * {
-  font-family: var(--main-font), Roboto-Regular, Roboto, sans-serif, TengwarTelcontar;
+  font-family: Roboto-Regular, Roboto, sans-serif, TengwarTelcontar;
 }
 
 .shaka-video-container:fullscreen {
@@ -50,8 +50,7 @@
 }
 
 .shaka-video-container:fullscreen .shaka-text-container {
-  font-size: 2.5vmin;
-  bottom: 5%;
+  font-size: 3.5vmin;
 }
 
 .shaka-video-container:-webkit-full-screen {
@@ -61,7 +60,7 @@
 }
 
 .shaka-video-container:-webkit-full-screen .shaka-text-container {
-  font-size: 4.4vmin;
+  font-size: 3.5vmin;
 }
 
 .shaka-video-container:-moz-full-screen {
@@ -71,7 +70,7 @@
 }
 
 .shaka-video-container:-moz-full-screen .shaka-text-container {
-  font-size: 4.4vmin;
+  font-size: 3.4vmin;
 }
 
 .shaka-video-container:-ms-fullscreen {
@@ -81,7 +80,7 @@
 }
 
 .shaka-video-container:-ms-fullscreen .shaka-text-container {
-  font-size: 4.4vmin;
+  font-size: 3.4vmin;
 }
 
 .shaka-controls-container {
@@ -239,7 +238,7 @@
 }
 
 .shaka-controls-container[shown="true"] ~ .shaka-text-container {
-  bottom: 15%;
+  bottom: 10%;
   transition-delay: 0s;
 }
 
