@@ -197,7 +197,7 @@
             height: 100px;
             position: relative;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.1) transparent 50%;
+            background-color: transparent;
             border: 1px solid transparent;
             transition: opacity 0.3s, transform 0.3s;
             opacity: 0.7;
@@ -206,6 +206,7 @@
         .d-pad:hover, .d-pad.active {
             opacity: 1;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .d-pad-btn {
@@ -453,6 +454,8 @@
             function stopScrolling() {
                 clearTimeout(accelerationTimeout);
                 clearInterval(scrollInterval);
+                scrollInterval = null;
+                accelerationTimeout = null;
             }
 
 
@@ -486,11 +489,20 @@
 
             upBtn.addEventListener('mousedown', () => startScrolling(-1));
             upBtn.addEventListener('mouseup', stopScrolling);
-            upBtn.addEventListener('mouseleave', stopScrolling); // Stop if mouse leaves button while held
+            upBtn.addEventListener('mouseleave', stopScrolling);
 
             downBtn.addEventListener('mousedown', () => startScrolling(1));
             downBtn.addEventListener('mouseup', stopScrolling);
             downBtn.addEventListener('mouseleave', stopScrolling);
+
+            upBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startScrolling(-1); }, { passive: false });
+            upBtn.addEventListener('touchend', stopScrolling);
+            upBtn.addEventListener('touchcancel', stopScrolling);
+
+            downBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startScrolling(1); }, { passive: false });
+            downBtn.addEventListener('touchend', stopScrolling);
+            downBtn.addEventListener('touchcancel', stopScrolling);
+
 
             document.getElementById('left-btn').addEventListener('click', openChannelList);
             document.getElementById('right-btn').addEventListener('click', closeChannelList);
