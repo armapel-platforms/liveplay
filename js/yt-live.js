@@ -5,5 +5,5 @@ const yt_live = [
   { name: 'DZRH TV', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/DZRH_News_Television_Logo_%282021%29.jpg?20220522024804', type: "youtube", embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCcTiBX8js_djhSSlmJRI99A', category: "YouTube Live" },
   { name: 'THE K-POP', logo: '/logo/the_kpop_logo.png', type: "youtube", embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCoRXPcv8XK5fAplLbk9PTww', category: "YouTube Live" },
   { name: 'THE K-POP 2', logo: '/logo/the_kpop2_logo.png', type: "youtube", embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCITH7URIRpb8yoshUwGE9jg', category: "YouTube Live" },
-  { name: 'Vibing The K-POP' , logo: '/logo/vbngtkpop_logo.png', type: "youtube", embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC5BMQOsAB8hKUyHu9KI6yig', category: "YouTube Live" },
+  { name: 'Vibing The K-POP' , logo: '/logo/vbngtkpop_logo.png', type: "youtube", embedUrl: 'https://www.youtube.com/embed/jhsltv-xwQg', category: "YouTube Live" },
 ];
