@@ -6,4 +6,5 @@ const yt_live = [
   { name: 'THE K-POP', logo: '/logo/the_kpop_logo.png', type: "youtube", embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCoRXPcv8XK5fAplLbk9PTww', category: "YouTube Live" },
   { name: 'THE K-POP 2', logo: '/logo/the_kpop2_logo.png', type: "youtube", embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCITH7URIRpb8yoshUwGE9jg', category: "YouTube Live" },
   { name: 'Vibing with K-POP' , logo: '/logo/vbngtkpop_logo.png', type: "youtube", embedUrl: 'https://www.youtube.com/embed/jhsltv-xwQg', category: "YouTube Live" },
+  { name: 'MLBB PH Livestream' , logo: '/logo/mlbbph_livestream_logo.png', type: "youtube", embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC3QyDSID3tQBDRxMnfcfFiA', category: "YouTube Live" },
 ];
