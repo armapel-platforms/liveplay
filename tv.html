@@ -35,7 +35,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png" />
     <link rel="manifest" href="/logo/site.webmanifest" />
     <link href="https://fonts.cdnfonts.com/css/tt-hoves-pro-trial" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,200,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100,0,0" />
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.4/dist/shaka-player.ui.js"></script>
     <style>
         body, html {
@@ -206,6 +206,7 @@
         .d-pad:hover, .d-pad.active {
             opacity: 1;
             background: rgba(25, 25, 25, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1)
             color: rgba(255, 255, 255, 0.7);
         }
 
@@ -247,7 +248,7 @@
             border: 1px solid transparent;
         }
         
-        #ok-btn.active {
+        .d-pad:hover #ok-btn {
             background-color: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
