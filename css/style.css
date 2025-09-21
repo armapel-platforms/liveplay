@@ -702,7 +702,7 @@ header.subpage-header h1 {
 }
 
 .developer-header a:hover {
-    color: var(--text-color);
+    color: var(--theme-color);
 }
 
 .search-container {
