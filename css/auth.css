@@ -135,7 +135,7 @@ main.auth-container {
     transition: background-color 0.3s ease;
 }
 
-.auth-btn:hover {
+.auth-btn:active {
     background-color: #2c2c2e;
 }
 
@@ -345,7 +345,7 @@ main.auth-container {
     box-sizing: border-box;
 }
 
-.popup-action-btn:hover {
+.popup-action-btn:active {
     background-color: #ff6a29;
 }
 
