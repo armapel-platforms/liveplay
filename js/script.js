@@ -156,6 +156,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     if (closePopupBtn) closePopupBtn.addEventListener('click', hideAuthPopup);
 
+    const popupActionBtn = document.querySelector('.popup-action-btn');
+    if (popupActionBtn) {
+        popupActionBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            popupActionBtn.classList.add('clicked');
+            popupActionBtn.textContent = 'Redirecting...';
+
+            const destination = popupActionBtn.href;
+
+            setTimeout(() => {
+                window.location.href = destination;
+            }, 200);
+        });
+    }
+
     if (menuBtn) menuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (floatingMenu) floatingMenu.classList.toggle('active');
