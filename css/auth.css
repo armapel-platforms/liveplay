@@ -171,11 +171,11 @@ main.auth-container {
 }
 
 .auth-btn:active {
-    background-color: #2c2c2e;
+    background-color: var(--input-background);
 }
 
 .auth-btn:disabled {
-    background-color: #2c2c2e;
+    background-color: var(--input-background);
     cursor: not-allowed;
 }
 
@@ -183,12 +183,12 @@ main.auth-container {
     background-color: #ff0000;
 }
 
-.auth-btn.danger:hover {
-    background-color: #2c2c2e;
+.auth-btn.danger:active {
+    background-color: var(--input-background);
 }
 
 .auth-btn.danger:disabled {
-    background-color: #2c2c2e;
+    background-color: var(--input-background);
     cursor: not-allowed;
 }
 
@@ -468,11 +468,11 @@ main.auth-container {
 }
 
 .popup-action-btn:active {
-    background-color: #ff6a29;
+    background-color: var(--input-background);
 }
 
 .popup-action-btn:disabled {
-    background-color: #2c2c2e;
+    background-color: var(--input-background);
     cursor: not-allowed;
 }
 
