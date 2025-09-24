@@ -471,6 +471,12 @@ main.auth-container {
     background-color: var(--input-background);
 }
 
+.popup-action-btn.clicked {
+    background-color: var(--input-background);
+    cursor: wait;
+    pointer-events: none;
+}
+
 .popup-action-btn:disabled {
     background-color: var(--input-background);
     cursor: not-allowed;
