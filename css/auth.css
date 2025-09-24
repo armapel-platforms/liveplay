@@ -139,6 +139,11 @@ main.auth-container {
     background-color: #2c2c2e;
 }
 
+.auth-btn:disabled {
+    background-color: #2c2c2e;
+    cursor: not-allowed;
+}
+
 .auth-btn span.ripple {
     position: absolute;
     border-radius: 50%;
@@ -347,6 +352,11 @@ main.auth-container {
 
 .popup-action-btn:active {
     background-color: #ff6a29;
+}
+
+.popup-action-btn:disabled {
+    background-color: #2c2c2e;
+    cursor: not-allowed;
 }
 
 .auth-popup h3 {
