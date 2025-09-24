@@ -35,6 +35,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function onEnterPress(inputFields, actionButton) {
+        inputFields.forEach(input => {
+            if (input) {
+                input.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        if (actionButton && !actionButton.disabled) {
+                            actionButton.click();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         const signupForm = document.getElementById('signup-form');
@@ -43,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const loginButton = document.getElementById('login-button');
         const signupButton = document.getElementById('signup-button');
         const otpModal = document.getElementById('otp-modal-overlay');
+        const verifyOtpForSignupButton = document.getElementById('verify-otp-button');
 
         showSignupLink.addEventListener('click', (e) => { e.preventDefault(); signupForm.classList.add('active'); loginForm.classList.remove('active'); });
         showLoginLink.addEventListener('click', (e) => { e.preventDefault(); loginForm.classList.add('active'); signupForm.classList.remove('active'); });
@@ -93,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        document.getElementById('verify-otp-button').addEventListener('click', async () => {
+        verifyOtpForSignupButton.addEventListener('click', async () => {
             const email = document.getElementById('otp-email-display').textContent;
             const token = document.getElementById('otp-input').value;
             const { data, error } = await window.auth.verifyOtp(email, token, 'signup');
@@ -103,6 +119,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = '/home';
             }
         });
+
+        onEnterPress([document.getElementById('login-email'), document.getElementById('login-password')], loginButton);
+        onEnterPress([
+            document.getElementById('signup-firstname'),
+            document.getElementById('signup-lastname'),
+            document.getElementById('signup-email'),
+            document.getElementById('signup-password'),
+            document.getElementById('signup-confirm-password')
+        ], signupButton);
+        onEnterPress([document.getElementById('otp-input')], verifyOtpForSignupButton);
     }
 
     const emailRequestForm = document.getElementById('email-request-form');
@@ -189,6 +215,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 doneButton.textContent = "Done";
             }
         });
+
+        onEnterPress([document.getElementById('reset-email')], sendOtpButton);
+        onEnterPress([otpInput], verifyOtpButton);
+        onEnterPress([newPasswordInput, confirmPasswordInput], doneButton);
     }
 
     const accountCard = document.querySelector('.account-card');
