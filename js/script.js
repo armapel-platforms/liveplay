@@ -162,8 +162,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
 
             popupActionBtn.classList.add('clicked');
-            popupActionBtn.textContent = 'Redirecting...';
-
             const destination = popupActionBtn.href;
 
             setTimeout(() => {
