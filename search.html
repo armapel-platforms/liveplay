@@ -54,7 +54,7 @@
             const searchResultsContainer = document.getElementById('search-results');
             const initialMessage = document.getElementById('initial-message');
             let allStreams = [];
-
+    
             try {
                 const response = await fetch('/api/getChannels');
                 if (!response.ok) throw new Error('Failed to fetch channel list');
@@ -67,11 +67,11 @@
                 allStreams = [...yt_live]; 
                 searchResultsContainer.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.8rem; text-align: center;">Could not load full channel list. Search may be limited.</p>';
             }
-
+    
             const authPopup = document.getElementById('auth-popup-overlay');
             const closePopupBtn = document.getElementById('close-popup');
             let currentUser = await window.auth.getCurrentUser();
-
+    
             window.auth.onAuthStateChange(async (_event, session) => {
                 if (session) {
                     currentUser = await window.auth.getCurrentUser();
@@ -79,15 +79,15 @@
                     currentUser = null;
                 }
             });
-
+    
             const showAuthPopup = () => {
                 if (authPopup) authPopup.classList.add('active');
             };
-
+    
             const hideAuthPopup = () => {
                 if (authPopup) authPopup.classList.remove('active');
             };
-
+    
             if (authPopup) {
                 authPopup.addEventListener('click', (e) => {
                     if (e.target === authPopup) hideAuthPopup();
@@ -96,21 +96,36 @@
             if(closePopupBtn) {
                 closePopupBtn.addEventListener('click', hideAuthPopup);
             }
-
+    
+            const popupActionBtn = document.querySelector('.popup-action-btn');
+            if (popupActionBtn) {
+                popupActionBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+    
+                    popupActionBtn.classList.add('clicked');
+    
+                    const destination = popupActionBtn.href;
+    
+                    setTimeout(() => {
+                        window.location.href = destination;
+                    }, 200);
+                });
+            }
+    
             const categoryIcons = { ALL: 'apps', General: 'tv_gen', News: 'news', Entertainment: 'theater_comedy', Movies: 'theaters', Sports: 'sports_basketball', Kids: 'smart_toy', Infotainment: 'emoji_objects', 'Lifestyle + Food': 'restaurant', Music: 'music_note', 'Action + Crime': 'local_police', 'Nature + Animal': 'pets', Overseas: 'globe', Religious: 'church', 'YouTube Live': 'smart_display' };
-
+    
             const renderResults = (results) => {
                 searchResultsContainer.innerHTML = '';
                 if (results.length === 0) {
                     searchResultsContainer.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.8rem; text-align: center; width: 100%; padding: 50px 0;">No channels found.</p>';
                     return;
                 }
-
+    
                 const groupedByCategory = results.reduce((acc, stream) => {
                     (acc[stream.category] = acc[stream.category] || []).push(stream);
                     return acc;
                 }, {});
-
+    
                 for (const category in groupedByCategory) {
                     const section = document.createElement('div');
                     section.className = 'category-section';
@@ -119,7 +134,7 @@
                     title.className = 'category-title';
                     title.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span><h3>${category}</h3>`;
                     section.appendChild(title);
-
+    
                     const row = document.createElement('div');
                     row.className = 'channel-row';
                     
@@ -137,16 +152,16 @@
                         });
                         row.appendChild(card);
                     });
-
+    
                     section.appendChild(row);
                     searchResultsContainer.appendChild(section);
                 }
             };
-
+    
             searchInput.addEventListener('input', (e) => {
                 const query = e.target.value.toLowerCase().trim();
                 initialMessage.style.display = 'none';
-
+    
                 if (query.length > 0) {
                     const filteredStreams = allStreams.filter(stream => stream.name.toLowerCase().includes(query));
                     renderResults(filteredStreams);
