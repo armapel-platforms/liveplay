@@ -338,17 +338,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const initPlayer = async () => {
-        debugger;
         shaka.polyfill.installAll();
+    
         if (shaka.Player.isBrowserSupported()) {
             player = new shaka.Player();
-            await player.attach(videoElement); 
+            await player.attach(videoElement);
     
             ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
             
             ui.configure({
                 addSeekBar: false,
-                enableNativePictureInPicture: false 
+    
+                'controlPanelElements': [
+                    'play_pause',
+                    'time_and_duration',
+                    'mute',
+                    'volume',
+                    'fullscreen',
+                    'picture_in_picture',
+                    'overflow_menu'
+                ]
             });
     
             player.addEventListener('error', onError);
