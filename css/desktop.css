@@ -65,10 +65,6 @@
     #video-player:fullscreen {
         border-radius: 0;
     }
-
-    .shaka-overflow-menu, .shaka-settings-menu {
-        bottom: 40px;
-    }
     
     .player-info {
         max-width: none;
