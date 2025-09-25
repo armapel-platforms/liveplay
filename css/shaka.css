@@ -357,7 +357,7 @@
 
 .shaka-settings-menu.shaka-low-position,
 .shaka-overflow-menu.shaka-low-position {
-    bottom: 15px;
+    bottom: 40px;
 }
 
 .shaka-controls-container[shown="true"] .shaka-settings-menu,
