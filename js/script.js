@@ -342,11 +342,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         shaka.polyfill.installAll();
         if (shaka.Player.isBrowserSupported()) {
             player = new shaka.Player();
-            await player.attach(videoElement);
+            await player.attach(videoElement); 
     
             ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
             
-            ui.configure({ addSeekBar: false }); 
+            ui.configure({
+                addSeekBar: false,
+                enableNativePictureInPicture: false 
+            });
     
             player.addEventListener('error', onError);
         } else {
