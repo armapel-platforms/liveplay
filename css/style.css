@@ -526,6 +526,10 @@ header.subpage-header h1 {
     border-radius: 0;
 }
 
+.shaka-seek-bar-container {
+    display: none !important;
+}
+
 .player-info { 
     width: 100%; 
     max-width: 960px; 
