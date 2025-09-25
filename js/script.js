@@ -338,18 +338,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const initPlayer = async () => {
-    debugger;
-    shaka.polyfill.installAll();
-    if (shaka.Player.isBrowserSupported()) {
-        player = new shaka.Player(videoElement);
-        ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
-
-        player.addEventListener('error', onError);
-    } else {
-        console.error('Browser not supported!');
-    }
-};
-
+        debugger;
+        shaka.polyfill.installAll();
+        if (shaka.Player.isBrowserSupported()) {
+            player = new shaka.Player();
+            await player.attach(videoElement);
+    
+            ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
+            
+            ui.configure({ addSeekBar: false }); 
+    
+            player.addEventListener('error', onError);
+        } else {
+            console.error('Browser not supported!');
+        }
+    };
+    
     const onError = (event) => {
         debugger;
         console.error('Player Error', event.detail);
