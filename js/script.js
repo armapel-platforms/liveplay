@@ -43,6 +43,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const originalTitle = "Liveplay - Free Live Philippine TV Channels Online";
 
+    const playerInfo = document.querySelector('.player-info');
+    if (videoElement && playerView && playerWrapper && playerInfo) {
+        videoElement.addEventListener('leavepictureinpicture', () => {
+            playerView.insertBefore(playerWrapper, playerInfo);
+        });
+    }
+
     const isDesktop = () => window.innerWidth >= 1024;
 
     const setVideoPoster = () => {
@@ -348,7 +355,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             ui.configure({
                 addSeekBar: false,
-                enableNativePictureInPicture: false 
             });
     
             player.addEventListener('error', onError);
