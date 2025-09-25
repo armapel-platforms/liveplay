@@ -2,476 +2,453 @@
 @import url('https://fonts.cdnfonts.com/css/tt-hoves-pro-trial');
 
 :root {
-  --theme-accent-color: #ff4d00;
-  --menu-background-color: rgba(25, 25, 25, 0.5);
-  --menu-border: 1px solid rgba(255, 255, 255, 0.1);
-  --main-text-color: #ffffff;
-  --secondary-text-color: #b0b0b0;
-  --main-font: 'TT Hoves Pro Trial', sans-serif;
-  --menu-border-radius: 15px;
-  --menu-hover-radius: 5px;
-  --menu-padding: 5px;
-  --range-track-color: rgba(255, 255, 255, 0.3);
+    --theme-accent-color: #ff4d00;
+    --menu-background-color: rgba(25, 25, 25, 0.5);
+    --menu-border: 1px solid rgba(255, 255, 255, 0.1);
+    --main-text-color: #ffffff;
+    --secondary-text-color: #b0b0b0;
+    --main-font: 'TT Hoves Pro Trial', sans-serif;
+    --menu-border-radius: 15px;
+    --menu-hover-radius: 5px;
+    --menu-padding: 5px;
+    --range-track-color: rgba(255, 255, 255, 0.3);
 }
 
-/**
- * Shaka Player Controls CSS
- * Copyright 2016 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/* General Utility */
 .shaka-hidden {
-  display: none !important;
+    display: none !important;
 }
 
-/* Main Container */
 .shaka-video-container {
-  position: relative;
-  top: 0;
-  left: 0;
-  display: flex;
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
 }
 
 .shaka-video-container * {
-  font-family: var(--main-font), Roboto-Regular, Roboto, sans-serif, TengwarTelcontar;
+    font-family: var(--main-font), Roboto-Regular, Roboto, sans-serif, TengwarTelcontar;
 }
 
 .shaka-video-container .material-icons-round,
 .shaka-video-container .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-size: 24px;
-  font-style: normal;
-  font-variation-settings: 'FILL' 0, 'wght' 200 !important;
-  transition: font-variation-settings 0.3s ease;
+    font-family: 'Material Symbols Outlined';
+    font-size: 24px;
+    font-style: normal;
+    font-variation-settings: 'FILL' 0, 'wght' 200 !important;
+    transition: font-variation-settings 0.3s ease;
 }
 
-/* Fullscreen Styling */
 .shaka-video-container:fullscreen {
-  width: 100%;
-  height: 100%;
-  background-color: #000;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
 }
 
 .shaka-video-container:fullscreen .shaka-text-container {
-  font-size: 3.5vmin;
+    font-size: 3.5vmin;
 }
 
 .shaka-video-container:-webkit-full-screen {
-  width: 100%;
-  height: 100%;
-  background-color: #000;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
 }
 
 .shaka-video-container:-webkit-full-screen .shaka-text-container {
-  font-size: 3.5vmin;
+    font-size: 3.5vmin;
 }
 
 .shaka-video-container:-moz-full-screen {
-  width: 100%;
-  height: 100%;
-  background-color: #000;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
 }
 
 .shaka-video-container:-moz-full-screen .shaka-text-container {
-  font-size: 3.4vmin;
+    font-size: 3.4vmin;
 }
 
 .shaka-video-container:-ms-fullscreen {
-  width: 100%;
-  height: 100%;
-  background-color: #000;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
 }
 
 .shaka-video-container:-ms-fullscreen .shaka-text-container {
-  font-size: 3.4vmin;
+    font-size: 3.4vmin;
 }
 
-/* Controls Container */
 .shaka-controls-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .shaka-video-container:not([shaka-controls="true"]) .shaka-controls-container {
-  display: none;
+    display: none;
 }
 
 .shaka-controls-container * {
-  flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .shaka-controls-container[casting="true"] .shaka-fullscreen-button {
-  display: none;
+    display: none;
 }
 
-/* Canvas Container */
 .shaka-canvas-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-/* Bottom Controls Panel */
 .shaka-bottom-controls {
-  width: 96%;
-  padding: 0;
-  padding-bottom: 2.0%;
-  z-index: 1;
+    width: 96%;
+    padding: 0;
+    padding-bottom: 2.0%;
+    z-index: 1;
 }
 
 .shaka-controls-button-panel {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  min-width: 48px;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-size: 12px;
-  font-weight: 400;
-  font-style: normal;
-  opacity: 0;
-  transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 48px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 400;
+    font-style: normal;
+    opacity: 0;
+    transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .shaka-controls-container[shown="true"] .shaka-controls-button-panel,
 .shaka-controls-container[casting="true"] .shaka-controls-button-panel {
-  opacity: 1;
+    opacity: 1;
 }
 
 .shaka-controls-button-panel > * {
-  height: 32px;
-  margin: 1px;
-  padding: 0 5px;
-  line-height: 0.5;
-  color: var(--main-text-color);
-  background: 0 0;
-  border: 0;
-  cursor: pointer;
+    height: 32px;
+    margin: 1px;
+    padding: 0 5px;
+    line-height: 0.5;
+    color: var(--main-text-color);
+    background: 0 0;
+    border: 0;
+    cursor: pointer;
 }
 
 .shaka-controls-button-panel .shaka-overflow-menu-only {
-  display: none;
+    display: none;
 }
 
-/* Scrim (Gradient behind controls) */
 .shaka-scrim-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  flex-shrink: 1;
-  background: linear-gradient(to top, #000 0, transparent 15%);
-  opacity: 0;
-  transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    flex-shrink: 1;
+    background: linear-gradient(to top, #000 0, transparent 15%);
+    opacity: 0;
+    transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
 }
 
 .shaka-controls-container[shown="true"] .shaka-scrim-container,
 .shaka-controls-container[casting="true"] .shaka-scrim-container {
-  opacity: 1;
+    opacity: 1;
 }
 
-/* Text & Cue Container */
 .shaka-text-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  width: 100%;
-  min-width: 48px;
-  pointer-events: none;
-  color: #fff;
-  font-size: 15px;
-  line-height: 1.4;
-  transition: bottom cubic-bezier(0.4, 0, 0.6, 1) 0.1s;
-  transition-delay: 0.5s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    min-width: 48px;
+    pointer-events: none;
+    color: #fff;
+    font-size: 15px;
+    line-height: 1.4;
+    transition: bottom cubic-bezier(0.4, 0, 0.6, 1) 0.1s;
+    transition-delay: 0.5s;
 }
 
 .shaka-controls-container[shown="true"] ~ .shaka-text-container {
-  bottom: 10%;
-  transition-delay: 0s;
+    bottom: 10%;
+    transition-delay: 0s;
 }
 
 .shaka-text-container span.shaka-text-wrapper {
-  display: inline;
-  background: 0 0;
+    display: inline;
+    background: 0 0;
 }
 
 ::cue {
-  color: white;
-  background-color: rgba(0, 0, 0, 0.7);
-  text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    text-align: center;
 }
 
-/* Spinner */
 .shaka-video-container:not([shaka-controls="true"]) .shaka-spinner-container {
-  display: none;
+    display: none;
 }
 
-/* Time & Volume Display */
 .shaka-current-time {
-  font-size: 14px;
-  color: var(--main-text-color);
-  cursor: pointer;
+    font-size: 14px;
+    color: var(--main-text-color);
+    cursor: pointer;
 }
 
 .shaka-current-time[disabled] {
-  color: var(--main-text-color);
-  background-color: transparent;
-  cursor: default;
+    color: var(--main-text-color);
+    background-color: transparent;
+    cursor: default;
 }
 
-/* Focus Outlines */
 .shaka-controls-container button:focus,
 .shaka-controls-container input:focus {
-  outline: 1px solid Highlight;
+    outline: 1px solid Highlight;
 }
 
 .shaka-controls-container button:-moz-focus-inner,
 .shaka-controls-container input:-moz-focus-outer {
-  outline: 0;
-  border: 0;
+    outline: 0;
+    border: 0;
 }
 
 .shaka-controls-container:not(.shaka-keyboard-navigation) button:focus,
 .shaka-controls-container:not(.shaka-keyboard-navigation) input:focus {
-  outline: 0;
+    outline: 0;
 }
 
-/* Range Elements (Seek/Volume Bars) */
 .shaka-range-container {
-  position: relative;
-  top: 0;
-  left: 0;
-  height: 1px;
-  margin: calc((12px - 3px) / 2) 6px;
-  background: var(--range-track-color);
-  border-radius: 2px;
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 1px;
+    margin: calc((12px - 3px) / 2) 6px;
+    background: var(--range-track-color);
+    border-radius: 2px;
 }
 
 .shaka-range-element {
-  position: absolute;
-  top: calc((1px - 12px) / 2);
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  width: 100%;
-  height: 12px;
-  margin: 0;
-  padding: 0;
-  background: 0 0;
-  -webkit-appearance: none;
+    position: absolute;
+    top: calc((1px - 12px) / 2);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+    height: 12px;
+    margin: 0;
+    padding: 0;
+    background: 0 0;
+    -webkit-appearance: none;
 }
 
-/* Webkit Range Styles */
 .shaka-range-element::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 12px;
-  background: 0 0;
-  color: transparent;
-  border: none;
-  cursor: pointer;
+    width: 100%;
+    height: 12px;
+    background: 0 0;
+    color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .shaka-range-element::-webkit-slider-thumb {
-  width: 12px;
-  height: 12px;
-  background: #ffffff;
-  border: none;
-  border-radius: 12px;
-  -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #ffffff;
+    border: none;
+    border-radius: 12px;
+    -webkit-appearance: none;
 }
 
-/* Mozilla Range Styles */
 .shaka-range-element::-moz-range-track {
-  width: 100%;
-  height: 12px;
-  background: 0 0;
-  color: transparent;
-  border: none;
-  cursor: pointer;
+    width: 100%;
+    height: 12px;
+    background: 0 0;
+    color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .shaka-range-element::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  background: #ffffff;
-  border: none;
-  border-radius: 12px;
-  -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #ffffff;
+    border: none;
+    border-radius: 12px;
+    -webkit-appearance: none;
 }
 
-/* Volume Bar */
 .shaka-volume-bar-container {
-  width: 100px;
-  padding: 0;
+    width: 100px;
+    padding: 0;
 }
 
-/* Seek Bar */
 .shaka-seek-bar-container {
-  display: none !important;
+    display: none !important;
 }
 
 .shaka-seek-bar-container .shaka-range-element::-webkit-slider-thumb,
 .shaka-seek-bar-container .shaka-range-element::-moz-range-thumb {
-  display: none;
+    display: none;
 }
 
 .shaka-controls-container[shown="true"] .shaka-seek-bar-container,
 .shaka-controls-container[casting="true"] .shaka-seek-bar-container {
-  opacity: 1;
+    opacity: 1;
 }
 
 .shaka-spacer {
-  margin: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
-  cursor: default;
+    margin: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    cursor: default;
 }
 
-/* Settings & Overflow Menus */
 .shaka-settings-menu,
 .shaka-overflow-menu {
-  position: absolute;
-  right: 15px;
-  bottom: 40px;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  max-height: 200px;
-  min-width: 140px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  white-space: nowrap;
-  background: var(--menu-background-color);
-  border: var(--menu-border);
-  border-radius: var(--menu-border-radius);
-  box-shadow: 0 1px 9px 0 rgba(0 0 0 / 40%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  opacity: 0;
-  transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
+    position: absolute;
+    right: 15px;
+    bottom: 40px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    min-width: 140px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    white-space: nowrap;
+    background: var(--menu-background-color);
+    border: var(--menu-border);
+    border-radius: var(--menu-border-radius);
+    box-shadow: 0 1px 9px 0 rgba(0 0 0 / 40%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 0;
+    transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
 }
 
 .shaka-settings-menu.shaka-low-position,
 .shaka-overflow-menu.shaka-low-position {
-  bottom: 15px;
+    bottom: 15px;
 }
 
 .shaka-controls-container[shown="true"] .shaka-settings-menu,
 .shaka-controls-container[casting="true"] .shaka-settings-menu,
 .shaka-controls-container[shown="true"] .shaka-overflow-menu,
 .shaka-controls-container[casting="true"] .shaka-overflow-menu {
-  opacity: 1;
+    opacity: 1;
 }
 
 .shaka-settings-menu::-webkit-scrollbar,
 .shaka-overflow-menu::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .shaka-settings-menu,
 .shaka-overflow-menu {
-  scrollbar-width: none;
+    scrollbar-width: none;
 }
 
 .shaka-settings-menu button,
 .shaka-overflow-menu button {
-  display: flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 6px 9.5px;
-  font-size: 12px;
-  color: var(--main-text-color);
-  background: 0 0;
-  border: none;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 6px 9.5px;
+    font-size: 12px;
+    color: var(--main-text-color);
+    background: 0 0;
+    border: none;
+    cursor: pointer;
 }
 
 .shaka-settings-menu button:hover,
 .shaka-overflow-menu button:hover {
-  background: rgb(255, 77, 0) 80%;
-  border-radius: var(--menu-hover-radius);
+    background: rgb(255, 77, 0) 80%;
+    border-radius: var(--menu-hover-radius);
 }
 
 .shaka-keyboard-navigation .shaka-settings-menu button:focus,
 .shaka-keyboard-navigation .shaka-overflow-menu button:focus {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--menu-hover-radius);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--menu-hover-radius);
 }
 
 .shaka-settings-menu button label,
 .shaka-overflow-menu button label {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .shaka-settings-menu i,
 .shaka-overflow-menu i {
-  padding-left: 0px;
-  padding-right: 8px;
-  font-size: 16px;
-  font-weight: 200 !important;
+    padding-left: 0px;
+    padding-right: 8px;
+    font-size: 16px;
+    font-weight: 200 !important;
 }
 
 .shaka-overflow-menu span {
-  text-align: left;
+    text-align: left;
 }
 
 .shaka-overflow-button-label {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .shaka-current-selection-span {
-  font-size: 10px;
-  color: var(--secondary-text-color);
+    font-size: 10px;
+    color: var(--secondary-text-color);
 }
 
 .shaka-back-to-overflow-button span {
-  margin-left: 0;
+    margin-left: 0;
 }
 
 .shaka-back-to-overflow-button i {
-  padding-right: 8px !important;
+    padding-right: 8px !important;
 }
 
 .shaka-auto-span {
-  left: 17px;
+    left: 17px;
 }
 
 .shaka-settings-menu button:not(.shaka-back-to-overflow-button) {
@@ -479,66 +456,59 @@
 }
 
 .shaka-settings-menu button:not(.shaka-back-to-overflow-button) > i {
-  order: -1;
-  visibility: hidden;
-  margin-left: -20px;
-  margin-right: 0;
-  padding-right: 0;
+    order: -1;
+    visibility: hidden;
+    margin-left: -20px;
+    margin-right: 0;
+    padding-right: 0;
 }
 
 .shaka-settings-menu button[aria-selected="true"] > i {
-  visibility: visible;
+    visibility: visible;
 }
 
-/* Tooltips */
 .shaka-tooltips-on {
-  overflow: visible;
+    overflow: visible;
 }
 
 .shaka-tooltips-on > [class*="shaka-tooltip"] {
-  position: relative;
+    position: relative;
 }
 
 .shaka-tooltips-on > [class*="shaka-tooltip"]:hover:after,
 .shaka-tooltips-on > [class*="shaka-tooltip"]:active:after,
 .shaka-tooltips-on > [class*="shaka-tooltip"]:focus-visible:after {
-  content: attr(aria-label);
-  position: absolute;
-  bottom: calc(32px + 5px);
-  left: calc(32px / 2);
-  padding: 5px 10px;
-  font-family: Roboto-Regular, Roboto, sans-serif;
-  font-size: 13px;
-  line-height: calc(32px / 2);
-  white-space: nowrap;
-  color: #fff;
-  background: rgba(35 35 35 / 90%);
-  border-radius: 3px;
-  transform: translateX(-50%);
+    content: attr(aria-label);
+    position: absolute;
+    bottom: calc(32px + 5px);
+    left: calc(32px / 2);
+    padding: 5px 10px;
+    font-family: Roboto-Regular, Roboto, sans-serif;
+    font-size: 13px;
+    line-height: calc(32px / 2);
+    white-space: nowrap;
+    color: #fff;
+    background: rgba(35 35 35 / 90%);
+    border-radius: 3px;
+    transform: translateX(-50%);
 }
 
 .shaka-tooltips-on > .shaka-tooltip-status:hover:after,
 .shaka-tooltips-on > .shaka-tooltip-status:active:after,
 .shaka-tooltips-on > .shaka-tooltip-status:focus-visible:after {
-  content: attr(aria-label) " (" attr(shaka-status) ")";
+    content: attr(aria-label) " (" attr(shaka-status) ")";
 }
 
 .shaka-tooltips-on button:first-child:hover:after,
 .shaka-tooltips-on button:first-child:active:after,
 .shaka-tooltips-on button:first-child:focus-visible:after {
-  left: 0;
-  transform: translateX(0);
+    left: 0;
+    transform: translateX(0);
 }
 
 .shaka-tooltips-on button:last-child:hover:after,
 .shaka-tooltips-on button:last-child:active:after,
 .shaka-tooltips-on button:last-child:focus-visible:after {
-  left: 32px;
-  transform: translateX(-100%);
-}
-
-/* Active State Icons */
-.shaka-video-container button[aria-label="Pause"] .material-symbols-outlined,
-.shaka-video-container .shaka-mute-button[aria-pressed="true"] .material-symbols-outlined {
-  font-variation-settings: 'FILL' 1;
+    left: 32px;
+    transform: translateX(-100%);
 }
