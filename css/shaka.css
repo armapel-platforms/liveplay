@@ -14,15 +14,18 @@
   --range-track-color: rgba(255, 255, 255, 0.3);
 }
 
-/*! @license
- * Shaka Player
+/**
+ * Shaka Player Controls CSS
  * Copyright 2016 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
+
+/* General Utility */
 .shaka-hidden {
   display: none !important;
 }
 
+/* Main Container */
 .shaka-video-container {
   position: relative;
   top: 0;
@@ -30,19 +33,20 @@
   display: flex;
 }
 
+.shaka-video-container * {
+  font-family: var(--main-font), Roboto-Regular, Roboto, sans-serif, TengwarTelcontar;
+}
+
 .shaka-video-container .material-icons-round,
 .shaka-video-container .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-size: 24px;
   font-style: normal;
-  font-variation-settings: 'FILL' 0, 'wght' 200 !important; 
+  font-variation-settings: 'FILL' 0, 'wght' 200 !important;
   transition: font-variation-settings 0.3s ease;
 }
 
-.shaka-video-container * {
-  font-family: var(--main-font), Roboto-Regular, Roboto, sans-serif, TengwarTelcontar;
-}
-
+/* Fullscreen Styling */
 .shaka-video-container:fullscreen {
   width: 100%;
   height: 100%;
@@ -83,22 +87,23 @@
   font-size: 3.4vmin;
 }
 
+/* Controls Container */
 .shaka-controls-container {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .shaka-video-container:not([shaka-controls="true"]) .shaka-controls-container {
@@ -113,18 +118,20 @@
   display: none;
 }
 
+/* Canvas Container */
 .shaka-canvas-container {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  margin: 0;
-  padding: 0;
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
+/* Bottom Controls Panel */
 .shaka-bottom-controls {
   width: 96%;
   padding: 0;
@@ -133,36 +140,36 @@
 }
 
 .shaka-controls-button-panel {
-  padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  overflow: hidden;
   min-width: 48px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
   font-size: 12px;
   font-weight: 400;
   font-style: normal;
+  opacity: 0;
+  transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  opacity: 0;
-  transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
 }
 
-.shaka-controls-container[casting="true"] .shaka-controls-button-panel,
-.shaka-controls-container[shown="true"] .shaka-controls-button-panel {
+.shaka-controls-container[shown="true"] .shaka-controls-button-panel,
+.shaka-controls-container[casting="true"] .shaka-controls-button-panel {
   opacity: 1;
 }
 
 .shaka-controls-button-panel > * {
-  color: var(--main-text-color);
   height: 32px;
-  line-height: 0.5;
   margin: 1px;
   padding: 0 5px;
+  line-height: 0.5;
+  color: var(--main-text-color);
   background: 0 0;
   border: 0;
   cursor: pointer;
@@ -172,69 +179,45 @@
   display: none;
 }
 
-.shaka-play-button-container {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  flex-shrink: 1;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
+/* Scrim (Gradient behind controls) */
 .shaka-scrim-container {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  flex-shrink: 1;
   position: absolute;
+  top: 0;
   left: 0;
   right: 0;
-  top: 0;
   bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  flex-shrink: 1;
+  background: linear-gradient(to top, #000 0, transparent 15%);
   opacity: 0;
   transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
-  background: linear-gradient(to top, #000 0, transparent 15%);
 }
 
-.shaka-controls-container[casting="true"] .shaka-scrim-container,
-.shaka-controls-container[shown="true"] .shaka-scrim-container {
+.shaka-controls-container[shown="true"] .shaka-scrim-container,
+.shaka-controls-container[casting="true"] .shaka-scrim-container {
   opacity: 1;
 }
 
+/* Text & Cue Container */
 .shaka-text-container {
   position: absolute;
+  top: 0;
   left: 0;
   right: 0;
-  top: 0;
   bottom: 0;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  pointer-events: none;
   width: 100%;
   min-width: 48px;
-  transition: bottom cubic-bezier(0.4, 0, 0.6, 1) 0.1s;
-  transition-delay: 0.5s;
+  pointer-events: none;
+  color: #fff;
   font-size: 15px;
   line-height: 1.4;
-  color: #fff;
-}
-
-::cue {
- background-color: rgba(0, 0, 0, 0.7);
- color: white;
- text-align: center;
-}
-
-.shaka-text-container span.shaka-text-wrapper {
-  display: inline;
-  background: 0 0;
+  transition: bottom cubic-bezier(0.4, 0, 0.6, 1) 0.1s;
+  transition-delay: 0.5s;
 }
 
 .shaka-controls-container[shown="true"] ~ .shaka-text-container {
@@ -242,21 +225,23 @@
   transition-delay: 0s;
 }
 
+.shaka-text-container span.shaka-text-wrapper {
+  display: inline;
+  background: 0 0;
+}
+
+::cue {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+/* Spinner */
 .shaka-video-container:not([shaka-controls="true"]) .shaka-spinner-container {
   display: none;
 }
 
-.shaka-spinner {
-  position: relative;
-  top: 0;
-  left: 0;
-  margin: 0;
-  box-sizing: border-box;
-  padding: calc(9.5% / 2);
-  width: 0;
-  height: 0;
-}
-
+/* Time & Volume Display */
 .shaka-current-time {
   font-size: 14px;
   color: var(--main-text-color);
@@ -264,11 +249,12 @@
 }
 
 .shaka-current-time[disabled] {
-  background-color: transparent;
   color: var(--main-text-color);
+  background-color: transparent;
   cursor: default;
 }
 
+/* Focus Outlines */
 .shaka-controls-container button:focus,
 .shaka-controls-container input:focus {
   outline: 1px solid Highlight;
@@ -285,237 +271,180 @@
   outline: 0;
 }
 
+/* Range Elements (Seek/Volume Bars) */
 .shaka-range-container {
   position: relative;
   top: 0;
   left: 0;
-  margin: calc((12px - 3px) / 2) 6px;
   height: 1px;
-  border-radius: 2px;
+  margin: calc((12px - 3px) / 2) 6px;
   background: var(--range-track-color);
+  border-radius: 2px;
 }
 
+.shaka-range-element {
+  position: absolute;
+  top: calc((1px - 12px) / 2);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+  height: 12px;
+  margin: 0;
+  padding: 0;
+  background: 0 0;
+  -webkit-appearance: none;
+}
+
+/* Webkit Range Styles */
+.shaka-range-element::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 12px;
+  background: 0 0;
+  color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.shaka-range-element::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: none;
+  border-radius: 12px;
+  -webkit-appearance: none;
+}
+
+/* Mozilla Range Styles */
+.shaka-range-element::-moz-range-track {
+  width: 100%;
+  height: 12px;
+  background: 0 0;
+  color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.shaka-range-element::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: none;
+  border-radius: 12px;
+  -webkit-appearance: none;
+}
+
+/* Volume Bar */
 .shaka-volume-bar-container {
   width: 100px;
   padding: 0;
 }
 
-.shaka-range-element {
-  -webkit-appearance: none;
-  background: 0 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  height: 12px;
-  top: calc((1px - 12px) / 2);
-  z-index: 1;
-}
-
-.shaka-range-element::-webkit-slider-runnable-track {
-  width: 100%;
-  cursor: pointer;
-  height: 12px;
-  background: 0 0;
-  color: transparent;
-  border: none;
-}
-
-.shaka-range-element::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: none;
-  border-radius: 12px;
-  height: 12px;
-  width: 12px;
-  background: #ffffff;
-}
-
-.shaka-range-element::-moz-range-track {
-  width: 100%;
-  cursor: pointer;
-  height: 12px;
-  background: 0 0;
-  color: transparent;
-  border: none;
-}
-
-.shaka-range-element::-moz-range-thumb {
-  -webkit-appearance: none;
-  border: none;
-  border-radius: 12px;
-  height: 12px;
-  width: 12px;
-  background: #ffffff;
-}
-
-.shaka-seek-bar-container .shaka-range-element::-webkit-slider-thumb {
-  display: none;
-}
-
-.shaka-seek-bar-container .shaka-range-element::-moz-range-thumb {
-  display: none;
-}
-
+/* Seek Bar */
 .shaka-seek-bar-container {
   display: none !important;
 }
 
-.shaka-controls-container[casting="true"] .shaka-seek-bar-container,
-.shaka-controls-container[shown="true"] .shaka-seek-bar-container {
+.shaka-seek-bar-container .shaka-range-element::-webkit-slider-thumb,
+.shaka-seek-bar-container .shaka-range-element::-moz-range-thumb {
+  display: none;
+}
+
+.shaka-controls-container[shown="true"] .shaka-seek-bar-container,
+.shaka-controls-container[casting="true"] .shaka-seek-bar-container {
   opacity: 1;
 }
 
-.shaka-ad-markers {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.shaka-spinner-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  animation: rotate 2s linear infinite;
-  transform-origin: center center;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.shaka-spinner-path {
-  stroke: var(--theme-accent-color);
-  stroke-dasharray: 20, 200;
-  stroke-dashoffset: 0;
-  animation: dash 1s ease-in-out infinite;
-  stroke-linecap: round;
-}
-
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes dash {
-  0% {
-    stroke-dasharray: 1, 200;
-    stroke-dashoffset: 0;
-  }
-  50% {
-    stroke-dasharray: 89, 200;
-    stroke-dashoffset: -35px;
-  }
-  100% {
-    stroke-dasharray: 89, 200;
-    stroke-dashoffset: -124px;
-  }
-}
-
 .shaka-spacer {
-  cursor: default;
-  flex-shrink: 1;
-  flex-grow: 1;
   margin: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  cursor: default;
 }
 
-.shaka-overflow-menu,
-.shaka-settings-menu {
+/* Settings & Overflow Menus */
+.shaka-settings-menu,
+.shaka-overflow-menu {
+  position: absolute;
+  right: 15px;
+  bottom: 40px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  max-height: 200px;
+  min-width: 140px;
   overflow-x: hidden;
   overflow-y: auto;
   white-space: nowrap;
   background: var(--menu-background-color);
-  backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
   border: var(--menu-border);
-  box-shadow: 0 1px 9px 0 rgba(0 0 0 / 40%);
   border-radius: var(--menu-border-radius);
-  max-height: 200px;
-  min-width: 140px;
+  box-shadow: 0 1px 9px 0 rgba(0 0 0 / 40%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   opacity: 0;
   transition: opacity cubic-bezier(0.4, 0, 0.6, 1) 0.6s;
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  z-index: 2;
-  right: 15px;
+}
+
+.shaka-settings-menu.shaka-low-position,
+.shaka-overflow-menu.shaka-low-position {
   bottom: 15px;
 }
 
-.shaka-settings-menu {
-}
-
-.shaka-controls-container[casting="true"] .shaka-overflow-menu,
+.shaka-controls-container[shown="true"] .shaka-settings-menu,
 .shaka-controls-container[casting="true"] .shaka-settings-menu,
 .shaka-controls-container[shown="true"] .shaka-overflow-menu,
-.shaka-controls-container[shown="true"] .shaka-settings-menu {
+.shaka-controls-container[casting="true"] .shaka-overflow-menu {
   opacity: 1;
 }
 
-.shaka-overflow-menu::-webkit-scrollbar,
-.shaka-settings-menu::-webkit-scrollbar {
+.shaka-settings-menu::-webkit-scrollbar,
+.shaka-overflow-menu::-webkit-scrollbar {
   display: none;
 }
 
-.shaka-overflow-menu, 
-.shaka-settings-menu {
+.shaka-settings-menu,
+.shaka-overflow-menu {
   scrollbar-width: none;
 }
 
-.shaka-overflow-menu button,
-.shaka-settings-menu button {
-  font-size: 12px;
-  background: 0 0;
-  color: var(--main-text-color);
-  border: none;
-  min-height: 30px;
-  padding: 6px 9.5px;
+.shaka-settings-menu button,
+.shaka-overflow-menu button {
   display: flex;
   align-items: center;
+  min-height: 30px;
+  padding: 6px 9.5px;
+  font-size: 12px;
+  color: var(--main-text-color);
+  background: 0 0;
+  border: none;
   cursor: pointer;
 }
 
-.shaka-overflow-menu button:hover,
-.shaka-settings-menu button:hover {
-  background: rgb(255,77,0) 80%;
+.shaka-settings-menu button:hover,
+.shaka-overflow-menu button:hover {
+  background: rgb(255, 77, 0) 80%;
   border-radius: var(--menu-hover-radius);
 }
 
-.shaka-overflow-menu button label,
-.shaka-settings-menu button label {
-  cursor: pointer;
-}
-
-.shaka-keyboard-navigation .shaka-overflow-menu button:focus,
-.shaka-keyboard-navigation .shaka-settings-menu button:focus {
+.shaka-keyboard-navigation .shaka-settings-menu button:focus,
+.shaka-keyboard-navigation .shaka-overflow-menu button:focus {
   background: rgba(255, 255, 255, 0.1);
   border-radius: var(--menu-hover-radius);
 }
 
-.shaka-overflow-menu i,
-.shaka-settings-menu i {
+.shaka-settings-menu button label,
+.shaka-overflow-menu button label {
+  cursor: pointer;
+}
+
+.shaka-settings-menu i,
+.shaka-overflow-menu i {
   padding-left: 0px;
   padding-right: 8px;
   font-size: 16px;
   font-weight: 200 !important;
-}
-
-.shaka-overflow-menu.shaka-low-position,
-.shaka-settings-menu.shaka-low-position {
-  bottom: 15px;
 }
 
 .shaka-overflow-menu span {
@@ -529,11 +458,8 @@
 }
 
 .shaka-current-selection-span {
-  color: var(--secondary-text-color);
   font-size: 10px;
-}
-
-.shaka-settings-menu span {
+  color: var(--secondary-text-color);
 }
 
 .shaka-back-to-overflow-button span {
@@ -548,6 +474,23 @@
   left: 17px;
 }
 
+.shaka-settings-menu button:not(.shaka-back-to-overflow-button) {
+  padding-left: 40px;
+}
+
+.shaka-settings-menu button:not(.shaka-back-to-overflow-button) > i {
+  order: -1;
+  visibility: hidden;
+  margin-left: -20px;
+  margin-right: 0;
+  padding-right: 0;
+}
+
+.shaka-settings-menu button[aria-selected="true"] > i {
+  visibility: visible;
+}
+
+/* Tooltips */
 .shaka-tooltips-on {
   overflow: visible;
 }
@@ -556,61 +499,46 @@
   position: relative;
 }
 
+.shaka-tooltips-on > [class*="shaka-tooltip"]:hover:after,
 .shaka-tooltips-on > [class*="shaka-tooltip"]:active:after,
-.shaka-tooltips-on > [class*="shaka-tooltip"]:focus-visible:after,
-.shaka-tooltips-on > [class*="shaka-tooltip"]:hover:after {
+.shaka-tooltips-on > [class*="shaka-tooltip"]:focus-visible:after {
   content: attr(aria-label);
-  font-family: Roboto-Regular, Roboto, sans-serif;
-  line-height: calc(32px / 2);
-  white-space: nowrap;
-  font-size: 13px;
-  background: rgba(35 35 35 / 90%);
-  color: #fff;
-  border-radius: 3px;
-  padding: 5px 10px;
   position: absolute;
   bottom: calc(32px + 5px);
   left: calc(32px / 2);
+  padding: 5px 10px;
+  font-family: Roboto-Regular, Roboto, sans-serif;
+  font-size: 13px;
+  line-height: calc(32px / 2);
+  white-space: nowrap;
+  color: #fff;
+  background: rgba(35 35 35 / 90%);
+  border-radius: 3px;
   transform: translateX(-50%);
 }
 
+.shaka-tooltips-on > .shaka-tooltip-status:hover:after,
 .shaka-tooltips-on > .shaka-tooltip-status:active:after,
-.shaka-tooltips-on > .shaka-tooltip-status:focus-visible:after,
-.shaka-tooltips-on > .shaka-tooltip-status:hover:after {
+.shaka-tooltips-on > .shaka-tooltip-status:focus-visible:after {
   content: attr(aria-label) " (" attr(shaka-status) ")";
 }
 
+.shaka-tooltips-on button:first-child:hover:after,
 .shaka-tooltips-on button:first-child:active:after,
-.shaka-tooltips-on button:first-child:focus-visible:after,
-.shaka-tooltips-on button:first-child:hover:after {
+.shaka-tooltips-on button:first-child:focus-visible:after {
   left: 0;
   transform: translateX(0);
 }
 
+.shaka-tooltips-on button:last-child:hover:after,
 .shaka-tooltips-on button:last-child:active:after,
-.shaka-tooltips-on button:last-child:focus-visible:after,
-.shaka-tooltips-on button:last-child:hover:after {
+.shaka-tooltips-on button:last-child:focus-visible:after {
   left: 32px;
   transform: translateX(-100%);
 }
 
+/* Active State Icons */
 .shaka-video-container button[aria-label="Pause"] .material-symbols-outlined,
 .shaka-video-container .shaka-mute-button[aria-pressed="true"] .material-symbols-outlined {
   font-variation-settings: 'FILL' 1;
-}
-
-.shaka-settings-menu button:not(.shaka-back-to-overflow-button) {
-    padding-left: 40px;
-}
-
-.shaka-settings-menu button:not(.shaka-back-to-overflow-button) > i {
-    order: -1;
-    visibility: hidden;
-    margin-left: -20px; 
-    margin-right: 0;
-    padding-right: 0;
-}
-
-.shaka-settings-menu button[aria-selected="true"] > i {
-    visibility: visible;
 }
