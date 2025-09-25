@@ -44,12 +44,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const originalTitle = "Liveplay - Free Live Philippine TV Channels Online";
 
     const playerInfo = document.querySelector('.player-info');
-    if (videoElement && playerView && playerWrapper && playerInfo) {
+        if (videoElement && playerView && playerWrapper && playerInfo) {
         videoElement.addEventListener('leavepictureinpicture', () => {
-            playerView.insertBefore(playerWrapper, playerInfo);
+            setTimeout(() => {
+                playerView.appendChild(document.querySelector('.player-header'));
+                playerView.appendChild(playerWrapper);
+                playerView.appendChild(playerInfo);
+            }, 0);
         });
     }
-
+    
     const isDesktop = () => window.innerWidth >= 1024;
 
     const setVideoPoster = () => {
