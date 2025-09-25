@@ -531,8 +531,7 @@ header.subpage-header h1 {
 }
 
 .shaka-overflow-menu, .shaka-settings-menu {
-    top: 15px;
-    bottom: 30px;
+    bottom: 40px;
 }
 
 .player-info { 
