@@ -392,7 +392,7 @@
 
 .shaka-settings-menu button:hover,
 .shaka-overflow-menu button:hover {
-    background: rgb(255, 77, 0) 80%;
+    background: var(--theme-accent-color);
     border-radius: var(--menu-hover-radius);
 }
 
