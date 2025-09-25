@@ -530,6 +530,11 @@ header.subpage-header h1 {
     display: none !important;
 }
 
+.shaka-overflow-menu, .shaka-settings-menu {
+    top: 15px;
+    bottom: 30px;
+}
+
 .player-info { 
     width: 100%; 
     max-width: 960px; 
