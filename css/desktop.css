@@ -18,7 +18,6 @@
         display: flex;
         flex-direction: column;
         position: sticky;
-        top: 80px;
         transform: none;
         background: var(--background-color);
         backdrop-filter: none;
