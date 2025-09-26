@@ -96,12 +96,14 @@ header.subpage-header {
     position: relative;
     border-bottom: 1px solid var(--glass-border);
 }
+
 header.subpage-header a.back-link {
     position: absolute;
     left: 20px;
     display: flex;
     align-items: center;
 }
+
 header.subpage-header h1 {
     font-size: 1.2rem;
     font-weight: 600;
@@ -207,11 +209,13 @@ header.subpage-header h1 {
     background: var(--card-background);
     border-radius: 50px; 
 }
+
 .search-bar .material-symbols-outlined { 
     color: var(--text-secondary); 
     font-size: 1.5rem; 
     margin-right: 10px; 
 }
+
 .search-bar input { 
     width: 100%; 
     background: none; 
@@ -222,6 +226,7 @@ header.subpage-header h1 {
     font-size: 0.85rem; 
     padding: 10px 0;
 }
+
  #initial-message { 
      color: var(--text-secondary); 
      text-align: center;
@@ -635,6 +640,7 @@ header.subpage-header h1 {
     position: relative;
     background-color: #000;
 }
+
 #youtube-player {
     position: absolute;
     top: 0;
@@ -726,12 +732,15 @@ header.subpage-header h1 {
     border-radius: var(--border-radius);
     overflow: hidden;
 }
+
 .faq-item {
     border-bottom: 1px solid #2a2a2a;
 }
+
 .faq-item:last-child {
     border-bottom: none;
 }
+
 .faq-question {
     display: flex;
     justify-content: space-between;
@@ -742,21 +751,26 @@ header.subpage-header h1 {
     font-weight: 600;
     transition: color 0.2s;
 }
+
 .faq-question:hover {
     color: var(--theme-color);
 }
+
 .faq-question span:first-child {
     padding-right: 15px;
 }
+
 .faq-question .material-symbols-outlined {
     transition: transform 0.3s ease;
     flex-shrink: 0;
 }
+
 .faq-answer {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-out;
 }
+
 .faq-answer p {
     padding: 0 25px 20px 25px;
     margin: 0;
@@ -764,17 +778,21 @@ header.subpage-header h1 {
     line-height: 1.7;
     color: var(--text-secondary);
 }
+
 .faq-item.active .faq-question .material-symbols-outlined {
     transform: rotate(180deg);
 }
+
 .faq-item.active .faq-answer {
     max-height: 300px;
 }
+
 .faq-answer a.inline-link {
     color: var(--theme-color);
     text-decoration: underline;
     font-weight: 600;
 }
+
 .site-footer {
     background-color: transparent;
     color: #666;
@@ -783,10 +801,12 @@ header.subpage-header h1 {
     line-height: 0.7;
     margin-top: 40px;
 }
+
 .footer-content p {
     margin: 8px 0;
     font-size: 0.5rem;
 }
+
 .footer-content .developer-credit {
     font-size: 0.5rem;
     display: flex;
@@ -794,6 +814,7 @@ header.subpage-header h1 {
     justify-content: center;
     gap: 4px;
 }
+
 .footer-content .developer-logo {
     height: 9px;
     width: auto;
@@ -802,9 +823,11 @@ header.subpage-header h1 {
 .footer-content .copyright {
     font-weight: 500;
 }
+
 .footer-content .footer-brand {
     font-weight: 800;
 }
+
 .footer-content .version {
     font-size: 0.5rem;
     color: #555;
