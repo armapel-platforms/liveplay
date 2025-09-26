@@ -35,6 +35,7 @@
 
     .video-player-container {
         order: 2;
+        display: flex;
         max-width: none;
         margin: 0;
     }
