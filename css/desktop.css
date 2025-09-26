@@ -34,9 +34,8 @@
 
     .video-player-container {
         order: 2;
-        display: flex;
         max-width: none;
-        margin: 0 auto auto;
+        margin: 0;
         align-items: center;
         justify-content: center;
     }
