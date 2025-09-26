@@ -16,6 +16,7 @@
 
     #player-view {
         position: sticky;
+        top: 80px;
         transform: none;
         background: transparent;
         backdrop-filter: none;
