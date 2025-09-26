@@ -1,6 +1,5 @@
 @media (min-width: 1024px) {
     body {
-        padding-top: 60px;
     }
     
     main {
@@ -16,7 +15,6 @@
 
     #player-view {
         position: sticky;
-        top: 80px;
         transform: none;
         background: transparent;
         backdrop-filter: none;
