@@ -38,6 +38,8 @@
         display: flex;
         max-width: none;
         margin: 0;
+        align-items: center;
+        justify-content: center;
     }
     
     #video-player {
