@@ -76,7 +76,6 @@
         width: 100%;
         padding: 0 20px;
         max-width: none;
-        padding: 0;
         flex-shrink: 0;
         transition: none;
     }
