@@ -17,7 +17,7 @@
     #player-view {
         position: sticky;
         top: 80px;
-        height: calc(100vh - 100px);
+        height: auto;
         padding: 0;
         flex-direction: column;
         box-sizing: border-box;
