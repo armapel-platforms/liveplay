@@ -18,7 +18,6 @@
         position: sticky;
         top: 80px;
         height: calc(100vh - 100px);
-        display: flex;
         padding: 0;
         flex-direction: column;
         box-sizing: border-box;
