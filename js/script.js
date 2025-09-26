@@ -88,6 +88,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupLayout();
     });
 
+    const placeholder = document.querySelector('.video-placeholder');
+
+    if (playerView && placeholder) {
+        const triggerPoint = playerView.offsetTop + playerView.offsetHeight;
+
+        window.addEventListener('scroll', () => {
+            if (isDesktop() && activeStream) {
+                if (window.scrollY > triggerPoint) {
+                    playerView.classList.add('pip-mode');
+                    placeholder.classList.add('active');
+                } else {
+                    playerView.classList.remove('pip-mode');
+                    placeholder.classList.remove('active');
+                }
+            } else {
+                playerView.classList.remove('pip-mode');
+                placeholder.classList.remove('active');
+            }
+        });
+    }
+    
     if (document.getElementById('featured-slider')) {
         window.addEventListener('scroll', () => {
             header.classList.toggle('scrolled', window.scrollY > 10);
@@ -374,6 +395,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const openPlayer = async (stream) => {
         debugger;
+        playerView.classList.remove('pip-mode');
+        placeholder.classList.remove('active');
         const youtubePlayer = document.getElementById('youtube-player');
         activeStream = stream;
 
@@ -454,6 +477,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         debugger;
         e.stopPropagation();
 
+        playerView.classList.remove('pip-mode');
+        placeholder.classList.remove('active');
         const youtubePlayer = document.getElementById('youtube-player');
         if (youtubePlayer) {
             youtubePlayer.src = '';
