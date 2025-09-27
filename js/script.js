@@ -1,27 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     debugger;
 
-    const createRipple = (event) => {
-        debugger;
-        const target = event.currentTarget;
-        const circle = document.createElement("span");
-        const diameter = Math.max(target.clientWidth, target.clientHeight);
-        const radius = diameter / 2;
-        const rect = target.getBoundingClientRect();
-        circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${event.clientX - rect.left - radius}px`;
-        circle.style.top = `${event.clientY - rect.top - radius}px`;
-        circle.classList.add("ripple");
-        const ripple = target.getElementsByClassName("ripple")[0];
-        if (ripple) {
-            debugger;
-            ripple.remove();
-        }
-        target.appendChild(circle);
-    };
-
-    const staticRippleElements = document.querySelectorAll('.icon-link, #minimized-player, .back-link');
-    staticRippleElements.forEach(elem => elem.addEventListener("click", createRipple));
+    // The createRipple function and its corresponding event listener have been removed.
 
     const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
@@ -53,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 0);
         });
     }
-    
+
     const isDesktop = () => window.innerWidth >= 1024;
 
     const setVideoPoster = () => {
@@ -128,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 li.addEventListener('touchstart', () => li.classList.add('active-press'));
                 const releaseAction = (e) => {
                     li.classList.remove('active-press');
-                    createRipple(e);
+                    // createRipple call removed
                     if (link && link.href) {
                         setTimeout(() => {
                             window.location.href = link.href;
@@ -260,7 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const logoBg = document.createElement('div');
                 logoBg.className = 'channel-logo-bg';
                 logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
-                logoBg.addEventListener("click", createRipple);
+                // logoBg.addEventListener("click", createRipple); // Removed ripple effect
                 logoBg.addEventListener('click', (e) => {
                     debugger;
                     e.preventDefault();
@@ -321,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
-                pill.addEventListener('click', createRipple);
+                // pill.addEventListener('click', createRipple); // Removed ripple effect
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active')?.classList.remove('active');
                     pill.classList.add('active');
@@ -354,19 +334,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (shaka.Player.isBrowserSupported()) {
             player = new shaka.Player();
             await player.attach(videoElement);
-    
+
             ui = new shaka.ui.Overlay(player, playerWrapper, videoElement);
-            
+
             ui.configure({
                 addSeekBar: false,
             });
-    
+
             player.addEventListener('error', onError);
         } else {
             console.error('Browser not supported!');
         }
     };
-    
+
     const onError = (event) => {
         debugger;
         console.error('Player Error', event.detail);
