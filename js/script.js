@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     debugger;
 
-    // The createRipple function and its corresponding event listener have been removed.
-
     const header = document.querySelector('header');
     const menuBtn = document.getElementById('menu-btn');
     const floatingMenu = document.getElementById('floating-menu');
@@ -108,7 +106,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 li.addEventListener('touchstart', () => li.classList.add('active-press'));
                 const releaseAction = (e) => {
                     li.classList.remove('active-press');
-                    // createRipple call removed
                     if (link && link.href) {
                         setTimeout(() => {
                             window.location.href = link.href;
@@ -240,7 +237,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const logoBg = document.createElement('div');
                 logoBg.className = 'channel-logo-bg';
                 logoBg.innerHTML = `<img src="${stream.logo}" alt="${stream.name}" class="channel-logo">`;
-                // logoBg.addEventListener("click", createRipple); // Removed ripple effect
                 logoBg.addEventListener('click', (e) => {
                     debugger;
                     e.preventDefault();
@@ -301,7 +297,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (category === 'ALL') pill.classList.add('active');
                 pill.dataset.category = category;
                 pill.innerHTML = `<span class="material-symbols-outlined">${categoryIcons[category] || 'emergency'}</span>`;
-                // pill.addEventListener('click', createRipple); // Removed ripple effect
                 pill.addEventListener('click', () => {
                     document.querySelector('.pill.active')?.classList.remove('active');
                     pill.classList.add('active');
