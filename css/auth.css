@@ -32,6 +32,7 @@ main.auth-container {
     max-width: 420px;
     margin-top: auto;
     padding: 20px 0;
+    display: flex-start;
     flex-shrink: 0;
     font-size: 0.7rem;
     color: var(--text-secondary);
@@ -169,7 +170,7 @@ main.auth-container {
 }
 
 .auth-btn:hover {
-    background-color: #e64400; /* Darker shade for hover */
+    background-color: #e64400;
 }
 
 .auth-btn:active {
