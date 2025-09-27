@@ -30,9 +30,7 @@ main.auth-container {
 .auth-footer {
     width: 100%;
     max-width: 420px;
-    margin-top: 20px;
-    padding: 20px 0;
-    display: flex-start;
+    margin-top: 25px;
     flex-shrink: 0;
     font-size: 0.7rem;
     color: var(--text-secondary);
