@@ -1,28 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    function createRipple(event) {
-        const button = event.currentTarget;
-        const circle = document.createElement("span");
-        const diameter = Math.max(button.clientWidth, button.clientHeight);
-        const radius = diameter / 2;
-        const rect = button.getBoundingClientRect();
-        circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${event.clientX - rect.left - radius}px`;
-        circle.style.top = `${event.clientY - rect.top - radius}px`;
-        circle.classList.add("ripple");
-        const existingRipple = button.querySelector(".ripple");
-        if (existingRipple) {
-            existingRipple.remove();
-        }
-        button.appendChild(circle);
-        circle.addEventListener('animationend', () => {
-            if (circle.parentNode) {
-                circle.remove();
-            }
-        });
-    }
-    document.querySelectorAll('.auth-btn').forEach(button => {
-        button.addEventListener('click', createRipple);
-    });
 
     document.body.addEventListener('click', function(e) {
         if (e.target.classList.contains('visibility-toggle')) {
@@ -62,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         showSignupLink.addEventListener('click', (e) => { e.preventDefault(); signupForm.classList.add('active'); loginForm.classList.remove('active'); });
         showLoginLink.addEventListener('click', (e) => { e.preventDefault(); loginForm.classList.add('active'); signupForm.classList.remove('active'); });
-    
+
         loginButton.addEventListener('click', async () => {
             loginButton.disabled = true;
             loginButton.textContent = "Logging In...";
@@ -197,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         newPasswordInput.addEventListener('input', validateNewPasswords);
         confirmPasswordInput.addEventListener('input', validateNewPasswords);
-        
+
         doneButton.addEventListener('click', async () => {
             const newPassword = newPasswordInput.value;
             doneButton.disabled = true;
@@ -228,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const setUserData = async () => {
             const user = await window.auth.getCurrentUser();
             if (!user) return window.location.href = '/home/login-signup';
-            
+
             document.querySelector('[data-field="first_name"] .row-value').textContent = user.first_name || 'Not set';
             document.querySelector('[data-field="last_name"] .row-value').textContent = user.last_name || 'Not set';
             document.querySelector('[data-field="email"] .row-value').textContent = user.email || '';
@@ -245,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isPassword = input.type === 'password';
                 input.type = isPassword ? 'text' : 'password';
                 target.textContent = isPassword ? 'visibility' : 'visibility_off';
-                return; 
+                return;
             }
 
             if (target.classList.contains('edit-icon')) {
@@ -262,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     clickedRow.classList.add('editing');
                     const input = clickedRow.querySelector('.row-input');
                     const valueSpan = clickedRow.querySelector('.row-value');
-                    
+
                     if (clickedRow.dataset.field !== 'password') {
                         input.value = valueSpan.textContent;
                     } else {
@@ -357,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        
+
         setUserData();
     }
 
