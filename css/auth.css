@@ -165,9 +165,11 @@ main.auth-container {
     font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
-    position: relative;
-    overflow: hidden;
     transition: background-color 0.3s ease;
+}
+
+.auth-btn:hover {
+    background-color: #e64400; /* Darker shade for hover */
 }
 
 .auth-btn:active {
@@ -183,6 +185,10 @@ main.auth-container {
     background-color: #ff0000;
 }
 
+.auth-btn.danger:hover {
+    background-color: #cc0000;
+}
+
 .auth-btn.danger:active {
     background-color: var(--input-background);
 }
@@ -190,22 +196,6 @@ main.auth-container {
 .auth-btn.danger:disabled {
     background-color: var(--input-background);
     cursor: not-allowed;
-}
-
-.auth-btn span.ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
-    animation: ripple 600ms linear;
-    background-color: rgba(255, 255, 255, 0.7);
-    pointer-events: none;
-}
-
-@keyframes ripple {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
 }
 
 .account-container {
