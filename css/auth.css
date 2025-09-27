@@ -569,9 +569,10 @@ main.auth-container {
 
     .auth-footer {
         position: absolute;
+        bottom: 25px;
         left: 0;
         right: 0;
-        top: 25px;
+        margin-top: 0;
         max-width: 100%;
     }
 }
