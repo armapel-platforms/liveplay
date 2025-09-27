@@ -86,10 +86,6 @@ header nav {
     transition: background-color 0.2s ease;
 }
 
-.icon-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
 header.subpage-header {
     display: flex;
     justify-content: center;
@@ -385,10 +381,6 @@ header.subpage-header h1 {
     cursor: pointer;
 }
 
-.pill:hover {
-    background-color: #333;
-}
-
 .pill.active {
     background-color: var(--theme-color);
     color: white;
@@ -459,7 +451,6 @@ header.subpage-header h1 {
 }
 
 .channel-logo-bg:hover {
-    transform: scale(1.05);
     background-color: #222;
 }
 
