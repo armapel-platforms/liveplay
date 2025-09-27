@@ -174,11 +174,6 @@ header.subpage-header h1 {
     pointer-events: none;
 }
 
-.floating-menu li.active-press {
-    background-color: rgba(255, 255, 255, 0.15);
-    transition-duration: 0s;
-}
-
 .menu-header {
     padding: 10px 10px 8px;
     font-weight: 900;
