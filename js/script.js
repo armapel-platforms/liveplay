@@ -38,9 +38,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         debugger;
         if (!videoElement) return;
         if (isDesktop()) {
-            videoElement.poster = '/logo/desktop-poster.png';
+            videoElement.poster = '/assets/desktop-poster.png';
         } else {
-            videoElement.poster = '/logo/attention.png';
+            videoElement.poster = '/assets/attention.png';
         }
     };
 
