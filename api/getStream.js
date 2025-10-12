@@ -150,7 +150,7 @@ const streams = [
     { name: 'Love Nature', logo: 'https://blueantmedia.com/wp-content/uploads/2025/02/LoveNature2024_Logo_Coral-768x304.png', type: 'mpegdash', manifestUri: 'https://linearjitp-playback.astro.com.my/dash-wv/linear/5096/default_ott.mpd', clearKey: { '168bd815468639fe4528b4bf0141f310': '775a654c0610811ad022329a68884de1' }, category: "Nature + Animal" },  
     
     // Overseas
-    { name: 'GMA Pinoy TV', logo: 'https://upload.wikimedia.org/wikipedia/en/a/af/GMA_Pinoy_TV_logo.png', type: 'mpegdash', manifestUri: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01006-abs-cbn-abscbn-gma-x7-dash-abscbnono/7c693236-e0c1-40a3-8bd0-bb25e43f5bfc/index.mpd', clearKey: { 'c95ed4c44b0b4f7fa1c6ebbbbaab21a1': '47635b8e885e19f2ccbdff078c207058' }, category: "Overseas" },
+    { name: 'GMA Pinoy TV', logo: 'https://static.wikia.nocookie.net/logopedia/images/6/6b/GMA_Pinoy_TV_%282024%29.png', type: 'mpegdash', manifestUri: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01006-abs-cbn-abscbn-gma-x7-dash-abscbnono/7c693236-e0c1-40a3-8bd0-bb25e43f5bfc/index.mpd', clearKey: { 'c95ed4c44b0b4f7fa1c6ebbbbaab21a1': '47635b8e885e19f2ccbdff078c207058' }, category: "Overseas" },
     { name: 'TFC Asia', logo: 'https://img.mytfc.com/cmsroot/abscms/media/mytfctv/channels/tfc/logos/tfc_logo_800px.png?ext=.png', type: 'mpegdash', manifestUri: 'https://cdn-ue1-prod.tsv2.amagi.tv/linear/amg01006-abs-cbn-tfcasia-dash-abscbnono/7045bc3c-9492-42d4-974e-a3b217776e57/index.mpd', clearKey: { '9568cc84e1d944f38eac304517eab6fd': 'f12142af8f39b3bab79d3679d3665ebe' }, category: "Overseas" },
     
     // Religious
