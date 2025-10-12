@@ -154,7 +154,7 @@ const streams = [
     { name: 'TFC Asia', logo: 'https://img.mytfc.com/cmsroot/abscms/media/mytfctv/channels/tfc/logos/tfc_logo_800px.png?ext=.png', type: 'mpegdash', manifestUri: 'https://cdn-ue1-prod.tsv2.amagi.tv/linear/amg01006-abs-cbn-tfcasia-dash-abscbnono/7045bc3c-9492-42d4-974e-a3b217776e57/index.mpd', clearKey: { '9568cc84e1d944f38eac304517eab6fd': 'f12142af8f39b3bab79d3679d3665ebe' }, category: "Overseas" },
     
     // Religious
-    { name: 'TV Maria', logo: 'https://tvmaria.ph/wp-content/uploads/2021/11/cropped-tvm-1400-3.png', type: 'mpegdash', manifestUri: 'https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/tvmaria_prd/default/index.mpd', clearKey: { 'fa3998b9a4de40659725ebc5151250d6': '998f1294b122bbf1a96c1ddc0cbb229f' }, category: "Religious" }
+    { name: 'TV Maria', logo: 'https://dioceseofmalolos.ph/wp-content/uploads/2017/12/TV-Maria-Logo-510x212.png', type: 'mpegdash', manifestUri: 'https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/tvmaria_prd/default/index.mpd', clearKey: { 'fa3998b9a4de40659725ebc5151250d6': '998f1294b122bbf1a96c1ddc0cbb229f' }, category: "Religious" }
 ];
 
 export default function handler(request, response) {
