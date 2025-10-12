@@ -6,6 +6,6 @@ const yt_live = [
     { name: 'THE K-POP', logo: '/assets/the_kpop_logo.png', type: 'youtube', embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCoRXPcv8XK5fAplLbk9PTww', category: "YouTube Live" },
     { name: 'THE K-POP 2', logo: '/assets/the_kpop2_logo.png', type: 'youtube', embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCITH7URIRpb8yoshUwGE9jg', category: "YouTube Live" },
     { name: 'Vibing with K-POP' , logo: '/assets/vbngtkpop_logo.png', type: 'youtube', embedUrl: 'https://www.youtube.com/embed/jhsltv-xwQg', category: "YouTube Live" },
-    { name: 'MLBB PH Livestream' , logo: 'https://liquipedia.net/commons/images/5/52/MPL_Philippines_Season_15_allmode.png', type: 'youtube', embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC5ASeit2rM3taMSUChv9tNA', category: "YouTube Live" },
-    { name: 'HOK PH Livestream', logo: 'https://liquipedia.net/commons/images/e/e3/HoK_PKL_darkmode.png', type: 'youtube', embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC5OPy9uNF1oK_df5UgAp3qA', category: "YouTube Live" }
+    { name: 'MLBB PH Livestream' , logo: '/assets/mlbb_mpl_logo.png', type: 'youtube', embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC5ASeit2rM3taMSUChv9tNA', category: "YouTube Live" },
+    { name: 'HOK PH Livestream', logo: '/assets/hok_pkl_logo.png', type: 'youtube', embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC5OPy9uNF1oK_df5UgAp3qA', category: "YouTube Live" }
 ];
