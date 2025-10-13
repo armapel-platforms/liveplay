@@ -115,7 +115,8 @@
                             </div>
                         </a>
 
-                        <a href="/home?play=NBA-TV-Philippines" class="slide">
+                        <!-- MODIFICATION START: Added class and data-channel-id -->
+                        <a href="/home?play=NBA-TV-Philippines" class="slide watch-now-slide" data-channel-id="NBA-TV-Philippines">
                             <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*7OmCmTMBu1adOhD6vP9BFw.jpeg" alt="Promotion Background" class="slide-bg">
                             <div class="slide-overlay"></div>
                             <div class="slide-content">
@@ -125,7 +126,8 @@
                             </div>
                         </a>
 
-                        <a href="/home?play=HBO" class="slide">
+                        <!-- MODIFICATION START: Added class and data-channel-id -->
+                        <a href="/home?play=HBO" class="slide watch-now-slide" data-channel-id="HBO">
                             <img src="https://beam-images.warnermediacdn.com/2025-03/Max_BrandQuilt_2025_Q1_Global_1920x1080.jpg?host=wbd-dotcom-drupal-prd-us-east-1.s3.amazonaws.com&w=1920" class="slide-bg" alt="Show Background">
                             <div class="slide-overlay"></div>
                             <div class="slide-content">
@@ -197,5 +199,26 @@
     <script src="/js/ui.js"></script>
     <script src="/js/yt-live.js"></script>
     <script src="/js/script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const watchNowSlides = document.querySelectorAll('.watch-now-slide');
+
+            watchNowSlides.forEach(slide => {
+                slide.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+                    const channelId = slide.dataset.channelId;
+
+                    if (channelId) {
+                        console.log(`Slider clicked. Playing channel: ${channelId}`);
+                        const playerView = document.getElementById('player-view');
+                        playerView.style.display = 'block';
+                        playerView.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
