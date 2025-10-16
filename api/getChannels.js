@@ -146,7 +146,7 @@ const streams = [
     //{ name: 'MTV Hits', logo: 'https://static.wikia.nocookie.net/logopedia/images/4/49/MTV_Hits_2021_%28horizontal%29.svg', type: 'mpegdash', manifestUri: 'https://live-atv-cdn.izzigo.tv/4/out/u/dash/MTVHITSSD/default.mpd', clearKey: { '0b5868bc161634a033a19a20f3f3595d': 'b336c8c6bb249b1a5f89dace8d9889e5' }, category: "Music" },
     { name: 'Nick Music', logo: '/assets/nickmusic_logo.png', type: 'mpegdash', manifestUri: 'https://live-atv-cdn.izzigo.tv/4/out/u/dash/NICKMUSICSD/default.mpd', clearKey: { '96c869392d2e908eaf78a9fcfa8c3107': 'cd307966418dafe8fa5e673f8c172f39' }, category: "Music" },
     { name: 'Vevo Pop', logo: 'https://images.viaway.com/26295749_640.png', type: 'hls', manifestUri: 'https://amg00056-amg00056c6-rakuten-uk-3235.playouts.now.amagi.tv/playlist.m3u8', category: "Music" },
-    { name: 'Star M (Test Broadcast)', logo: '/assets/StarM_logo.png', type: 'hls', manifestUri: 'https://live20.bozztv.com/giatv/giatv-starm/starm/playlist.m3u8', category: "Music" },
+    //{ name: 'Star M (Test Broadcast)', logo: '/assets/StarM_logo.png', type: 'hls', manifestUri: 'https://live20.bozztv.com/giatv/giatv-starm/starm/playlist.m3u8', category: "Music" },
 
     // Action + Crime
     { name: 'Tap Action Flix', logo: 'https://static.wikia.nocookie.net/russel/images/b/b3/TAP_Action_Flix_Logo_2021.png', type: 'mpegdash', manifestUri: 'https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/cg_tapactionflix_hd1/default/index.mpd', clearKey: { 'bee1066160c0424696d9bf99ca0645e3': 'f5b72bf3b89b9848de5616f37de040b7' }, category: "Action + Crime" },
