@@ -164,6 +164,8 @@ const streams = [
     { name: 'Club MTV', logo: 'https://static.wikia.nocookie.net/logopedia/images/9/92/Club_MTV_hori.svg', type: 'hls', manifestUri: 'https://dash3.antik.sk/live/test_mtv_dance_1200_atk/playlist.m3u8', category: "Music" },
     { name: 'Nick Music', logo: '/assets/nickmusic_logo.png', type: 'mpegdash', manifestUri: 'https://live-atv-cdn.izzigo.tv/4/out/u/dash/NICKMUSICSD/default.mpd', clearKey: { '96c869392d2e908eaf78a9fcfa8c3107': 'cd307966418dafe8fa5e673f8c172f39' }, category: "Music" },
     { name: 'Vevo Pop', logo: 'https://images.viaway.com/26295749_640.png', type: 'hls', manifestUri: 'https://amg00056-amg00056c6-rakuten-uk-3235.playouts.now.amagi.tv/playlist.m3u8', category: "Music" },
+    { name: 'MTV Biggest Pop', logo: 'https://images.viaway.com/26295749_640.png', type: 'hls', manifestUri: 'https://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/5d14fd1a252d35decbc4080clivestitch/master.m3u8?appName=web&appVersion=unknown&clientTime=0&deviceDNT=0&deviceId=6c2a02e7-30d3-11ef-9cf5-e9ddff8ff496&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&serverSideAds=false&sid=db3aa987-9f35-4664-b523-5fe34623b36c&profilesFromStream=true', category: "Music" },    
+    { name: 'MTV LIVE', logo: '/assets/mtv_live_logo.svg', type: 'hls', manifestUri: 'https://fl41.moveonjoy.com/MTV_LIVE/index.m3u8', category: "Music" },
     //{ name: 'Star M (Test Broadcast)', logo: '/assets/StarM_logo.png', type: 'hls', manifestUri: 'https://live20.bozztv.com/giatv/giatv-starm/starm/playlist.m3u8', category: "Music" },
 
     // Action + Crime
