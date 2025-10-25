@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return acc;
         }, {});
 
-        const categories = ['ALL', 'General', 'News', 'Entertainment', 'Movies', 'Sports', 'Kids', 'Infotainment', 'Lifestyle + Food', 'Music', 'Action + Crime', 'Nature + Animal', 'Overseas', 'Religious', 'YouTube Live'];
+        const categories = ['ALL', 'General', 'News', 'Entertainment', 'Movies', 'Sports', 'Kids', 'Infotainment', 'Lifestyle + Food', 'Music', 'Action + Crime', 'Nature + Animal', 'Overseas', 'Religious', 'PBB Livestream', 'YouTube Live'];
         const categoryIcons = {
             ALL: 'apps',
             General: 'tv_gen',
@@ -218,6 +218,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             'Nature + Animal': 'pets',
             Overseas: 'globe',
             Religious: 'church',
+            'PBB Livestream': 'visibility',
             'YouTube Live': 'smart_display'
         };
 
@@ -287,6 +288,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Nature + Animal': 'pets',
                 Overseas: 'globe',
                 Religious: 'church',
+                'PBB Livestream': 'visibility',
                 'YouTube Live': 'smart_display'
             };
 
